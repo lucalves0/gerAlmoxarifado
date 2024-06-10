@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block page_title %}
+ Login
+{% endblock page_title %}
+
+{% block content %}
+    <h1>Login</h1>
+
+    <form method='post'>
+        {% csrf_token %}
+        <div class="mb-2">
+          <label for="username_login" >Usuario</label>
+          <input type="username" class="form-control" id="username_login" required>
+        </div>
+        <div class="mb-2">
+          <label for="password_login" class="form-label">Senha</label>
+          <input type="password" class="form-control" id="password_login" required>
+        </div>
+        <button href="{% if not username_login and password_login%} disabled {% endif %}"type="submit" class="btn btn-primary">Entrar</button>
+    </form>
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
+{% endblock  %}
+
+
+  
+
+
+
+
+
+
+
+
+
+
