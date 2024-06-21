@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from decouple import config, Csv
 from dj_database_url import parse as db_url
@@ -100,15 +101,19 @@ LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Fortaleza"
 
 USE_I18N = True
-
 USE_TZ = True
 
-STATIC_URL = "static/"
+
+STATIC_URL = '/assets/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "todos", "static"),
+]
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 AUTHENTICATION_BACKENDS = [
@@ -116,5 +121,5 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # login do admin
-LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = 'todo_list'
 

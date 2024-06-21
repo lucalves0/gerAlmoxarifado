@@ -2,38 +2,26 @@
 {% load crispy_forms_tags %}
 
 {% block page_title %}
- Login
+    Login
 {% endblock page_title %}
 
 {% block content %}
-    <h1>Login</h1>
-
-    <form method='post'>
+    <h2>Login</h2>
+    <form method="post">
         {% csrf_token %}
-        <div class="mb-2">
-          <label for="username_login" >Usuario</label>
-          <input type="username" class="form-control" id="username_login" required>
-        </div>
-        <div class="mb-2">
-          <label for="password_login" class="form-label">Senha</label>
-          <input type="password" class="form-control" id="password_login" required>
-        </div>
-        <button href="{% if not username_login and password_login%} disabled {% endif %}"type="submit" class="btn btn-primary">Entrar</button>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br>
+        <button type="submit">Login</button>
     </form>
-    {% if error %}
-        <p>{{ error }}</p>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 {% endblock  %}
-
-
-  
-
-
-
-
-
-
-
-
 
 
