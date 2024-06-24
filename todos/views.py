@@ -1,19 +1,19 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
-from django.contrib.auth import authenticate, login
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib import messages
-from crispy_forms.helper import FormHelper
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
-from crispy_forms.layout import Layout, Submit, Div
 
 from django.urls import reverse_lazy
 from .models import Todo
 
-class TodoListView(ListView):
+class TodoListView(LoginRequiredMixin, ListView):
    model = Todo
+   template_name = 'todo_list.html'
+   context_object_name = 'todos'
 
-class TodoForm(forms.ModelForm):
+class TodoForm(LoginRequiredMixin, forms.ModelForm):
     
    class Meta:
       model = Todo
@@ -28,7 +28,7 @@ class TodoForm(forms.ModelForm):
       ])
       self.fields['category'].widget.attrs.update({'class': 'form-select custom-select'})
 
-class TodoCreateView(CreateView):
+class TodoCreateView(LoginRequiredMixin, CreateView):
    model = Todo
    form_class = TodoForm
    success_url = reverse_lazy("todo_list")
@@ -38,29 +38,14 @@ class TodoUpdateView(UpdateView):
    fields = ["title", "deadline"]
    success_url = reverse_lazy("todo_list")
 
-class TodoDeleteView(DeleteView):
+class TodoDeleteView(LoginRequiredMixin, DeleteView):
    model = Todo
    success_url = reverse_lazy("todo_list")
 
-class TodoCompleteView(View):
+class TodoCompleteView(LoginRequiredMixin, View):
    def get(self, request, pk):
       todo = get_object_or_404(Todo, pk=pk)
       todo.mark_has_complete()
       return redirect("todo_list")
-   
-class LoginView(View):
-    def get(self, request):
-        return render(request, 'todos/login.html')
-
-    def post(self, request):
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('todo_list') 
-        else:
-            messages.error(request, 'Usuário ou senha incorretos')
-            return render(request, 'todos/templates/todos/login.html')
 
    

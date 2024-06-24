@@ -18,7 +18,10 @@
 
   <header>
     <a href="{% url 'todo_list' %}"> <h2>Gerenciador de Almoxarifado</h2> </a>
-    <a class="button_logout" href="{% url 'login' %}"> SAIR </a>
+    {% comment %} <a class="button_logout" href="{% url 'logout' %}"> SAIR </a> {% endcomment %}
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit">Logout</button>
   </header>
 
   <main>

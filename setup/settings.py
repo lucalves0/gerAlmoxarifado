@@ -121,5 +121,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # login do admin
-LOGIN_REDIRECT_URL = 'todo_list'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
 
