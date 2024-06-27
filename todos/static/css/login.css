@@ -7,6 +7,7 @@
 body,
 html {
   background-color: white;
+  margin: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -24,58 +25,72 @@ header {
 
 }
 
-header a {
+header h1 {
   font-size: 20px;
   text-decoration-line: none;
   color: black;
 }
 
-header .button_logout {
-
-  background-color: red;
-  border-radius: 5px;
-  padding: 5px 20px;
-
-  color: white;
-}
-
 main {
   display: flex;
   flex-direction: column;
-  margin: 30px;
   align-items: center;
+  justify-content: center;
+  margin: 10px 0;
+  height: 100%;
 }
 
-main h1{
-  color: #57777e;
+main .container-main {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-main .btn {
+.container-main h1 {
+  font-size: 50px;
+  margin: 50px 0;
+}
 
+label{
+  color: black;
+  font-size: 20px;
+}
+
+form {
+  width: 50%;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="submit"] {
+  width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin: 10px;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.container-main .btn {
   text-align: center;
   text-decoration: none;
   font-size: 20px;
   padding: 8px 12px;
-  margin: 0 5px;
+  margin: 20px 5px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   display: inline-block;
-  
 }
 
-main .btn-excluir{
-  background-color: red;
-  color: black
-}
+.container-main .btn-login{
 
-main .btn-cancelar{
   background-color: green;
   color: black;
-}
-
-p {
-  font-size: 20px;
-  color: black;
-  margin: 20px;
 }

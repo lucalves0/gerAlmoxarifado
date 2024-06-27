@@ -1,17 +1,15 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 
 from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django import forms
 
 from django.urls import reverse_lazy
 from .models import Todo
-
+    
 class TodoListView(LoginRequiredMixin, ListView):
    model = Todo
    template_name = 'todo_list.html'
-   context_object_name = 'todos'
 
 class TodoForm(LoginRequiredMixin, forms.ModelForm):
     
@@ -35,7 +33,7 @@ class TodoCreateView(LoginRequiredMixin, CreateView):
 
 class TodoUpdateView(UpdateView):
    model = Todo
-   fields = ["title", "deadline"]
+   fields = ["title", "category", "quantity"]
    success_url = reverse_lazy("todo_list")
 
 class TodoDeleteView(LoginRequiredMixin, DeleteView):

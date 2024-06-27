@@ -3,6 +3,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
+from todos import views
 
 from todos.views import (
   TodoListView, 
@@ -13,8 +14,8 @@ from todos.views import (
 )
 
 urlpatterns = [
-  path("", TodoListView.as_view(), name="todo_list"),
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+  path("", TodoListView.as_view(template_name="todos/todo_list.html"), name="todo_list"),
   path('logout/', auth_views.LogoutView.as_view(template_name='todos/templates/registration/logged_out.html'), name='logout'),
   path("create/", TodoCreateView.as_view(), name="todo_create"),
   path("update/<int:pk>", TodoUpdateView.as_view(), name="todo_update"),

@@ -9,8 +9,7 @@ html {
   background-color: white;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 header {
@@ -19,9 +18,8 @@ header {
   padding: 10px;
   align-items: center;
   justify-content: space-between;
-  background-color: #07A0C3;
+  background-color: #07a0c3;
   border: 2px solid black;
-
 }
 
 header a {
@@ -31,7 +29,6 @@ header a {
 }
 
 header .button_logout {
-
   background-color: red;
   border-radius: 5px;
   padding: 5px 20px;
@@ -40,28 +37,30 @@ header .button_logout {
 }
 
 main {
+  height: 100%;
   display: flex;
   flex-direction: column;
   margin: 30px;
   align-items: center;
 }
 
-main h1{
-  color: #07A0C3;
+main h1 {
+  color: #ff6600;
+  font-size: 30px;
+  font-style: bold;
 }
 
-main .table-items{
+main .table-items {
+  width: 100%;
   border-collapse: collapse;
   margin: 25px 0;
   font-size: 18px;
   text-align: center;
-  width: 100%;
   border: 1px solid #dddddd;
 }
 
 main .table-items thead tr {
-  background-color: #07A0C3;
-
+  background-color: #07a0c3;
   font-size: 20px;
   color: black;
   text-align: center;
@@ -91,7 +90,6 @@ main .table-items tbody tr td {
 }
 
 main .btn {
-
   text-align: center;
   text-decoration: none;
   font-size: 20px;
@@ -101,11 +99,10 @@ main .btn {
   border-radius: 5px;
   cursor: pointer;
   display: inline-block;
-  
 }
 
 main .table-items .btn-edit {
-  background-color: #07A0C3;
+  background-color: #07a0c3;
   color: black;
 }
 
@@ -121,11 +118,11 @@ main .table-items .btn-deletar {
 
 main .btn-cadastrar {
   width: 20%;
-  background-color: #07A0C3;
+  background-color: #07a0c3;
   color: black;
 }
 
-p {
+main p {
   font-size: 20px;
   color: black;
   margin: 20px;

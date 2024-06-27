@@ -33,7 +33,7 @@ MY_APPS = [
     "todos.apps.TodosConfig",
 ]
 
-INSTALLED_APPS =MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -104,7 +104,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = '/assets/'
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "todos", "static"),
@@ -124,4 +124,9 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Use cookies de sessão
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60 * 30 # 30 minutos
 

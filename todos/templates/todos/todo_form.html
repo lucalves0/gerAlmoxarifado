@@ -12,25 +12,23 @@
   
   <title>Gerenciamento de Almoxarifado</title>
   
-  <link rel="stylesheet" href="{% static 'css/todo_form.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/todo_form.css' %}">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900display=swap" rel="stylesheet">
 </head>
 <body>
 
   <header>
-    <a href="{% url 'todo_list' %}"> <h2>Gerenciador de Almoxarifado</h2> </a>
+    <a href="{% url 'todo_list' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
     <a class="button_logout" href="{% url 'login' %}"> SAIR </a>
   </header>
 
   <main>
-
     <div class="container">
       {% if todo.pk %}
-      <h1>Editar Item</h1>
+        <h1>Editar Item</h1>
       {% else %}
         <h1>Novo Item </h1> 
       {% endif %}
-      
       <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
@@ -38,8 +36,6 @@
         <a href="{% url 'todo_list' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
     </div>
-    
-    
   </main>
 </body>
 </html>
