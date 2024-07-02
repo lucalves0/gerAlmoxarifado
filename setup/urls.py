@@ -11,12 +11,14 @@ from todos.views import (
   TodoUpdateView, 
   TodoDeleteView, 
   TodoCompleteView,
+  ItemsStockView
 )
 
 urlpatterns = [
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-  path("", TodoListView.as_view(template_name="todos/todo_list.html"), name="todo_list"),
+  path("", TodoListView.as_view(template_name="todos/main.html"), name="main"),
   path('logout/', auth_views.LogoutView.as_view(template_name='todos/templates/registration/logged_out.html'), name='logout'),
+  path('stock/', ItemsStockView.as_view(), name="stock"),
   path("create/", TodoCreateView.as_view(), name="todo_create"),
   path("update/<int:pk>", TodoUpdateView.as_view(), name="todo_update"),
   path("delete/<int:pk>", TodoDeleteView.as_view(), name="todo_delete"),

@@ -1,0 +1,115 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gerenciamento de Almoxarifado</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="{% static "css/todos/favicon.ico" %}">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  
+</head>
+<body>
+
+  <header>
+    <a href="{% url 'main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button class="button_logout" type="submit">SAIR</button>
+  </header>
+
+  <main>
+    <h1>Lista de Itens</h1>
+    {% if todo_list %}
+      <form >
+        <table class="table-items">
+          <thead>
+            <tr>
+              <th colspan="6" class="table-acoes">
+                {% with todo=todo_list.0 %}
+                <a href="{% url 'todo_update' pk=todo.pk %}" class="btn btn-edit">
+                    <i class="fa-solid fa-pen"><p>Editar</p></i>
+                  <a> 
+                {% endwith %}
+                {% with todo=todo_list.0 %}
+                  <a href="{% url 'todo_delete' pk=todo.pk %}" class="btn btn-delete">
+                    <i class="fa-solid fa-trash"><p>Excluir</p></i>
+                  <a> 
+                {% endwith %}
+                {% with todo=todo_list.0 %}
+                  <a href="{% url 'todo_complete' pk=todo.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}"> 
+                    <i class="fa-solid fa-check"><p>Retirar</p></i>
+                  <a>
+                {% endwith %}
+                <button class="btn btn-vizualizar"> 
+                  <i class="fa-solid fa-eye"><p>Estoque</p></i>
+                </button>
+              </th>
+            </tr>
+          </thead>
+            <tr>
+              <th>Selecionar</th>
+              <th scope="col">Unidades</th>
+              <th scope="col">Título</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Data de entrada</th>
+              <th scope="col">Data de saída</th>
+            </tr>
+          <tbody>
+            {% for todo in todo_list %}
+              <tr>
+                <td><input type="checkbox" class="select-row" value="{{ todo.pk }}"></td>
+                <td>{{ todo.quantity }}</td>
+                <td>{{ todo.title }}</td>
+                <td>{{ todo.category }}</td>
+                <td>{{ todo.create_at }}</td>
+                <td>{{ todo.finished_at|default:"-" }}</td>
+                {% comment %} <td>
+                  
+                 
+                </td> {% endcomment %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </form>
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          console.log('Script carregado!');
+          const checkboxes = document.querySelectorAll('.select-row');
+          checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', function () {
+              const row = this.closest('tr');
+              if (this.checked) {
+                row.classList.add('selected');
+                checkboxes.forEach(function (cb) {
+                  if (cb !== checkbox) {
+                      cb.checked = false;
+                      cb.closest('tr').classList.remove('selected')
+                  }
+                });
+              } else {
+                row.classList.remove('selected');
+                }
+            });
+          });
+        });
+      </script>
+    {% else %}
+      <p class="notifications_no_items">Não há itens cadastradas.</p>
+    {% endif %}
+    <a href="{% url 'todo_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
+  </main>
+</body>
+</html>
+
+
+
+
+
+  
+  

@@ -18,7 +18,7 @@
 <body>
 
   <header>
-    <a href="{% url 'todo_list' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
+    <a href="{% url 'main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
     <a class="button_logout" href="{% url 'login' %}"> SAIR </a>
   </header>
 
@@ -33,7 +33,7 @@
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-save">Salvar</button>
-        <a href="{% url 'todo_list' %}" class="btn btn-cancelar">Cancelar</a>
+        <a href="{% url 'main' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
     </div>
   </main>
