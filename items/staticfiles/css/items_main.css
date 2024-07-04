@@ -124,7 +124,7 @@ main .table-items tbody tr td {
   background-color: green;
 }
 
-.btn-vizualizar{
+.btn-stock{
   background-color: rgb(46, 41, 41);
 }
 
@@ -161,6 +161,10 @@ main .notifications_no_items {
   font-size: 20px;
   color: black;
   margin: 20px;
+}
+
+.btn-cadastrar {
+  background-color: green;
 }
 
 

@@ -10,13 +10,13 @@
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="{% static "css/todos/favicon.ico" %}">
-  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="{% static 'css/items_main.css' %}">
   
 </head>
 <body>
 
   <header>
-    <a href="{% url 'main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
+    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
     <form method="POST" action="{% url 'logout' %}">
       {% csrf_token %}
       <button class="button_logout" type="submit">SAIR</button>
@@ -24,30 +24,30 @@
 
   <main>
     <h1>Lista de Itens</h1>
-    {% if todo_list %}
+    {% if items_list %}
       <form >
         <table class="table-items">
           <thead>
             <tr>
               <th colspan="6" class="table-acoes">
-                {% with todo=todo_list.0 %}
-                <a href="{% url 'todo_update' pk=todo.pk %}" class="btn btn-edit">
+                {% with items=items_list.0 %}
+                <a href="{% url 'items_update' pk=todo.pk %}" class="btn btn-edit">
                     <i class="fa-solid fa-pen"><p>Editar</p></i>
                   <a> 
                 {% endwith %}
-                {% with todo=todo_list.0 %}
-                  <a href="{% url 'todo_delete' pk=todo.pk %}" class="btn btn-delete">
+                {% with items=items_list.0 %}
+                  <a href="{% url 'items_delete' pk=todo.pk %}" class="btn btn-delete">
                     <i class="fa-solid fa-trash"><p>Excluir</p></i>
                   <a> 
                 {% endwith %}
-                {% with todo=todo_list.0 %}
-                  <a href="{% url 'todo_complete' pk=todo.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}"> 
+                {% with items=items_list.0 %}
+                  <a href="{% url 'items_complete' pk=items.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}"> 
                     <i class="fa-solid fa-check"><p>Retirar</p></i>
                   <a>
                 {% endwith %}
-                <button class="btn btn-vizualizar"> 
+                <a href="{% url 'items_stock'  %}" class="btn btn-stock">
                   <i class="fa-solid fa-eye"><p>Estoque</p></i>
-                </button>
+                <a>
               </th>
             </tr>
           </thead>
@@ -60,18 +60,14 @@
               <th scope="col">Data de saída</th>
             </tr>
           <tbody>
-            {% for todo in todo_list %}
+            {% for items in items_list %}
               <tr>
-                <td><input type="checkbox" class="select-row" value="{{ todo.pk }}"></td>
-                <td>{{ todo.quantity }}</td>
-                <td>{{ todo.title }}</td>
-                <td>{{ todo.category }}</td>
-                <td>{{ todo.create_at }}</td>
-                <td>{{ todo.finished_at|default:"-" }}</td>
-                {% comment %} <td>
-                  
-                 
-                </td> {% endcomment %}
+                <td><input type="checkbox" class="select-row" value="{{ items.pk }}"></td>
+                <td>{{ items.quantity }}</td>
+                <td>{{ items.title }}</td>
+                <td>{{ items.category }}</td>
+                <td>{{ items.create_at }}</td>
+                <td>{{ items.finished_at|default:"-" }}</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -102,7 +98,7 @@
     {% else %}
       <p class="notifications_no_items">Não há itens cadastradas.</p>
     {% endif %}
-    <a href="{% url 'todo_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
+    <a href="{% url 'items_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
   </main>
 </body>
 </html>

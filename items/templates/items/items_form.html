@@ -5,26 +5,23 @@
 <html lang="pt-br">
 <head>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Gerenciamento de Almoxarifado</title>
   
-  <link rel="stylesheet" type="text/css" href="{% static 'css/todo_form.css' %}">
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/items_cad.css' %}">
 </head>
 <body>
 
   <header>
-    <a href="{% url 'main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
+    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
     <a class="button_logout" href="{% url 'login' %}"> SAIR </a>
   </header>
 
   <main>
     <div class="container">
-      {% if todo.pk %}
+      {% if items.pk %}
         <h1>Editar Item</h1>
       {% else %}
         <h1>Novo Item </h1> 
@@ -33,7 +30,7 @@
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-save">Salvar</button>
-        <a href="{% url 'main' %}" class="btn btn-cancelar">Cancelar</a>
+        <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
     </div>
   </main>

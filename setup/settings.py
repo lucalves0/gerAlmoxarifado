@@ -30,7 +30,7 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-    "todos.apps.TodosConfig",
+    "items.apps.ItemsConfig",
 ]
 
 INSTALLED_APPS = MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
@@ -50,7 +50,7 @@ ROOT_URLCONF = "setup.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -106,7 +106,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "todos", "staticfiles"),
+    os.path.join(BASE_DIR, "items", "staticfiles"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
