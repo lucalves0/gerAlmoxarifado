@@ -9,8 +9,10 @@ from items.views import (
   ItemsCreateView, 
   ItemsUpdateView, 
   ItemsDeleteView,
-  ItemsCompleteView,
-  ItemsStockView
+  ItemsRetirarView,
+  ItemsStockView,
+  EstoqueSucessoView,
+  LoadSubcategoriesView,
 )
 
 urlpatterns = [
@@ -21,8 +23,10 @@ urlpatterns = [
   path("create/", ItemsCreateView.as_view(), name="items_create"),
   path("update/<int:pk>", ItemsUpdateView.as_view(), name="items_update"),
   path("delete/<int:pk>", ItemsDeleteView.as_view(), name="items_delete"),
-  path("complete/<int:pk>", ItemsCompleteView.as_view(), name="items_complete"),
-
+  # path("retirar/<int:pk>", ItemsRetirarView.as_view(), name="items_retirar"),
+  path('retirar_produto/<int:pk>/', ItemsRetirarView.as_view(), name='retirar_produto'),
+  path('items_stock_success/', EstoqueSucessoView.as_view(), name='estoque_sucesso'),
+  path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
 ]
 
 if settings.DEBUG:

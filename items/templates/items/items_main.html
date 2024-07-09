@@ -31,17 +31,17 @@
             <tr>
               <th colspan="6" class="table-acoes">
                 {% with items=items_list.0 %}
-                <a href="{% url 'items_update' pk=todo.pk %}" class="btn btn-edit">
+                <a href="{% url 'items_update' pk=items.pk %}" class="btn btn-edit">
                     <i class="fa-solid fa-pen"><p>Editar</p></i>
                   <a> 
                 {% endwith %}
                 {% with items=items_list.0 %}
-                  <a href="{% url 'items_delete' pk=todo.pk %}" class="btn btn-delete">
+                  <a href="{% url 'items_delete' pk=items.pk %}" class="btn btn-delete">
                     <i class="fa-solid fa-trash"><p>Excluir</p></i>
                   <a> 
                 {% endwith %}
                 {% with items=items_list.0 %}
-                  <a href="{% url 'items_complete' pk=items.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}"> 
+                  <a href="{% url 'retirar_produto' pk=items.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar"> 
                     <i class="fa-solid fa-check"><p>Retirar</p></i>
                   <a>
                 {% endwith %}
@@ -64,7 +64,7 @@
               <tr>
                 <td><input type="checkbox" class="select-row" value="{{ items.pk }}"></td>
                 <td>{{ items.quantity }}</td>
-                <td>{{ items.title }}</td>
+                <td>{{ items.name }}</td>
                 <td>{{ items.category }}</td>
                 <td>{{ items.create_at }}</td>
                 <td>{{ items.finished_at|default:"-" }}</td>
@@ -73,6 +73,13 @@
           </tbody>
         </table>
       </form>
+      {% if form.errors %}
+        <ul>
+          {% for field, errors in form.errors.items %}
+              <li>{{ field }}: {{ errors|join:", " }}</li>
+          {% endfor %}
+        </ul>
+    {% endif %}
       <script>
         document.addEventListener('DOMContentLoaded', function () {
           console.log('Script carregado!');

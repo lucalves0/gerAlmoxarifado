@@ -21,11 +21,11 @@
 
   <main>
     <h1>Excluir Item</h1>
-    <p>Tem certeza que deseja excluir item <strong>{{ items.title }}</strong>?</p>
+    <p>Tem certeza que deseja excluir item <strong>{{ items.name }}</strong>?</p>
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-excluir">Excluir</button>
-      <a href="{%url 'main'%}" class="btn btn-cancelar">Cancelar</a>
+      <a href="{%url 'items_main'%}" class="btn btn-cancelar">Cancelar</a>
     </form>
   </main>
 </body>

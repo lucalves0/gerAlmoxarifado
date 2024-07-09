@@ -1,0 +1,23 @@
+<!-- templates/retirar_produto.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Retirar Produto</title>
+</head>
+<body>
+    <h1>Retirar Produto do Estoque</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" name="action" value="retirar">Retirar</button>
+        <button type="submit" name="action" value="outro_acao">Outra Ação</button>
+    </form>
+    {% if form.errors %}
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: {{ errors|join:", " }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
