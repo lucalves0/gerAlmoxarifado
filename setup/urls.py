@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
@@ -9,9 +8,7 @@ from items.views import (
   ItemsCreateView, 
   ItemsUpdateView, 
   ItemsDeleteView,
-  ItemsRetirarView,
   ItemsStockView,
-  EstoqueSucessoView,
   LoadSubcategoriesView,
 )
 
@@ -23,9 +20,6 @@ urlpatterns = [
   path("create/", ItemsCreateView.as_view(), name="items_create"),
   path("update/<int:pk>", ItemsUpdateView.as_view(), name="items_update"),
   path("delete/<int:pk>", ItemsDeleteView.as_view(), name="items_delete"),
-  # path("retirar/<int:pk>", ItemsRetirarView.as_view(), name="items_retirar"),
-  path('retirar_produto/<int:pk>/', ItemsRetirarView.as_view(), name='retirar_produto'),
-  path('items_stock_success/', EstoqueSucessoView.as_view(), name='estoque_sucesso'),
   path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
 ]
 

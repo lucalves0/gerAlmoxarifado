@@ -21,3 +21,4 @@ class Items(models.Model):
         if not self.finished_at:
             self.finished_at = date.today()
             self.save()
+    

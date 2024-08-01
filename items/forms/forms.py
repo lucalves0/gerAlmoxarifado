@@ -4,7 +4,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from items.models import Items
 
-
 class ItemsForm(LoginRequiredMixin, forms.ModelForm):
    CATEGORY_CHOICES = [
       ('', 'Selecionar'),
@@ -53,11 +52,3 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
          'Descarte' : ['Não a sub categorias']
       }
       return subcategories.get(category, [])
-
-class ItemsRetirarForm(LoginRequiredMixin, forms.Form):
-   quantity = forms.IntegerField(label="Quantidade a retirar")
-   def clean_quantidade(self):
-      quantity = self.cleaned_data.get('quantity')
-      if quantity < 1:
-         raise forms.ValidationError('A quantidade deve ser maior que zero.')
-      return quantity

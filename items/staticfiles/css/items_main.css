@@ -44,72 +44,111 @@ main {
   flex-direction: column;
   margin: 30px;
   align-items: center;
+  gap: 20px;
 }
 
-main h1 {
+main h1,
+.arrow {
   font-size: 30px;
-  font-style: bold;
+  font-weight: bold;
 }
 
-main .table-items {
+main .arrow {
+  font-size: 20px;
+}
+
+main .titulo{
+  font-size: 50px;
+}
+
+.expandable-list {
+  width: 50%;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+.expandable-list p{
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.expandable-list .item {
+  border: 1px solid #ccc;
+  margin: 10px 0;
+}
+
+.expandable-list .header {
+  display: flex;
+  background-color: #f1f1f1;
+  cursor: pointer;
+  padding: 10px;
+  gap: 15px;
+}
+
+.expandable-list .header .arrow {
+  display: inline-block;
+  width: 20px;
+  transition: transform 0.3s;
+}
+
+.expandable-list .content {
+  display: none;
+  padding: 10px;
+}
+
+.expandable-list .content.open {
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-  margin-bottom: 25px;
-  font-size: 18px;
-  text-align: center;
-  border: 1px solid #dddddd;
 }
 
-.table-items th{
-  background-color: #07A0C3;
-  text-align: center;
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 10px;
 }
 
-.table-items th.table-acoes {
-  background-color: #ffffff;
+.content .dados_items{
+  display: flex;
   font-size: 20px;
-  color: black;
-  text-align: end;
-  padding: 2px;
+  padding: 10px;
+  margin-bottom: 5px; 
+}
+.content .dados_items .description {
+  flex: 1;
 }
 
-.table-items tr {
-  font-size: 20px;
-  color: black;
+.content .dados_items .description {
+  flex: 1;
 }
 
+.content .dados_items .acoes {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+} 
 
-main .table-items th,
-main .table-items td {
-  padding: 12px 10px;
-  border: 1px solid #dddddd;
+
+.select-row {
+  width: 20px; 
+  height: 20px; 
 }
 
-main .table-items tbody tr {
-  border-bottom: 1px solid #dddddd;
-}
-
-main .table-items tbody tr:last-of-type {
-  border-bottom: 2px solid #009879;
-}
-
-main .table-items tbody tr td {
-  vertical-align: middle; 
+.expandable-list .header.active .arrow {
+  transform: rotate(90deg);
 }
 
 .btn {
-  display: inline-block;
   padding: 10px 20px;
-  margin: 5px;
   font-size: 16px;
   cursor: pointer;
-  border: none;
   border-radius: 5px;
   color: white;
   text-align: center;
   text-decoration: none;
-  margin-right: 10px;
 }
 
 .btn-delete {
@@ -124,8 +163,8 @@ main .table-items tbody tr td {
   background-color: green;
 }
 
-.btn-stock{
-  background-color: rgb(46, 41, 41);
+.btn:hover {
+  background-color: #49535f;
 }
 
 .btn i {
@@ -135,37 +174,15 @@ main .table-items tbody tr td {
   gap: 10px;
 }
 
-.btn:hover {
-  background-color: #0056b3;
-}
-
-.selected {
-  background-color: rgba(30, 121, 141, 0.472); 
-}
-
-.select-row {
-  width: 20px; /* Largura do checkbox */
-  height: 20px; /* Altura do checkbox */
-}
-
-td a{
-  text-align: center;
-  text-decoration: none;
-  padding: 8px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  color: black;
+.btn-cadastrar {
+  background-color: green;
 }
 
 main .notifications_no_items {
   font-size: 20px;
   color: black;
   margin: 20px;
-}
-
-.btn-cadastrar {
-  background-color: green;
-}
+} 
 
 
 

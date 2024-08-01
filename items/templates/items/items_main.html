@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="icon" type="image/x-icon" href="{% static "css/todos/favicon.ico" %}">
   <link rel="stylesheet" href="{% static 'css/items_main.css' %}">
+  <script src="{% static 'js/items_stock.js' %}"></script>
   
 </head>
 <body>
@@ -23,55 +24,161 @@
   </header>
 
   <main>
-    <h1>Lista de Itens</h1>
+    <h1 class="titulo">Lista de Itens</h1>
     {% if items_list %}
       <form >
-        <table class="table-items">
-          <thead>
-            <tr>
-              <th colspan="6" class="table-acoes">
-                {% with items=items_list.0 %}
-                <a href="{% url 'items_update' pk=items.pk %}" class="btn btn-edit">
-                    <i class="fa-solid fa-pen"><p>Editar</p></i>
-                  <a> 
-                {% endwith %}
-                {% with items=items_list.0 %}
-                  <a href="{% url 'items_delete' pk=items.pk %}" class="btn btn-delete">
-                    <i class="fa-solid fa-trash"><p>Excluir</p></i>
-                  <a> 
-                {% endwith %}
-                {% with items=items_list.0 %}
-                  <a href="{% url 'retirar_produto' pk=items.pk %}" class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar"> 
-                    <i class="fa-solid fa-check"><p>Retirar</p></i>
-                  <a>
-                {% endwith %}
-                <a href="{% url 'items_stock'  %}" class="btn btn-stock">
-                  <i class="fa-solid fa-eye"><p>Estoque</p></i>
-                <a>
-              </th>
-            </tr>
-          </thead>
-            <tr>
-              <th>Selecionar</th>
-              <th scope="col">Unidades</th>
-              <th scope="col">Título</th>
-              <th scope="col">Categoria</th>
-              <th scope="col">Data de entrada</th>
-              <th scope="col">Data de saída</th>
-            </tr>
-          <tbody>
-            {% for items in items_list %}
-              <tr>
-                <td><input type="checkbox" class="select-row" value="{{ items.pk }}"></td>
-                <td>{{ items.quantity }}</td>
-                <td>{{ items.name }}</td>
-                <td>{{ items.category }}</td>
-                <td>{{ items.create_at }}</td>
-                <td>{{ items.finished_at|default:"-" }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        <div class="expandable-list">
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+                <span class="arrow">&#9654;</span> 
+                <h1>Material para instalação</h1>
+            </div>
+            <div class="content">
+              {% for item in items_list %}
+                {% if item.category == "Material para instalação" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_material_instalacao %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Material para instalação"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>            
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+                <span class="arrow">&#9654;</span> 
+                <h1>Informática</h1>
+            </div>
+            <div class="content">
+              {% for item in items_list %}
+                {% if item.category == "Informática" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_informatica %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Informática"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>   
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+                <span class="arrow">&#9654;</span> 
+                <h1>Ferramentas</h1>
+            </div>
+            <div class="content">
+              {% for item in items_list %}
+                {% if item.category == "Ferramentas" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_ferramentas %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Ferramentas"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>   
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+                <span class="arrow">&#9654;</span> 
+                <h1>Material de consumo</h1>
+            </div>
+            <div class="content">
+              {% for item in items_list %}
+                {% if item.category == "Material de consumo" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_material_consumo%}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Material de consumo"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>  
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+                <span class="arrow">&#9654;</span> 
+                <h1>Para descarte</h1>
+            </div>
+            <div class="content">
+              {% for item in items_list %}
+                {% if item.category == "Descarte" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a class="btn btn-retirar {% if todo.finished_at %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_descarte %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Descarte"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>  
+        </div>
       </form>
       {% if form.errors %}
         <ul>
