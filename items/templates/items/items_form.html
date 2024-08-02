@@ -37,47 +37,52 @@
         <button type="submit" class="btn btn-save">Salvar</button>
         <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+              <li class="alert alert-info">{{ message }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
     </div>
-
     <script type="text/javascript">
       $(document).ready(function() {
-          $('#id_category').change(function() {
-              var category = $(this).val();
-              $.ajax({
-                  url: '{% url "ajax-load-subcategories" %}',
-                  data: {
-                      'category': category
-                  },
-                  success: function(data) {
-                      var $subCategory = $('#id_sub_category');
-                      $subCategory.empty();
-                      {% comment %} $subCategory.append('<option value="">Selecione</option>'); {% endcomment %}
-                      $.each(data, function(index, value) {
-                        $subCategory.append($('<option></option>').attr('value', value).text(value));
-                      });
-                  }
+        $('#id_category').change(function() {
+          var category = $(this).val();
+          $.ajax({
+            url: '{% url "ajax-load-subcategories" %}',
+            data: {
+              'category': category
+            },
+            success: function(data) {
+              var $subCategory = $('#id_sub_category');
+              $subCategory.empty();
+              {% comment %} $subCategory.append('<option value="">Selecione</option>'); {% endcomment %}
+              $.each(data, function(index, value) {
+                $subCategory.append($('<option></option>').attr('value', value).text(value));
               });
+            }
           });
-
-          var initialCategory = $('#id_category').val();
-          if (initialCategory) {
-              $.ajax({
-                  url: '{% url "ajax-load-subcategories" %}',
-                  data: {
-                      'category': initialCategory
-                  },
-                  success: function(data) {
-                      var $subCategory = $('#id_sub_category');
-                      $subCategory.empty();
-                      $subCategory.append('<option value="">Selecione</option>');
-                      $.each(data, function(index, value) {
-                          $subCategory.append('<option value="' + value + '">' + value + '</option>');
-                      });
-                  }
+        });
+        var initialCategory = $('#id_category').val();
+        if (initialCategory) {
+          $.ajax({
+            url: '{% url "ajax-load-subcategories" %}',
+            data: {
+                'category': initialCategory
+            },
+            success: function(data) {
+              var $subCategory = $('#id_sub_category');
+              $subCategory.empty();
+              $subCategory.append('<option value="">Selecione</option>');
+              $.each(data, function(index, value) {
+                $subCategory.append('<option value="' + value + '">' + value + '</option>');
               });
-          }
+            }
+          });
+        }
       });
-  </script>
+    </script>
   </main>
 </body>
 </html>

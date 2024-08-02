@@ -1,4 +1,4 @@
-from sre_parse import CATEGORIES
+from pyexpat.errors import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
@@ -6,14 +6,30 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, V
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 
-from items.forms.forms import ItemsForm, ItemsRetirarForm
+from items.forms.forms import ItemsForm
 from .models import Items
-    
+
 class ItemsListView(LoginRequiredMixin, ListView):
    model = Items
    template_name = 'items/items_main.html'
+   context_object_name = 'items_list'
+
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      
+      # Obtém a lista de itens
+      items = context['items_list']
+      
+      # Verifica se há itens em cada categoria e adiciona ao contexto
+      context['has_material_intalacao'] = any(item.category == "Material para instalação" for item in items)
+      context['has_informatica'] = any(item.category == "Informática" for item in items)
+      context['has_ferramentas'] = any(item.category == "Ferramentas" for item in items)
+      context['has_material_consumo'] = any(item.category == "Material de consumo" for item in items)
+      context['has_descarte'] = any(item.category == "Descarte" for item in items)
+
+      return context
 
 class ItemsStockView(LoginRequiredMixin, TemplateView):
    model = Items
@@ -46,35 +62,4 @@ class ItemsUpdateView(UpdateView):
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
-   success_url = reverse_lazy("items_main")   
-
-class ItemsRetirarView(View):
-    template_name = 'retirar_produto.html'
-    form_class = ItemsRetirarForm
-
-    def get(self, request, pk):
-        items = get_object_or_404(Items, pk=pk)
-        form = self.form_class(initial={'items_id': items.pk})
-        return render(request, 'retirar_produto.html', {'form': form, 'items': items})
-
-    def post(self, request, pk):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            items_quantity_retirar = form.cleaned_data['quantity']
-            items = get_object_or_404(Items, pk=pk)
- 
-            if items.quantity >= items_quantity_retirar:
-               items.quantity  -= items_quantity_retirar
-               items.save()
-               return redirect(reverse('items_stock_success'))
-            else:
-               form.add_error(None, 'Quantidade em estoque insuficiente.')
-
-        return render(request, 'retirar_produto.html', {'form': form, 'items': items})
-
-class EstoqueSucessoView(View):
-    template_name = 'items_stock_success.html'
-
-    def get(self, request):
-        return render(request, self.template_name)
-   
+   success_url = reverse_lazy("items_main")  
