@@ -6,10 +6,10 @@
 
 body,
 html {
-  background-color: white;
   display: flex;
   flex-direction: column;
   height: 100%;
+  background-color: white;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -31,7 +31,6 @@ header a {
 }
 
 header .button_logout {
-
   background-color: red;
   border-radius: 5px;
   padding: 5px 20px;
@@ -40,49 +39,53 @@ header .button_logout {
 }
 
 main {
+  height: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 10px 0;
-  height: auto;
 }
 
 .container {
-  width: 60%;
-  margin: 50px;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: 50%;
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: center;
+  align-content: space-around;
+  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
 }
 
 .container h1{
+  font-size: 40px;
   margin-bottom: 20px;
   color: black;
 }
 
-label{
-  color: black;
+.container p {
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.form-group label{
   font-size: 20px;
+  font-weight: bold;
+  color: black;
+  
 }
 
 
 input[type="text"],
 input[type="number"],
 form .form-control{
-  width: 98%;
+  width: 100%;
+  margin-top: 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
   box-sizing: border-box;
-  margin-top: 20px;
-  margin-bottom: 20px;
   padding: 10px;
   font-size: 20px;
-}
-
-.form-label {
-  font-size: 20px;
-  font-weight: bold;
-  margin: 5px;
-  color: #333;
 }
 
 main .btn,
@@ -103,7 +106,22 @@ main .btn-save{
   color: black;
 }
 
-form .btn-cancelar {
+main .btn-cancelar {
   background-color: red;
   color: black;
+}
+
+.error-list,
+.error-messages {
+  color: #ff0000;
+  font-size: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.field-error,
+.non-field-error {
+  margin: 0;
+  padding: 0;
 }

@@ -1,0 +1,219 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gerenciamento de Almoxarifado</title>
+
+  <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
+  <script src="{% static 'js/funcoes.js' %}"></script>
+  
+</head>
+<body>
+
+  <header>
+    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button class="button_logout" type="submit">SAIR</button>
+  </header>
+
+  <main>
+    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
+    <h2>Sub-Categorias: </h2>
+
+    {% if item_informatica_list %}
+      <form>
+        <div class="expandable-list">
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Equipamentos</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Equipamentos" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_equipamentos %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Equipamentos"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Suprimentos</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Suprimentos" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_suprimentos %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Suprimentos"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Acessórios</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Acessórios" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_acessorios %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Acessórios"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Periféricos</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Periféricos" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_perifericos %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Periféricos"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Peças de Reposição</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Peças de reposição" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_pecas_reposicao %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Peças de reposição"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Outros</h1>
+            </div>
+            <div class="content">
+              {% for item in item_informatica_list  %}
+                {% if item.sub_category == "Outros" %}
+                  <div class="item-row">
+                    <div class="dados_items">
+                      <div class="description">
+                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
+                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                      </div>
+                    </div>
+                    <div class="acoes">
+                      <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              {% if not has_outros %}
+                <div>
+                  <p>Não há itens cadastrados para a categoria <strong>"Outros"<strong/>.</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </form>
+    {% else %}
+      <p class="notifications_no_items">Não há itens associados a categoria <strong>Informatica</strong>.</p>
+    {% endif %}
+    <a href="{% url 'items_main' %}" class="btn btn-delete">Voltar para página inicial</a>
+  </main>
+</body>
+</html>
