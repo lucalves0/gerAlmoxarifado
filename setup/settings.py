@@ -30,10 +30,10 @@ THIRD_PARTY_APPS = [
 ]
 
 MY_APPS = [
-    "todos.apps.TodosConfig",
+    "items.apps.ItemsConfig",
 ]
 
-INSTALLED_APPS =MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = MY_APPS + DJANGO_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -50,7 +50,7 @@ ROOT_URLCONF = "setup.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -104,11 +104,11 @@ USE_I18N = True
 USE_TZ = True
 
 
-STATIC_URL = '/assets/'
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "todos", "static"),
+    os.path.join(BASE_DIR, "items", "staticfiles"),
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -121,5 +121,12 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # login do admin
-LOGIN_REDIRECT_URL = 'todo_list'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/login/'
+
+# Use cookies de sessão
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 60 * 30 # 30 minutos
 

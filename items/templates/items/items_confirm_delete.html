@@ -1,0 +1,38 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Gerenciamento de Almoxarifado </title>
+  
+  <link rel="stylesheet" href="{% static 'css/items_delete.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2> </a>
+    <a class="button_logout" href="{% url 'login' %}"> SAIR </a>
+  </header>
+
+  <main>
+    <h1>Excluir Item</h1>
+    <p>Tem certeza que deseja excluir item <strong>{{ items.name }}</strong>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-excluir">Excluir</button>
+      <a href="{%url 'items_main'%}" class="btn btn-cancelar">Cancelar</a>
+    </form>
+  </main>
+</body>
+</html>
+
+  
+
+
+
+
