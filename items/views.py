@@ -116,7 +116,7 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
    model = Items
    form_class = ItemsFormCreate
    success_url = reverse_lazy("items_main")
-    
+   
 class LoadSubcategoriesView(View):
 
     def get(self, request, *args, **kwargs):

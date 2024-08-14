@@ -1,27 +1,14 @@
+{% extends 'items/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Gerenciamento de Almoxarifado</title>
-
+{% block title %}Sub Itens{% endblock %}
+{% block stylesheet %}
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
-  <script src="{% static 'js/funcoes.js' %}"></script>
-  
-</head>
-<body>
+{% endblock %}
 
-  <header>
-    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
-    <form method="POST" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button class="button_logout" type="submit">SAIR</button>
-  </header>
-
-  <main>
+{% block content %} 
+  <div class="container">
     <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}s</h1>
     <h2>Sub-Categorias: </h2>
 
@@ -55,6 +42,5 @@
       </form>
     {% endif %}
     <a href="{% url 'items_main' %}" class="btn btn-delete">Voltar para página inicial</a>
-  </main>
-</body>
-</html>
+  </div> 
+{% endblock %}

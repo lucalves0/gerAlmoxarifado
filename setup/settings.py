@@ -1,20 +1,14 @@
 import os
 from pathlib import Path
-from decouple import config, Csv
+from decouple import config
 from dj_database_url import parse as db_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
+DEBUG = True
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config("DEBUG", cast=bool, default=False)
-
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
-
-# Application definition
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -65,21 +59,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "setup.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
 DATABASES = {
-    'default': config(
-        "DATABASE_URL", 
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}', 
-        cast=db_url,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'banco_produtos',
+        'USER': 'admin',
+        'PASSWORD': 'l@b!nf0',
+        'HOST': 'localhost',  # Pode ser outro endereço se o banco de dados estiver em um servidor remoto
+        'PORT': '3306', 
+    }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -97,19 +86,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LANGUAGE_CODE = "pt-br"
-
 TIME_ZONE = "America/Fortaleza"
-
 USE_I18N = True
 USE_TZ = True
-
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "items", "staticfiles"),
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

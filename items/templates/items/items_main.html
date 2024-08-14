@@ -1,23 +1,15 @@
+{% extends 'items/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerenciamento de Almoxarifado</title>
-  <link rel="stylesheet" href="{% static 'css/items_main.css' %}">
-  
-</head>
-<body>
+{% block title %}Lista de itens{% endblock %}
+{% block stylesheet %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/items_main.css' %}">
+{% endblock %}
 
-  <header>
-    <a href="{% url 'items_main' %}"> <h2>Gerenciador de Almoxarifado</h2></a>
-    <form method="POST" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button class="button_logout" type="submit">SAIR</button>
-  </header>
-  <main>
+{% block content %}
+  
+  <div class="container">
     <h1>Lista de Itens</h1>
     {% if items_list %}
       <form >
@@ -55,6 +47,7 @@
       <p class="notifications_no_items">Não há itens cadastradas.</p>
     {% endif %}
     <a href="{% url 'items_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
-  </main>
-</body>
-</html>
+  </div>
+  
+
+{% endblock %}

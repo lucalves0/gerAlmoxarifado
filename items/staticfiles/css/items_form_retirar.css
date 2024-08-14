@@ -2,6 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 400;
 }
 
 body,
@@ -34,7 +36,6 @@ header .button_logout {
   background-color: red;
   border-radius: 5px;
   padding: 5px 20px;
-
   color: white;
 }
 
@@ -74,7 +75,6 @@ main {
   color: black;
   
 }
-
 
 input[type="text"],
 input[type="number"],

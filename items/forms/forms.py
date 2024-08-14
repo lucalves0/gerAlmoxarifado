@@ -63,6 +63,20 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       }
       return subcategories.get(category, [])
 
+   quantity = forms.IntegerField(
+      label='Quantidade',
+      min_value=1, 
+      error_messages={
+         'min_value': 'O valor deve ser maior ou igual a 1.' 
+      }
+   )
+
+   def clean_quantity(self):
+      valor = self.cleaned_data.get('quantity')
+      if valor < 1:
+         raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
+      return valor
+   
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
    quantity = forms.IntegerField(min_value=1, label="Quantidade a retirar")
 
