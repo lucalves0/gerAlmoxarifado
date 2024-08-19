@@ -3,14 +3,14 @@
 {% load static %}
 
 {% block title %}Deletar de Itens{% endblock %}
-{% block stylesheet %}
+{% block extra_styles %}
   <link rel="stylesheet" href="{% static 'css/items_form_retirar.css' %}">
 {% endblock %}
 
 {% block content %} 
   <div class="container">
     <h1>Retirar item de estoque</h1>
-    <p> Dentro de estoque possui {{items.quantity}} de unidades do item: <strong>{{items.name}}</strong></p>
+    <p> Dentro de estoque possui {{items.quantity}} de unidades do item: <span>{{items.name}}</span></p>
     <div class="formulario">
       <form method="POST">
         {% csrf_token %}

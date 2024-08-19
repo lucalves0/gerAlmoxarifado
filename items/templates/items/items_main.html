@@ -3,12 +3,11 @@
 {% load static %}
 
 {% block title %}Lista de itens{% endblock %}
-{% block stylesheet %}
+{% block extra_styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/items_main.css' %}">
 {% endblock %}
 
 {% block content %}
-  
   <div class="container">
     <h1>Lista de Itens</h1>
     {% if items_list %}
