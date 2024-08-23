@@ -9,7 +9,7 @@
 
 {% block content %} 
   <div class="container">
-    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
+    <h1 class="titulo">Itens na Categoria: Material para instalação</h1>
     <h2>Sub-Categorias: </h2>
 
     {% if item_material_aplicacao_list %}
@@ -22,7 +22,7 @@
             </div>
             <div class="content">
               {% for item in item_material_aplicacao_list  %}
-                {% if item.sub_category == "Elétricas" %}
+                {% if item.sub_category == "ELÉTRICAS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -40,7 +40,7 @@
               {% endfor %}
               {% if not has_eletricas %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Equipamentos"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Elétricas"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -52,7 +52,7 @@
             </div>
             <div class="content">
               {% for item in item_material_aplicacao_list  %}
-                {% if item.sub_category == "Rede" %}
+                {% if item.sub_category == "REDE" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -70,7 +70,7 @@
               {% endfor %}
               {% if not has_rede %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Rede"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Rede"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="content">
               {% for item in item_material_aplicacao_list  %}
-                {% if item.sub_category == "Outros" %}
+                {% if item.sub_category == "OUTROS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -100,7 +100,7 @@
               {% endfor %}
               {% if not has_outros %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Outros"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Outros"<span/>.</p>
                 </div>
               {% endif %}
             </div>

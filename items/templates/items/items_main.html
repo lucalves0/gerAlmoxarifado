@@ -8,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+
   <div class="container">
     <h1>Lista de Itens</h1>
     {% if items_list %}
@@ -47,6 +48,5 @@
     {% endif %}
     <a href="{% url 'items_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
   </div>
-  
 
 {% endblock %}

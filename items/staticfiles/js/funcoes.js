@@ -50,3 +50,8 @@ $(document).ready(function() {
         });
     }
 });
+
+function toggleMenu() {
+  const menuContainer = document.getElementById('menu-content');
+  menuContainer.classList.toggle('open');
+}

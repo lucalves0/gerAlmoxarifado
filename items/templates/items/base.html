@@ -24,6 +24,13 @@
     <a class="button_logout" href="{% url 'login' %}">SAIR</a>
   </header>
   
+  <div class="menu-container" id="menu-container">
+    <button class="menu-button" onclick="toggleMenu()">&#9776;</button>
+    <div class="menu-content" id="menu-content">
+        <a href="{% url "itemsAuditLog" %}">Histórico</a>
+    </div>
+  </div>
+
   <main>
     {% block content %}{% endblock %}
   </main>

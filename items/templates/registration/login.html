@@ -1,31 +1,21 @@
+{% extends 'items/base.html' %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
+{% block title %}Gerenciamento de Almoxarifado{% endblock %}
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <title>Gerenciamento de Almoxarifado</title>
-  
-  <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
-</head>
-<body>
-  <header>
-    <h1>Gerenciador de Almoxarifado</h1>
-  </header>
-  <main>
-    <div class="container-main">
-        <h1>Login</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-login">Login</button>
-        </form>
-    </div>
-  </main>
-</body>
-</html>
+{% block content %} 
+  <div class="container-main">
+    <h1>Login</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-login">Login</button>
+    </form>
+  </div>
+{% endblock %}
 
 

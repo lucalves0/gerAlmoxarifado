@@ -12,15 +12,37 @@
   <div class="container">
     {% if items.pk %}
       <h1>Editar Item</h1>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+         <!-- Renderização dos demais campos automaticamente -->
+        {% for field in form %}
+          {% if field.name != 'category' and field.name != 'sub_category' %}
+              {{ field|as_crispy_field }}
+          {% endif %}
+        {% endfor %}
+        <!-- Campo 'category' e 'sub-category' desativado manualmente -->
+        <div class="form-group">
+          <label for="{{ form.category.id_for_label }}">Categoria</label>
+          <input type="text" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" value="{{ form.category.value }}" class="form-control" disabled>
+        </div>
+        <div class="form-group">
+          <label for="{{ form.sub_category.id_for_label }}">Sub-Categoria</label>
+          <input type="text" name="{{ form.sub_category.name }}" id="{{ form.sub_category.id_for_label }}" value="{{ form.sub_category.value }}" class="form-control" disabled>
+        </div>
+        <button type="submit" class="btn btn-save">Salvar</button>
+        <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
+      </form>
     {% else %}
       <h1>Novo Item</h1>
+      <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-save">Salvar</button>
+        <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
+      </form>
     {% endif %}
-    <form method="POST">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button type="submit" class="btn btn-save">Salvar</button>
-      <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
-    </form>
+    
   </div>
   <script type="text/javascript">
     $(document).ready(function() {

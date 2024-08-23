@@ -1,25 +1,26 @@
 main {
   height: 100%;
+  padding: 20px;
+  margin-top: 60px; 
+  align-items: center;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
-  padding: 0 20px;
 }
 
 .container {
-  height: 70%;
   width: 100%;
   max-width: 900px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-content: space-around;
+  align-items: stretch;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
+  box-sizing: border-box;
 }
 
-.container h1{
+.container h1 {
   font-size: 3rem;
   text-align: center;
   margin-bottom: 15px;
@@ -28,7 +29,7 @@ main {
 .container .expandable-list {
   margin: 0 auto;
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
 }
 
 .container .expandable-list ul {
@@ -83,58 +84,59 @@ main {
 }
 
 main .notifications_no_items {
+  text-align: center;
   font-size: 1.5rem;
   color: black;
   margin: 20px;
-} 
+}
 
 /* Responsividade */
 @media (max-width: 768px) {
   header {
-    flex-direction: column;
-    height: auto;
-    padding: 20px;
+      flex-direction: column;
+      height: auto;
+      padding: 20px;
   }
 
   .container {
-    width: 100%;
-    padding: 10px;
-    box-shadow: none;
+      width: 100%;
+      padding: 10px;
+      box-shadow: none;
   }
 
   .container h1 {
-    font-size: 2rem;
+      font-size: 2rem;
   }
 
   .container .expandable-list a {
-    font-size: 1.2rem;
-    padding: 8px;
+      font-size: 1.2rem;
+      padding: 8px;
   }
 
   .btn {
-    font-size: 0.875rem;
-    padding: 8px 16px;
+      font-size: 0.875rem;
+      padding: 8px 16px;
   }
 }
 
 @media (max-width: 480px) {
   header a {
-    font-size: 18px;
+      font-size: 18px;
   }
 
   header .button_logout {
-    padding: 5px 15px;
+      padding: 5px 15px;
   }
 
   .container h1 {
-    font-size: 1.5rem;
+      font-size: 1.5rem;
   }
 
   .container .expandable-list a {
-    font-size: 1rem;
+      font-size: 1rem;
   }
 
   .btn {
-    font-size: 0.75rem;
+      font-size: 0.75rem;
   }
 }

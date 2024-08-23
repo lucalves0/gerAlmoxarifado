@@ -22,7 +22,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Equipamentos" %}
+                {% if item.sub_category == "EQUIPAMENTOS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -40,7 +40,7 @@
               {% endfor %}
               {% if not has_equipamentos %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Equipamentos"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Equipamentos"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -52,7 +52,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Suprimentos" %}
+                {% if item.sub_category == "SUPRIMENTOS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -70,7 +70,7 @@
               {% endfor %}
               {% if not has_suprimentos %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Suprimentos"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Suprimentos"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -82,7 +82,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Acessórios" %}
+                {% if item.sub_category == "ACESSÓRIOS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -100,7 +100,7 @@
               {% endfor %}
               {% if not has_acessorios %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Acessórios"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Acessórios"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -130,7 +130,7 @@
               {% endfor %}
               {% if not has_perifericos %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Periféricos"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Periféricos"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -160,7 +160,7 @@
               {% endfor %}
               {% if not has_pecas_reposicao %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Peças de reposição"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Peças de reposição"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -190,7 +190,7 @@
               {% endfor %}
               {% if not has_outros %}
                 <div>
-                  <p>Não há itens cadastrados para a categoria <strong>"Outros"<strong/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Outros"<span/>.</p>
                 </div>
               {% endif %}
             </div>
@@ -198,7 +198,7 @@
         </div>
       </form>
     {% else %}
-      <p class="notifications_no_items">Não há itens associados a categoria <strong>Informatica</strong>.</p>
+      <p class="notifications_no_items">Não há itens associados a categoria <span>Informatica</span>.</p>
     {% endif %}
     <a href="{% url 'items_main' %}" class="btn btn-delete">Voltar para página inicial</a>
   </div>

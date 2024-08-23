@@ -36,3 +36,34 @@ header .button_logout {
   padding: 5px 20px;
   color: white;
 }
+
+
+.menu-button {
+  font-size: 30px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: black;
+}
+
+.menu-content {
+  display: none;
+  background-color: #f0f0f0;
+  width: 400px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.menu-content.open {
+  display: block;
+}
+
+.menu-content a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: black;
+}
+
+.menu-content a:hover {
+  background-color: #ddd;
+}

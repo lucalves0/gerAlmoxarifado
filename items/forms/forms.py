@@ -30,15 +30,6 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
          'sub_category': forms.Select(attrs={'class': 'form-control'}),
       }
 
-      def clean_quantity(self):
-         quantity_to_item = self.cleaned_data.get('quantity')
-         item = self.instance
-
-         # Verifica se a quantidade a ser retirada é maior ou igual à quantidade disponível
-         if quantity_to_item <= 0:
-            raise forms.ValidationError("Insira o valor acima de 0 ")
-         
-         return quantity_to_item
         
    def __init__(self, *args, **kwargs):
       super(ItemsFormCreate, self).__init__(*args, **kwargs)
@@ -78,6 +69,7 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       return valor
    
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
+
    quantity = forms.IntegerField(min_value=1, label="Quantidade a retirar")
 
    class Meta:

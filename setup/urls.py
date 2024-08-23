@@ -14,7 +14,9 @@ from items.views import (
   ItemsSubInformatica,
   ItemsSubDescarte,
   ItemsSubMaterialConsumo,
-  ItemsSubFerramentas
+  ItemsSubFerramentas,
+  ItemsAuditLogView,
+  SomeView
 )
 
 urlpatterns = [
@@ -30,5 +32,7 @@ urlpatterns = [
   path('items-informatica/<str:category>/', ItemsSubInformatica.as_view(template_name="items/pag_subs_category/items_informatica.html"), name="items_informatica"),
   path('items-descarte/<str:category>/', ItemsSubDescarte.as_view(template_name="items/pag_subs_category/items_descarte.html"), name="items_descarte"),
   path('items-material-consumo/<str:category>/', ItemsSubMaterialConsumo.as_view(template_name="items/pag_subs_category/items_material_consumo.html"), name="items_material_consumo"),
-  path('items-ferramentas/<str:category>/', ItemsSubFerramentas.as_view(template_name="items/pag_subs_category/items_ferramentas.html"), name="items_ferramentas")
+  path('items-ferramentas/<str:category>/', ItemsSubFerramentas.as_view(template_name="items/pag_subs_category/items_ferramentas.html"), name="items_ferramentas"),
+  path('items-audit-log/', ItemsAuditLogView.as_view(), name='itemsAuditLog'),
+   path('item/<int:pk>/update/', SomeView.as_view(), name='item_update'), 
 ]
