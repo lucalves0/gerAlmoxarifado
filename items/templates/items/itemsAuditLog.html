@@ -23,8 +23,8 @@
             {% for log in logs %}
                 <tr>
                     <td>{{ log.action }}</td>
-                    <td>{{ log.item.name }}</td>
-                    <td>{{ log.user.username }}</td>
+                    <td>{{ log.item_deletado}}</td>
+                    <td>{{ log.user }}</td>
                     <td>{{ log.timestamp }}</td>
                     <td>{{ log.observation }}</td>
                 </tr>

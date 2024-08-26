@@ -1,41 +1,76 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
 from django.dispatch import receiver
 from items.models import Items, ItemsAuditLog
 
-@receiver(post_save)
-def log_save(sender, instance, created, **kwargs):
-    # Verifique se o modelo que disparou o sinal não é o ItemsAuditLog
-    if sender == ItemsAuditLog:
-        return
+# Captura o estado antigo da instância antes de salvar
+@receiver(pre_save, sender=Items)
+def capture_old_instance(sender, instance, **kwargs):
+    if instance.pk:  # Se o item já existe, captura o estado antigo
+        instance._old_instance = sender.objects.get(pk=instance.pk)
+    else:
+        instance._old_instance = None
 
-    action = "Criação" if created else "Atualização"
+# Criação/Atualização de log de auditoria após salvar
+@receiver(post_save, sender=Items)
+def log_save_action(sender, instance, created, **kwargs):
+    if created:
+        # Se o item foi criado
+        action = 'Criado'
+        item_deletado = f"{instance.name}"
+        observation = f"Item '{instance.name}' criado."
+        changes = ItemsAuditLog.track_changes(None, instance)  # Todas as mudanças são novas
+    else:
+        # Se o item foi atualizado
+        old_instance = getattr(instance, '_old_instance', None)  # Instância antiga capturada no pre_save
+        if old_instance and instance.quantity < old_instance.quantity:
+            action = f'Retirado: {old_instance.quantity - instance.quantity} UN'
+            item_deletado = f"{instance.name}"
+            observation = f"Quantidade do item '{instance.name}' reduzida de {old_instance.quantity} para {instance.quantity}."
+        else:
+            action = 'Editado'
+            item_deletado = f"{instance.name}"
+            observation = f"Item '{instance.name}' editado."
+        
+        changes = ItemsAuditLog.track_changes(old_instance, instance)  # Comparar as mudanças
 
-    # Obter o usuário atual. Ajuste conforme necessário para obter o usuário atual da requisição.
-    user = getattr(instance, 'modified_by', None)  # Altere isso para obter o usuário real se necessário
+    # Verifica se o usuário está definido
+    user = getattr(instance, 'modified_by', None)
+    if user is None:
+        print(f"AVISO: O usuário não está definido para o item '{instance.name}'.")
 
-    # Verifique se a instância é do modelo Items
-    if isinstance(instance, Items):
-        ItemsAuditLog.objects.create(
-            user=user,
-            action=action,
-            item=instance,
-            observation=f"Item '{instance.name}' {action.lower()}.",  # Altere a observação conforme necessário
-            changes=ItemsAuditLog.track_changes(None, instance)  # Registra as mudanças se necessário
-        )
+    # Criar o registro de log no audit log
+    ItemsAuditLog.objects.create(
+        action=action,
+        item=instance,
+        user=user,  # Garantir que user não é None
+        item_deletado=item_deletado,
+        observation=observation,
+        changes=changes
+    )
 
-@receiver(post_delete)
-def log_delete(sender, instance, **kwargs):
-    # Verifique se o modelo que disparou o sinal não é o ItemsAuditLog
-    if sender == ItemsAuditLog:
-        return
+# Captura as informações antes de deletar (para auditoria de deleção)
+@receiver(pre_delete, sender=Items)
+def capture_delete_data(sender, instance, **kwargs):
+    # Armazena informações relevantes antes da exclusão
+    instance._delete_user = instance.modified_by
+    instance._delete_name = instance.name
 
-    # Obter o usuário atual. Ajuste conforme necessário para obter o usuário real da requisição.
-    user = getattr(instance, 'modified_by', None)  # Altere isso para obter o usuário real se necessário
+# Criação de log de auditoria após exclusão
+@receiver(post_delete, sender=Items)
+def log_delete_action(sender, instance, **kwargs):
 
-    if isinstance(instance, Items):
-        ItemsAuditLog.objects.create(
-            user=user,
-            action="Exclusão",
-            item=instance,
-            observation=f"Item '{instance.name}' excluído."  # Altere a observação conforme necessário
-        )
+    item_name = getattr(instance, '_delete_name', 'Nome Desconhecido')
+    user = getattr(instance, '_delete_user', None)
+    
+    # Verifique se a referência ao item ainda está disponível
+    item = Items.objects.filter(pk=instance.pk).first()
+
+    # Criar o registro de log no audit log sem a referência ao item (pois ele já foi deletado)
+    ItemsAuditLog.objects.create(
+        action='Deletado',
+        item=item,  # Tenta associar o item, se ainda estiver disponível
+        user=user,
+        item_deletado = f"{item_name}",
+        observation=f"Item '{item_name}' deletado.",
+        changes='{"item_deleted": true}'  # Informação sobre a deleção
+    )

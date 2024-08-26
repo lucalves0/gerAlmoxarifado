@@ -8,14 +8,14 @@
   <link rel="stylesheet" href="{% static 'css/items_form.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block content %}
   <div class="container">
     {% if items.pk %}
       <h1>Editar Item</h1>
       <form method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
-         <!-- Renderização dos demais campos automaticamente -->
+        <!-- Renderização dos demais campos automaticamente -->
         {% for field in form %}
           {% if field.name != 'category' and field.name != 'sub_category' %}
               {{ field|as_crispy_field }}
@@ -24,11 +24,11 @@
         <!-- Campo 'category' e 'sub-category' desativado manualmente -->
         <div class="form-group">
           <label for="{{ form.category.id_for_label }}">Categoria</label>
-          <input type="text" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" value="{{ form.category.value }}" class="form-control" disabled>
+          <input type="text" name="{{ form.category.name }}" id="{{ form.category.id_for_label }}" value="{{ form.category.value }}" class="form-control" readonly>
         </div>
         <div class="form-group">
           <label for="{{ form.sub_category.id_for_label }}">Sub-Categoria</label>
-          <input type="text" name="{{ form.sub_category.name }}" id="{{ form.sub_category.id_for_label }}" value="{{ form.sub_category.value }}" class="form-control" disabled>
+          <input type="text" name="{{ form.sub_category.name }}" id="{{ form.sub_category.id_for_label }}" value="{{ form.sub_category.value }}" class="form-control" readonly>
         </div>
         <button type="submit" class="btn btn-save">Salvar</button>
         <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
@@ -42,7 +42,6 @@
         <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
     {% endif %}
-    
   </div>
   <script type="text/javascript">
     $(document).ready(function() {
@@ -54,7 +53,6 @@
           success: function(data) {
             var $subCategory = $('#id_sub_category');
             $subCategory.empty();
-            {% comment %} $subCategory.append('<option value="">Selecione</option>'); {% endcomment %}
             $.each(data, function(index, value) {
               $subCategory.append($('<option></option>').attr('value', value).text(value));
             });
@@ -72,7 +70,7 @@
             $subCategory.empty();
             $subCategory.append('<option value="">Selecione</option>');
             $.each(data, function(index, value) {
-              $subCategory.append('<option value="' + value + '">' + value + '</option>');
+              $subCategory.append($('<option></option>').attr('value', value).text(value));
             });
           }
         });
@@ -80,4 +78,3 @@
     });
   </script>
 {% endblock %}
-

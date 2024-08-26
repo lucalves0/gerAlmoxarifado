@@ -170,7 +170,7 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
    def form_invalid(self, form):
       return self.render_to_response(self.get_context_data(form=form))
 
-class ItemsAuditLogView(View):
+class ItemsAuditLogView(LoginRequiredMixin, View):
     template_name = 'items/itemsAuditLog.html'
 
     def get(self, request, *args, **kwargs):
@@ -179,10 +179,10 @@ class ItemsAuditLogView(View):
         return render(request, self.template_name, context)
 
 @method_decorator(login_required, name='dispatch')
-class SomeView(View):
+class SomeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-      item = get_object_or_404(Items, pk=kwargs['pk'])  # Usa get_object_or_404 para garantir que o item exista
-      item.modified_by = request.user
-      item.save()
-      return redirect('itemsAuditLog')
+        item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
+        item.modified_by = request.user  # Define o usuário que está modificando o item
+        item.save()
+        return redirect('itemsAuditLog')  # Redireciona para a página de logs
 
