@@ -8,25 +8,25 @@
 ## Passos iniciais após baixar o projeto do repositório
 
 1. **Clonar o repositório** para sua máquina:
-2. 
+ 
    ```bash
    git clone https://github.com/lucalves0/gerenciamento-almoxarifado.git)
    
 3. Abrir o projeto em uma IDE compatível com Django (como PyCharm, VS Code, etc.)
 4. Instalar as dependências: Verifique se todas as dependências necessárias estão instaladas na sua máquina, utilizando o comando abaixo (após ativar o ambiente virtual):
-5. 
+   
    ```bash
     pip install -r requirements.txt
    
 6. Configurar o ambiente virtual:
   - Abra o terminal na pasta onde o projeto foi clonado.
   - Execute o seguinte comando para permitir a execução de scripts PowerShell (no Windows):
-  - 
+    
      ```powershell
      Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
      
   - Ative o ambiente virtual:
-  - 
+    
       ```bash
       .\.venv\Scripts\activate
       
