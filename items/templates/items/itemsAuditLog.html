@@ -2,13 +2,20 @@
 
 {% load static %}
 
-{% block title %}Historico{% endblock %}
+{% block title %}Histórico{% endblock %}
+
 {% block extra_styles %}
   <link rel="stylesheet" href="{% static 'css/itemsAuditLog.css' %}">
 {% endblock %}
 
 {% block content %} 
-    <h1>Histórico de ações realizada dentro do sistema</h1>
+    <h1>Histórico de ações realizadas dentro do sistema</h1>
+
+    <!-- Botão para baixar o PDF -->
+    <div class="download-button">
+        <a href="?download_pdf=true" class="btn btn-primary">Baixar Relatório em PDF</a>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -23,7 +30,7 @@
             {% for log in logs %}
                 <tr>
                     <td>{{ log.action }}</td>
-                    <td>{{ log.item_deletado}}</td>
+                    <td>{{ log.item_deletado }}</td>
                     <td>{{ log.user }}</td>
                     <td>{{ log.timestamp }}</td>
                     <td>{{ log.observation }}</td>
@@ -32,6 +39,3 @@
         </tbody>
     </table>
 {% endblock %}
-
-  
-

@@ -35,9 +35,10 @@ class Items(models.Model):
             raise ValidationError("A quantidade não pode ser menor.")
     
     def save(self, *args, **kwargs):
-        # Verifica se é uma edição e, caso seja, define o usuário modificador
-        if self.pk:
-            self.modified_by = kwargs.pop('name', None)
+        user = kwargs.pop('user', None)  # Captura o usuário do kwargs
+        if user and self.pk:  # Somente definir 'modified_by' em edições
+            self.modified_by = user
+        
 
         # Converte todos os campos relevantes para maiúsculas
         self.name = self.name.upper()
@@ -94,3 +95,10 @@ class ItemsAuditLog(models.Model):
                 changes[field_name] = {'old': None, 'new': new_value}
                 
         return json.dumps(changes, ensure_ascii=False, indent=2, cls=DjangoJSONEncoder)
+    
+    def save(self, *args, **kwargs):
+        user = kwargs.pop('user', None) 
+        if user:
+            self.user = user
+
+        super().save(*args, **kwargs)

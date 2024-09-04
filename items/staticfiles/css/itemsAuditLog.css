@@ -7,6 +7,22 @@ h1 {
   text-align: center;
 }
 
+.download-button {
+  margin-bottom: 20px;
+}
+
+.download-button .btn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.download-button .btn:hover {
+  background-color: #0056b3;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
