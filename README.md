@@ -9,7 +9,7 @@
 
 1. **Clonar o repositório** para sua máquina:
    ```bash
-   git clone <url-do-repositorio>
+   git clone <https://github.com/lucalves0/gerenciamento-almoxarifado.git)>
    
 2. Abrir o projeto em uma IDE compatível com Django (como PyCharm, VS Code, etc.)
 3. Instalar as dependências: Verifique se todas as dependências necessárias estão instaladas na sua máquina, utilizando o comando abaixo (após ativar o ambiente virtual):
