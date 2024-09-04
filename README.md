@@ -32,5 +32,5 @@
       
 5. Executar o projeto: Com o ambiente virtual ativado, rode o servidor de desenvolvimento com o comando:
    
-   ```bash
+     ```bash
      python manage.py runserver
