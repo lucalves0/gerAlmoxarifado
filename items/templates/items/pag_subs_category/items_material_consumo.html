@@ -29,9 +29,9 @@
                     </div>
                   </div>
                   <div class="acoes">
-                    <a href="{% url 'items_update' pk=item.pk %}" class="btn btn-edit">Editar</a>
-                    <a href="{% url 'items_delete' pk=item.pk %}" class="btn btn-delete">Excluir</a>
-                    <a href="{% url 'items_form_retirar' pk=item.pk %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    <a href="{% url 'items_update' id=item.id %}" class="btn btn-edit">Editar</a>
+                    <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
+                    <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} {% endif %}" name="action" value="retirar">Retirar</a>
                   </div>
                 </div>
               {% endfor %}

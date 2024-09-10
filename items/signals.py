@@ -6,14 +6,17 @@ from .middleware import get_current_user
 # Captura o estado antigo da instância antes de salvar
 @receiver(pre_save, sender=Items)
 def capture_old_instance(sender, instance, **kwargs):
-    if instance.pk:  # Se o item já existe, captura o estado antigo
-        instance._old_instance = sender.objects.get(pk=instance.pk)
+    if instance.pk:  # Verifica se o objeto já foi salvo antes
+        try:
+            instance._old_instance = sender.objects.get(pk=instance.pk)
+        except sender.DoesNotExist:
+            instance._old_instance = None
     else:
         instance._old_instance = None
 
     # Captura o usuário logado
     user = get_current_user()
-    instance._save_user = user if user else None
+    instance._save_user = user if user and user.is_authenticated else None
 
 # Criação/Atualização de log de auditoria após salvar
 @receiver(post_save, sender=Items)

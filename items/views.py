@@ -145,20 +145,28 @@ class ItemsUpdateView(UpdateView):
    model = Items
    fields = ["name", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
    success_url = reverse_lazy("items_main")
-   
+
+   def get_object(self):
+      id = self.kwargs.get('id')
+      return get_object_or_404(Items, id=id)
+
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
-   success_url = reverse_lazy("items_main")  
+   success_url = reverse_lazy("items_main") 
+
+   def get_object(self):
+      id = self.kwargs.get('id')
+      return get_object_or_404(Items, id=id) 
 
 # atualiza a quantidade de unidades após retirada de produtos no estoque
 class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
 
    template_name = 'items/items_form_retirar.html'
    form_class = ItemsFormRetirarStock
-
+        
    def get_object(self):
-      item_id = self.kwargs.get('pk')
-      return get_object_or_404(Items, id=item_id)
+      id = self.kwargs.get('id')
+      return get_object_or_404(Items, id=id)
 
    def get_form_kwargs(self):
       kwargs = super().get_form_kwargs()
@@ -236,6 +244,6 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
-        item.save(user=request.user)
-        return redirect('itemsAuditLog')  # Redireciona para a página de logs
+      item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
+      item.save(user=request.user)
+      return redirect('itemsAuditLog')  # Redireciona para a página de logs
