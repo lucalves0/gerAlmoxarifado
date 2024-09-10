@@ -17,7 +17,6 @@ class Items(models.Model):
     sub_category = models.CharField(verbose_name="Sub-Categoria", max_length=100, default='')
     quantity = models.PositiveIntegerField(verbose_name="Quantidades de Unidades")
     create_at = models.DateField(auto_now_add=True, null=False, blank=False)
-    finished_at = models.DateField(null=True)
     locality = models.CharField(verbose_name="Localidade", max_length=100, blank=False, default='')
     observation = models.CharField(verbose_name="Observação", max_length=300, default='', blank=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)

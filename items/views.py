@@ -239,8 +239,3 @@ class SomeView(LoginRequiredMixin, View):
         item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
         item.save(user=request.user)
         return redirect('itemsAuditLog')  # Redireciona para a página de logs
-
-class ItemsSerializer(serializers.ModelSerializer):
-   class Meta:
-      model = Items
-      fields = '__all__'  # Ou especifique os campos que deseja serializar
