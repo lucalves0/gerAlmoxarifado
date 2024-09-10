@@ -36,10 +36,13 @@ class Items(models.Model):
     
     def save(self, *args, **kwargs):
         user = kwargs.pop('user', None)  # Captura o usuário do kwargs
-        if user and self.pk:  # Somente definir 'modified_by' em edições
-            self.modified_by = user
         
-
+        if user:
+            if self.pk:                     # Se o item já existe, é uma edição
+                self.modified_by = user     # Atribui o usuário que modificou o item
+            else:                           # Se o item está sendo criado, você pode adicionar lógica para criação também
+                self.modified_by = user
+        
         # Converte todos os campos relevantes para maiúsculas
         self.name = self.name.upper()
         self.brand = self.brand.upper()

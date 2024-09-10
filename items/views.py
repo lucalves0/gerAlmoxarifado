@@ -14,6 +14,8 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
+from rest_framework import serializers
+from rest_framework.renderers import JSONRenderer
 
 from items.forms.forms import ItemsFormCreate, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog
@@ -143,7 +145,7 @@ class ItemsUpdateView(UpdateView):
    model = Items
    fields = ["name", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
    success_url = reverse_lazy("items_main")
-
+   
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
    success_url = reverse_lazy("items_main")  
@@ -185,63 +187,60 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
 
         # Verifica se o parâmetro `download_pdf` foi enviado
         if request.GET.get('download_pdf'):
-            # Cria um buffer para o PDF
-            buffer = BytesIO()
-
-            # Cria o documento
-            doc = SimpleDocTemplate(buffer, pagesize=A4)
+           
+            buffer = BytesIO()                              # Cria um buffer para o PDF
+            doc = SimpleDocTemplate(buffer, pagesize=A4)    # Cria o documento
             elements = []
 
-            # Estilos de texto
-            styles = getSampleStyleSheet()
+            styles = getSampleStyleSheet()                  # Estilos de texto
             title_style = styles['Title']
 
             # Título com a data e hora
             current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
             title = f"Relatório de Ações - Gerado em: {current_time}"
             elements.append(Paragraph(title, title_style))
-            elements.append(Spacer(1, 12))  # Espaçamento após o título
+            elements.append(Spacer(1, 12))                   # Espaçamento após o título
 
             # Dados da tabela
             data = [['Ação', 'Item', 'Usuário', 'Data/Hora', 'Observação']]  # Cabeçalhos da tabela
 
             # Adiciona os dados de cada log na tabela
             for log in logs:
-                data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
+               data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
 
             # Cria a tabela
             table = Table(data)
 
             # Estilo da tabela
             style = TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # Fundo do cabeçalho
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  # Cor do texto do cabeçalho
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Centraliza o texto
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fonte do cabeçalho
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding do cabeçalho
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),  # Fundo das linhas
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Grade ao redor da tabela
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),        # Fundo do cabeçalho
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),   # Cor do texto do cabeçalho
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),               # Centraliza o texto
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),     # Fonte do cabeçalho
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),              # Padding do cabeçalho
+                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),      # Fundo das linhas
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),         # Grade ao redor da tabela
             ])
+
             table.setStyle(style)
+            elements.append(table)     # Adiciona a tabela ao documento
+            doc.build(elements)        # Constrói o documento PDF
+            buffer.seek(0)             # Retorna o PDF como resposta
 
-            # Adiciona a tabela ao documento
-            elements.append(table)
-
-            # Constrói o documento PDF
-            doc.build(elements)
-
-            # Retorna o PDF como resposta
-            buffer.seek(0)
             return HttpResponse(buffer, content_type='application/pdf')
 
         # Renderiza normalmente se não for pedido o download
         context = {'logs': logs}
         return render(request, self.template_name, context)
+
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
-        item.modified_by = request.user  # Define o usuário que está modificando o item
-        item.save()
+        item.save(user=request.user)
         return redirect('itemsAuditLog')  # Redireciona para a página de logs
 
+class ItemsSerializer(serializers.ModelSerializer):
+   class Meta:
+      model = Items
+      fields = '__all__'  # Ou especifique os campos que deseja serializar

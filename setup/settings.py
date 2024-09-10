@@ -37,6 +37,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'items.middleware.CurrentUserMiddleware',
+
 ]
 
 ROOT_URLCONF = "setup.urls"
@@ -62,7 +64,7 @@ WSGI_APPLICATION = "setup.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'banco_produtos',
+        'NAME': 'items',
         'USER': 'admin',
         'PASSWORD': 'l@b!nf0',
         'HOST': 'localhost',  # Pode ser outro endereço se o banco de dados estiver em um servidor remoto

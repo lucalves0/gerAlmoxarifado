@@ -5,6 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from items.models import Items
 
 class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
+   
    CATEGORY_CHOICES = [
       ('', 'Selecionar'),
       ('Material para instalação', 'Material para instalação'),
