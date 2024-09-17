@@ -62,7 +62,7 @@ main .btn-save {
   color: black;
 }
 
-form .btn-cancelar {
+main .btn-cancelar {
   background-color: red;
   color: black;
 }

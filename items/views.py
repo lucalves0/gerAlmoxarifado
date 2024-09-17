@@ -55,7 +55,8 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
 
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['title'] = "Criar Item"  # Define o título como 'Editar Items'
+      context['title'] = "Criar Item"
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
    
 class LoadSubcategoriesView(View):
@@ -73,7 +74,7 @@ class LoadSubcategoriesView(View):
         subcats = subcategories.get(category, [])
         return JsonResponse(subcats, safe=False)
     
-class ItemsUpdateView(UpdateView):
+class ItemsUpdateView(LoginRequiredMixin, UpdateView):
    model = Items
    fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
    success_url = reverse_lazy("items_main")
@@ -84,7 +85,8 @@ class ItemsUpdateView(UpdateView):
    
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['title'] = "Editar Item"  # Define o título como 'Editar Items'
+      context['title'] = "Editar Item" 
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
@@ -94,8 +96,14 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    def get_object(self):
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id) 
+   
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
+      return context
+   
 
-class ItemsFichaTecnica(UpdateView):
+class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
    model = Items
    fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
    success_url = reverse_lazy("items_main")
@@ -114,10 +122,10 @@ class ItemsFichaTecnica(UpdateView):
    # Altera o titulo do formulário dinamicamente
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
-      context['title'] = "Ficha Técnica"  # Define o título como 'Editar Items'
+      context['title'] = "Ficha Técnica"
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
    
-
 # atualiza a quantidade de unidades após retirada de produtos no estoque
 class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
 
