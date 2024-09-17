@@ -10,8 +10,8 @@
 
 {% block content %}
   <div class="container">
+    <h1>{{ title }}</h1>
     {% if items.pk %}
-      <h1>Editar Item</h1>
       <form method="POST">
         {% csrf_token %}
         {{ form.non_field_errors }}
@@ -34,7 +34,6 @@
         <a href="{% url 'items_main' %}" class="btn btn-cancelar">Cancelar</a>
       </form>
     {% else %}
-      <h1>Novo Item</h1>
       <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}

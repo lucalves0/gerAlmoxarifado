@@ -1,0 +1,27 @@
+{% extends 'items/base.html' %}
+
+{% load static %}
+
+{% block title %}Dashboard Itens{% endblock %}
+{% block extra_styles %}
+{% endblock %}
+
+{% block content %} 
+  <h1>Dashboard</h1>   
+  
+  <h2>Total de Itens: {{ total_items }}</h2>
+  
+  <h3>Itens por Categoria</h3>
+  <canvas id="myChart"></canvas>
+
+  <script type="application/json" id="category-data">
+    {{ items_by_category|safe }}
+  </script>
+  
+  <h3>Itens Recentes</h3>
+  <ul>
+    {% for item in recent_items %}
+      <li>{{ item.name }} - {{ item.create_at }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

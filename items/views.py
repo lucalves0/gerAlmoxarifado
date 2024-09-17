@@ -1,3 +1,4 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -14,11 +15,11 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
-from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer
+from django.db.models import Count
 
 from items.forms.forms import ItemsFormCreate, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog
+from items import models
 
 class ItemsListView(LoginRequiredMixin, ListView):
    model = Items
@@ -47,84 +48,15 @@ class ItemsListView(LoginRequiredMixin, ListView):
 
       return context
 
-class ItemsSubMaterialInstalacao(LoginRequiredMixin, ListView):
-   model: Items
-   template_name = "items/pag_sub_category/items_material_instalacao.html"
-   context_object_name = 'item_material_aplicacao_list'
-
-   def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-   
-   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      items = context['item_material_aplicacao_list']
-
-      context['has_eletricas'] = any(item.sub_category == "ELÉTRICAS" for item in items)
-      context['has_rede'] = any(item.sub_category == "REDE" for item in items)
-      context['has_outros'] = any(item.sub_category == "OUTROS" for item in items)
-
-      return context
-
-class ItemsSubDescarte(LoginRequiredMixin, ListView):
-   model: Items
-   template_name = "items/pag_sub_category/items_descarte.html"
-   context_object_name = 'item_descarte_list'
-
-   def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-
-class ItemsSubMaterialConsumo(LoginRequiredMixin, ListView):
-   model: Items
-   template_name = "items/pag_sub_category/items_material_consumo.html"
-   context_object_name = 'item_material_consumo_list'
-
-   def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-   
-   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      items = context['item_material_consumo_list']
-
-      return context
-   
-class ItemsSubInformatica(LoginRequiredMixin, ListView):
-   model: Items
-   template_name = "items/pag_sub_category/items_informatica.html"
-   context_object_name = 'item_informatica_list'
-
-   def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-   
-   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      items = context['item_informatica_list']
-
-      context['has_equipamentos'] = any(item.sub_category == "EQUIPAMENTOS" for item in items)
-      context['has_suprimentos'] = any(item.sub_category == "SUPRIMENTOS" for item in items)
-      context['has_acessorios'] = any(item.sub_category == "ACESSÓRIOS" for item in items)
-      context['has_perifericos'] = any(item.sub_category == "Periféricos" for item in items)
-      context['has_pecas_reposicao'] = any(item.sub_category == "Peças de reposição" for item in items)
-      context['has_outros'] = any(item.sub_category == "Outros" for item in items)
-
-      return context
-
-class ItemsSubFerramentas(LoginRequiredMixin, ListView):
-   model: Items
-   template_name = "items/pag_sub_category/items_ferramentas.html"
-   context_object_name = 'item_ferramenta_list'
-
-   def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-
 class ItemsCreateView(LoginRequiredMixin, CreateView):
    model = Items
    form_class = ItemsFormCreate
    success_url = reverse_lazy("items_main")
+
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Criar Item"  # Define o título como 'Editar Items'
+      return context
    
 class LoadSubcategoriesView(View):
 
@@ -143,12 +75,17 @@ class LoadSubcategoriesView(View):
     
 class ItemsUpdateView(UpdateView):
    model = Items
-   fields = ["name", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
+   fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
    success_url = reverse_lazy("items_main")
 
    def get_object(self):
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id)
+   
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Editar Item"  # Define o título como 'Editar Items'
+      return context
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
@@ -157,6 +94,29 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    def get_object(self):
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id) 
+
+class ItemsFichaTecnica(UpdateView):
+   model = Items
+   fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
+   success_url = reverse_lazy("items_main")
+
+   def get_object(self):
+      id = self.kwargs.get('id')
+      return get_object_or_404(Items, id=id)
+   
+   # Faz com que os campos fique desativado e não permita alteração
+   def get_form(self, form_class=None):
+      form = super().get_form(form_class)
+      for field in form.fields.values():
+         field.widget.attrs['readonly'] = True
+      return form
+   
+   # Altera o titulo do formulário dinamicamente
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Ficha Técnica"  # Define o título como 'Editar Items'
+      return context
+   
 
 # atualiza a quantidade de unidades após retirada de produtos no estoque
 class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
@@ -247,3 +207,92 @@ class SomeView(LoginRequiredMixin, View):
       item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
       item.save(user=request.user)
       return redirect('itemsAuditLog')  # Redireciona para a página de logs
+
+class ItemsSubMaterialInstalacao(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_material_instalacao.html"
+   context_object_name = 'item_material_aplicacao_list'
+
+   def get_queryset(self):
+        category = self.kwargs['category']
+        return Items.objects.filter(category=category)
+   
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      items = context['item_material_aplicacao_list']
+
+      context['has_eletricas'] = any(item.sub_category == "ELÉTRICAS" for item in items)
+      context['has_rede'] = any(item.sub_category == "REDE" for item in items)
+      context['has_outros'] = any(item.sub_category == "OUTROS" for item in items)
+
+      return context
+
+class ItemsSubDescarte(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_descarte.html"
+   context_object_name = 'item_descarte_list'
+
+   def get_queryset(self):
+        category = self.kwargs['category']
+        return Items.objects.filter(category=category)
+
+class ItemsSubMaterialConsumo(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_material_consumo.html"
+   context_object_name = 'item_material_consumo_list'
+
+   def get_queryset(self):
+        category = self.kwargs['category']
+        return Items.objects.filter(category=category)
+   
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      items = context['item_material_consumo_list']
+
+      return context
+   
+class ItemsSubInformatica(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_informatica.html"
+   context_object_name = 'item_informatica_list'
+
+   def get_queryset(self):
+        category = self.kwargs['category']
+        return Items.objects.filter(category=category)
+   
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      items = context['item_informatica_list']
+
+      context['has_equipamentos'] = any(item.sub_category == "EQUIPAMENTOS" for item in items)
+      context['has_suprimentos'] = any(item.sub_category == "SUPRIMENTOS" for item in items)
+      context['has_acessorios'] = any(item.sub_category == "ACESSÓRIOS" for item in items)
+      context['has_perifericos'] = any(item.sub_category == "Periféricos" for item in items)
+      context['has_pecas_reposicao'] = any(item.sub_category == "Peças de reposição" for item in items)
+      context['has_outros'] = any(item.sub_category == "Outros" for item in items)
+
+      return context
+
+class ItemsSubFerramentas(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_ferramentas.html"
+   context_object_name = 'item_ferramenta_list'
+
+   def get_queryset(self):
+        category = self.kwargs['category']
+        return Items.objects.filter(category=category)
+
+class DashboardView(View):
+   def get(self, request, *args, **kwargs):
+      # Coletar dados do banco de dados
+      total_items = Items.objects.count()
+      items_by_category = Items.objects.values('category').annotate(count=Count('id'))
+      recent_items = Items.objects.order_by('-create_at')[:5]  # Exemplo: últimos 5 itens cadastrados
+
+      context = {
+         'total_items': total_items,
+         'items_by_category': json.dumps(items_by_category),
+         'recent_items': recent_items,
+      }
+
+      return render(request, 'items/itemsDashboard.html', context)

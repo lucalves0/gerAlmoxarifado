@@ -23,19 +23,27 @@
             <div class="content">
               {% for item in item_material_aplicacao_list  %}
                 {% if item.sub_category == "ELÉTRICAS" %}
-                  <div class="item-row">
-                    <div class="dados_items">
-                      <div class="description">
-                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
-                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
-                      </div>
+                <div class="item-row">
+                  <div class="dados_items">
+                    <div class="description">
+                      <p><span>Entrada no estoque:</span></p>
+                      <p>{{item.create_at}}</p>
+                      <p><span>Nome:</span> {{ item.name }}</p>
+                      <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
+                      <p><span>Marca:</span> {{item.brand}}</p>
+                      <p><span>Modelo:</span> {{item.model}}</p>
                     </div>
-                    <div class="acoes">
+                  </div>
+                  <div class="menu-container">
+                    <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+                    <div class="menu-content" id="menuDropdown">
+                      <a href="{% url 'items_ficha' id=item.id %}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
                       <a href="{% url 'items_update' id=item.id %}" class="btn btn-edit">Editar</a>
                       <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
                       <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
                     </div>
-                  </div>
+                  </div> 
+                </div>
                 {% endif %}
               {% endfor %}
               {% if not has_eletricas %}
@@ -53,19 +61,27 @@
             <div class="content">
               {% for item in item_material_aplicacao_list  %}
                 {% if item.sub_category == "REDE" %}
-                  <div class="item-row">
-                    <div class="dados_items">
-                      <div class="description">
-                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
-                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
-                      </div>
+                <div class="item-row">
+                  <div class="dados_items">
+                    <div class="description">
+                      <p><span>Entrada no estoque:</span></p>
+                      <p>{{item.create_at}}</p>
+                      <p><span>Nome:</span> {{ item.name }}</p>
+                      <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
+                      <p><span>Marca:</span> {{item.brand}}</p>
+                      <p><span>Modelo:</span> {{item.model}}</p>
                     </div>
-                    <div class="acoes">
+                  </div>
+                  <div class="menu-container">
+                    <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+                    <div class="menu-content" id="menuDropdown">
+                      <a href="{% url 'items_ficha' id=item.id %}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
                       <a href="{% url 'items_update' id=item.id %}" class="btn btn-edit">Editar</a>
                       <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
                       <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
                     </div>
-                  </div>
+                  </div> 
+                </div>
                 {% endif %}
               {% endfor %}
               {% if not has_rede %}
@@ -86,15 +102,23 @@
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
-                        <p><strong>Entrada no estoque:</strong> {{item.create_at}}</p>
-                        <p>{{item.quantity}} UNIDADE - {{ item.name }} | Marca: {{item.brand}} | Modelo: {{item.model}}</p>
+                        <p><span>Entrada no estoque:</span></p>
+                        <p>{{item.create_at}}</p>
+                        <p><span>Nome:</span> {{ item.name }}</p>
+                        <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
+                        <p><span>Marca:</span> {{item.brand}}</p>
+                        <p><span>Modelo:</span> {{item.model}}</p>
                       </div>
                     </div>
-                    <div class="acoes">
-                      <a href="{% url 'items_update' id=item.id %}" class="btn btn-edit">Editar</a>
-                      <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
-                      <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %}  disabled {% endif %}" name="action" value="retirar">Retirar</a>
-                    </div>
+                    <div class="menu-container">
+                      <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+                      <div class="menu-content" id="menuDropdown">
+                        <a href="{% url 'items_ficha' id=item.id %}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
+                        <a href="{% url 'items_update' id=item.id %}" class="btn btn-edit">Editar</a>
+                        <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
+                        <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                      </div>
+                    </div> 
                   </div>
                 {% endif %}
               {% endfor %}

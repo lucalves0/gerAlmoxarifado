@@ -19,8 +19,8 @@ class Items(models.Model):
     sub_category = models.CharField(verbose_name="Sub-Categoria", max_length=100, default='')
     quantity = models.PositiveIntegerField(verbose_name="Quantidades de Unidades")
     create_at = models.DateField(auto_now_add=True, null=False, blank=False)
-    locality = models.CharField(verbose_name="Localidade", max_length=100, blank=False, default='')
     observation = models.CharField(verbose_name="Observação", max_length=300, default='', blank=True)
+    nmr_tombo = models.PositiveBigIntegerField(verbose_name="Tombo", null=True, blank=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
@@ -48,11 +48,8 @@ class Items(models.Model):
         self.name = self.name.upper()
         self.brand = self.brand.upper()
         self.model = self.model.upper()
-        self.location = self.location.upper()
         self.category = self.category.upper()
         self.sub_category = self.sub_category.upper()
-        self.locality = self.locality.upper()
-        self.observation = self.observation.upper()
         
         super().save(*args, **kwargs)
 

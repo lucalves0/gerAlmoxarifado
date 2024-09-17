@@ -16,7 +16,9 @@ from items.views import (
   ItemsSubMaterialConsumo,
   ItemsSubFerramentas,
   ItemsAuditLogView,
-  SomeView
+  SomeView,
+  DashboardView,
+  ItemsFichaTecnica
 )
 
 
@@ -36,4 +38,6 @@ urlpatterns = [
   path('items-ferramentas/<str:category>/', ItemsSubFerramentas.as_view(template_name="items/pag_subs_category/items_ferramentas.html"), name="items_ferramentas"),
   path('items-audit-log/', ItemsAuditLogView.as_view(), name='itemsAuditLog'),
   path('item/<str:hash>/update/', SomeView.as_view(), name='item_update'),
+  path('dashboard/', DashboardView.as_view(), name='items_dashboard'),
+  path('ficha/<str:id>/', ItemsFichaTecnica.as_view(), name="items_ficha"),
 ]

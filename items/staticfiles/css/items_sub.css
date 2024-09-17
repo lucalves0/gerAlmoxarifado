@@ -87,23 +87,45 @@ main {
   margin-bottom: 10px;
 }
 
-.content .dados_items,
-.content .acoes {
+.content .dados_items {
   display: flex;
   font-size: 20px;
   padding: 10px;
   margin-bottom: 5px; 
 }
 
-.content .acoes {
-  gap: 10px;
+.menu-container {
+  position: relative;
+  display: inline-block;
 }
 
-.content .dados_items .acoes {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-} 
+.menu-btn {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.menu-content {
+  display: none; 
+  position: absolute;
+  top: 100%;
+  left: 0; 
+  background-color: white;
+  border: 1px solid #ddd; 
+  z-index: 1000; 
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
+  padding: 10px; 
+}
+
+.menu-content a {
+  display: block;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 20px;
+  color: rgb(255, 255, 255);
+  border-bottom: 1px solid #f1f1f1;
+}
 
 .expandable-list .header.active .arrow {
   transform: rotate(90deg);
@@ -120,6 +142,11 @@ main {
   text-align: center;
   text-decoration: none;
   justify-content: space-evenly;
+}
+
+.btn-visualizar {
+  background-color: #4842548a;
+
 }
 
 .btn-delete {

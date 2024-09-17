@@ -1,0 +1,20 @@
+% extends 'items/base.html' %}
+
+{% load static %}
+
+{% block title %}Ficha Técnica{% endblock %}
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'css/items_form.css' %}">
+{% endblock %}
+
+{% block content %} 
+  <div class="container">
+    <h1>Excluir Item</h1>
+    <p>Tem certeza que deseja excluir item <strong>{{ items.name }}</strong>?</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-excluir">Excluir</button>
+      <a href="{%url 'items_main'%}" class="btn btn-cancelar">Cancelar</a>
+    </form>
+  </div> 
+{% endblock %}
