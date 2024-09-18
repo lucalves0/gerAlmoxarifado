@@ -30,11 +30,8 @@
 5. Executar o projeto: Com o ambiente virtual ativado, rode o servidor de desenvolvimento com o comando:
 
    ```bash
-    python manage.py runserver
-    
+    python manage.py runserver   
 ## Comando para baixar o banco de dados em sua máquina:
  
    ```bash
     mysql -u username -p nome_do_banco < caminho_para_o_backup.sql
-
-    
