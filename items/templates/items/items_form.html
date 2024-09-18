@@ -30,15 +30,17 @@
           <label for="{{ form.sub_category.id_for_label }}">Sub-Categoria</label>
           <input type="text" name="{{ form.sub_category.name }}" id="{{ form.sub_category.id_for_label }}" value="{{ form.sub_category.value }}" class="form-control" readonly>
         </div>
+        <button type="submit" class="btn btn-save">Salvar</button>
+        <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
       </form>
     {% else %}
       <form method="POST">
         {% csrf_token %}
         {{ form|crispy }}
+        <button type="submit" class="btn btn-save">Salvar</button>
+        <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
       </form>
     {% endif %}
-    <button type="submit" class="btn btn-save">Salvar</button>
-    <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
   </div>
   <script type="text/javascript">
     $(document).ready(function() {

@@ -140,7 +140,7 @@ main {
   border-radius: 5px;
   color: white;
   text-align: center;
-  text-decoration: none;
+  text-decoration: none; 
   justify-content: space-evenly;
 }
 

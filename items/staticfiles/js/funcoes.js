@@ -95,10 +95,14 @@ $(document).ready(function () {
   }
 });
 
-function toggleMenu() {
-  const menuContainer = document.getElementById("menu-content");
-  menuContainer.classList.toggle("open");
-}
+document.addEventListener("DOMContentLoaded", function() {
+  function toggleMenu() {
+    const menuContent = document.getElementById("menu-content");
+    menuContent.classList.toggle("open");
+  }
+
+  document.querySelector('.menu-button').addEventListener('click', toggleMenu);
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   var ctx = document.getElementById("myChart").getContext("2d");
