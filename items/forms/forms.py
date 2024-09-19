@@ -1,71 +1,193 @@
 
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, Submit, Row, Column
 
-from items.models import Items
+from items.models import Items, ItemTombo
 
 
 class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
+    
+   # Dicionario usando em campos Select | category e sub-category
    CATEGORY_CHOICES = [
       ('', 'Selecionar'),
       ('Material para instalação', 'Material para instalação'),
       ('Informática', 'Informática'),
       ('Ferramenta', 'Ferramenta'),
       ('Material de Consumo', 'Material de Consumo'),
-      ('Descarte', 'Descarte')
+      ('Descarte', 'Descarte')   
    ]
-   
-   # Inicialmente, a subcategoria será um campo vazio
+
    SUB_CATEGORY_CHOICES = [
       ('', 'Selecione'),
    ]
 
-   category = forms.ChoiceField(
-      choices=CATEGORY_CHOICES, 
-      widget=forms.Select(attrs={'class': 'form-control'}), 
-      label="Categoria"
-   )
-   sub_category = forms.ChoiceField(
-      choices=SUB_CATEGORY_CHOICES, 
-      widget=forms.Select(attrs={'class': 'form-control'}), 
-      label="Sub-Categoria"
-   )
-
-   quantity = forms.IntegerField(
-      label='Quantidade',
-      min_value=1, 
-      error_messages={
-         'min_value': 'O valor deve ser maior ou igual a 1.' 
-      }
+   name = forms.CharField (
+      label = "Nome",
+      widget = forms.TextInput (
+         attrs = {
+            'class' : 'form-control',
+            'placeholder': 'Digite o nome do item..'
+            
+         }
+      )
    )
 
+   tombo = forms.CharField (
+      label = 'Tombo',
+      required = False, 
+      widget = forms.TextInput (
+         attrs = {
+            'class': 'form-control',
+            'id': 'id_tombo',
+            'placeholder': 'Digite o tombo do item..'
+         },
+      ),
+   )
+
+   brand = forms.CharField (
+      label = "Marca",
+      widget = forms.TextInput (
+         attrs = {
+            'class' : 'form-control',
+            'placeholder': 'Digite a marca do item..'
+            
+         }
+      )
+   )
+
+   model = forms.CharField (
+      label = "Modelo",
+      widget = forms.TextInput (
+         attrs = {
+            'class' : 'form-control',
+            'placeholder': 'Digite o modelo do item..'
+            
+         }
+      )
+   )
+
+   location = forms.CharField (
+      label = "Localização",
+      widget = forms.TextInput (
+         attrs = {
+            'class' : 'form-control',
+            'placeholder': 'Digite o local está armazenado o item..'
+            
+         }
+      )
+   )
+
+   category = forms.ChoiceField (
+      choices = CATEGORY_CHOICES,
+      label = "Categoria",
+      widget = forms.Select (
+         attrs = {
+            'class': 'form-control',
+         }
+      )  
+   )
+
+   sub_category = forms.ChoiceField (
+      choices = SUB_CATEGORY_CHOICES,
+      label="Sub-Categoria",
+      widget = forms.Select (
+         attrs = {
+            'class': 'form-control',
+         }
+      ) 
+   )
+
+
+   quantity = forms.IntegerField (
+      label = 'Quantidade',
+      min_value = 1,
+      error_messages = {
+         'min_value': 'O valor deve ser maior ou igual a 1.'
+      },
+      widget = forms.NumberInput ( 
+         attrs = {
+            'class': 'form-control',  
+            'placeholder': 'Digite quantas unidades possi do item..'
+         }
+      )
+   )
+
+   observation = forms.CharField (
+      label="Observação",
+      required = False,
+      widget = forms.Textarea (
+         attrs = {
+            'class' : 'form-control',
+            'placeholder': 'Digite sua observação se necessário',
+            'row' : 10,                   # tamanho inicial      
+            'style': 'resize: vertical;'  # permite crescer verticamente
+         }
+      )
+   )
+
+   
    class Meta:
       model = Items
-      fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
-      
-      widgets = {
-         'category': forms.Select(attrs={'class': 'form-control'}),
-         'sub_category': forms.Select(attrs={'class': 'form-control'}),
-         'observation': forms.Textarea(attrs={
-            'class': 'form-control',
-            'rows': 3,  # Define um tamanho inicial
-            'style': 'resize: vertical;',  # Permite que o campo cresça verticalmente
-            'placeholder': 'Escreva suas observações aqui...',
-         }),
-      }
+      fields = ["name", "tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
 
    def __init__(self, *args, **kwargs):
+
       super(ItemsFormCreate, self).__init__(*args, **kwargs)
-      
+
+      # Adicionamos elementos dentro do init
+      self.helper = FormHelper()
+      self.helper.form_class = 'form-horizontal'
+      self.helper.layout = Layout(
+         Row (
+            
+            Column (
+               'tombo',
+               css_class = 'form-group col-md-8 mb-0'
+            ),
+
+            Column (
+               Submit (
+                  'submit_button',
+                  '+',
+                  css_class = 'btn btn-primary'
+               ),
+               css_class='form-group col-md-4 mb-0'
+            ),
+            css_class='form-row'
+
+         ),
+
+         'name',
+         'brand',
+         'model',
+         'location',
+         'category',
+         'sub_category',
+         'quantity',
+         'observation',
+      )
+
+      # Iremos retirar a redenrização automatica do campo 'tombo' para podermos configura-lo manualmente 
+      if 'tombo' in self.helper.layout.fields:
+         self.helper.layout.fields.remove('tombo')
+
       # Atualiza subcategorias com base na categoria selecionada
-      if 'category' in self.data:
-         category = self.data.get('category')
-         self.fields['sub_category'].choices = [(sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)]
+      if 'category' in self.data :
+         category = self.data.get ( 'category' ) 
+         self.fields [ 'sub_category' ].choices = [
+            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
+         ]
+
       elif self.instance.pk:
          category = self.instance.category
-         self.fields['sub_category'].choices = [(sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)]
+         self.fields[ 'sub_category' ].choices = [
+            (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
+         ]
 
    def get_subcategories(self, category):
+
       subcategories = {
          'Selecionar': [],
          'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
@@ -77,12 +199,26 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       return subcategories.get(category, [])
 
    def clean_quantity(self):
+
       valor = self.cleaned_data.get('quantity')
       if valor < 1:
          raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
       return valor
-   
-   
+
+   def save(self, commit=True):
+
+      item = super(ItemsFormCreate, self).save(commit=False)
+      if commit:
+         item.save()
+      
+      tombo = self.cleaned_data.get('tombo')
+      if tombo:
+         # Cria um novo ItemTombo se o tombo for fornecido
+         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
+      
+      return item
+
+
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
 
    quantity = forms.IntegerField(min_value=1, label="Quantidade a retirar")

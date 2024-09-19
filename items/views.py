@@ -75,15 +75,37 @@ class LoadSubcategoriesView(View):
         return JsonResponse(subcats, safe=False)
     
 class ItemsUpdateView(LoginRequiredMixin, UpdateView):
-   model = Items
-   fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
-   success_url = reverse_lazy("items_main")
+    model = Items
+    form_class = ItemsFormCreate
+    success_url = reverse_lazy("items_main")
 
-   def get_object(self):
+    def get_object(self):
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id)
-   
-   def get_context_data(self, **kwargs):
+    
+    def get_form(self, form_class=None):
+      form = super().get_form(form_class)
+      # Adiciona o ItemTombo se existir
+      item = self.get_object()
+      item_tombo_instance = item.tombos.first()  # Assume que há um ItemTombo associado
+      form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
+      return form
+
+    def form_valid(self, form):
+      response = super().form_valid(form)
+      item = self.object
+      tombo = form.cleaned_data.get('tombo')
+      
+      # Cria ou atualiza o ItemTombo
+      if tombo:
+         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
+      else:
+         # Remove o ItemTombo se o campo tombo estiver vazio
+         ItemTombo.objects.filter(item=item).delete()
+      
+      return response
+
+    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['title'] = "Editar Item" 
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
@@ -102,25 +124,30 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
    
-
 class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
-   model = Items
-   fields = ["name", "nmr_tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
-   success_url = reverse_lazy("items_main")
+    model = Items
+    form_class = ItemsFormCreate
+    success_url = reverse_lazy("items_main")
 
-   def get_object(self):
+    def get_object(self):
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id)
    
-   # Faz com que os campos fique desativado e não permita alteração
-   def get_form(self, form_class=None):
+    def get_form(self, form_class=None):
       form = super().get_form(form_class)
+      # Define todos os campos como somente leitura
       for field in form.fields.values():
          field.widget.attrs['readonly'] = True
+      
+      # Define o campo tombo como somente leitura
+      item = self.get_object()
+      item_tombo_instance = item.tombos.first()  # Assume que há um ItemTombo associado
+      form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
+      form.fields['tombo'].widget.attrs['readonly'] = True
+      
       return form
    
-   # Altera o titulo do formulário dinamicamente
-   def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['title'] = "Ficha Técnica"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior

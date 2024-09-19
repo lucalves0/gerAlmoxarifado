@@ -184,3 +184,42 @@ document.querySelectorAll('.menu-content').forEach(function(menu) {
     e.stopPropagation();
   });
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  // Capturar o botão "add-tombo-btn"
+  var addTomboBtn = document.getElementById('add-tombo-btn');
+
+  // Adicionar o evento de clique no botão
+  addTomboBtn.addEventListener('click', function() {
+
+    // Obter o contêiner onde os campos serão adicionados
+    var container = document.getElementById('tombo-container');
+
+    // Contar quantos campos já existem para gerar IDs únicos
+    var fieldCount = container.getElementsByClassName('form-group').length;
+
+    // Criar um novo div para o campo clonado
+    var newField = document.createElement('div');
+    newField.classList.add('form-group');
+
+    // Criar o HTML do novo campo clonado
+    newField.innerHTML = `
+      <label for="id_tombo_${fieldCount}">Tombo</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="id_tombo_${fieldCount}" name="tombo_${fieldCount}" placeholder="Digite o tombo do item..">
+        <div class="input-group-append">
+          <button type="button" class="btn btn-danger remove-tombo-btn">del</button>
+        </div>
+      </div>
+    `;
+
+    // Adicionar o novo campo no contêiner
+    container.appendChild(newField);
+
+    // Adicionar evento de remoção ao botão de deletar recém-adicionado
+    newField.querySelector('.remove-tombo-btn').addEventListener('click', function() {
+      newField.remove();
+    });
+  });
+});
