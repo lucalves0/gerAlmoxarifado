@@ -4,6 +4,7 @@
 
 - **Python**: v. 3.12.4
 - **Django**: v. 5.0.6
+- **MySQL: v. 8.07
 
 ## Passos iniciais após baixar o projeto do repositório
 
