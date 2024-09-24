@@ -1,7 +1,6 @@
 import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -17,11 +16,11 @@ from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 from django.db.models import Count
 
-from items.forms.forms import ItemsFormCreate, ItemsFormRetirarStock
-from .models import Items, ItemsAuditLog
-from items import models
+from .forms.forms import ItemsFormCreate, ItemsFormRetirarStock, ItemTomboFormSet
+from .models import Items, ItemsAuditLog, ItemTombo
 
 class ItemsListView(LoginRequiredMixin, ListView):
+
    model = Items
    template_name = 'items/items_main.html'
    context_object_name = 'items_list'
@@ -49,15 +48,42 @@ class ItemsListView(LoginRequiredMixin, ListView):
       return context
 
 class ItemsCreateView(LoginRequiredMixin, CreateView):
+
    model = Items
    form_class = ItemsFormCreate
+   template_name = 'items/items_form.html'
    success_url = reverse_lazy("items_main")
 
    def get_context_data(self, **kwargs):
+
       context = super().get_context_data(**kwargs)
       context['title'] = "Criar Item"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
+      context['tombo_formset'] = ItemTomboFormSet(queryset=ItemTombo.objects.none())
+
       return context
+
+   def form_valid(self, form):
+
+      self.object = form.save()  # Salva o item primeiro
+
+      # Agora associe o formset ao item salva
+      tombo_formset = ItemTomboFormSet(self.request.POST, instance=self.object)
+
+      if tombo_formset.is_valid():
+         tombo_formset.save()
+         return super().form_valid(form)
+      else:
+         return self.form_invalid(form)
+
+   def form_invalid(self, form):
+      # Obtém o contexto e o formset, caso o form principal seja inválido
+      context = self.get_context_data(form=form)
+      tombo_formset = ItemTomboFormSet(self.request.POST)
+      context['tombo_formset'] = tombo_formset
+
+      # repassa o formulário inválido e o formset para o contexto
+      return self.render_to_response(context)
    
 class LoadSubcategoriesView(View):
 
@@ -74,42 +100,42 @@ class LoadSubcategoriesView(View):
         subcats = subcategories.get(category, [])
         return JsonResponse(subcats, safe=False)
     
-class ItemsUpdateView(LoginRequiredMixin, UpdateView):
-    model = Items
-    form_class = ItemsFormCreate
-    success_url = reverse_lazy("items_main")
+# class ItemsUpdateView(LoginRequiredMixin, UpdateView):
+#     model = Items
+#     form_class = ItemsFormCreate
+#     success_url = reverse_lazy("items_main")
 
-    def get_object(self):
-      id = self.kwargs.get('id')
-      return get_object_or_404(Items, id=id)
+#     def get_object(self):
+#       id = self.kwargs.get('id')
+#       return get_object_or_404(Items, id=id)
     
-    def get_form(self, form_class=None):
-      form = super().get_form(form_class)
-      # Adiciona o ItemTombo se existir
-      item = self.get_object()
-      item_tombo_instance = item.tombos.first()  # Assume que há um ItemTombo associado
-      form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
-      return form
+#     def get_form(self, form_class=None):
+#       form = super().get_form(form_class)
+#       # Adiciona o ItemTombo se existir
+#       item = self.get_object()
+#       item_tombo_instance = item.tombos.first()  # Assume que há um ItemTombo associado
+#       form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
+#       return form
 
-    def form_valid(self, form):
-      response = super().form_valid(form)
-      item = self.object
-      tombo = form.cleaned_data.get('tombo')
+#     def form_valid(self, form):
+#       response = super().form_valid(form)
+#       item = self.object
+#       tombo = form.cleaned_data.get('tombo')
       
-      # Cria ou atualiza o ItemTombo
-      if tombo:
-         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
-      else:
-         # Remove o ItemTombo se o campo tombo estiver vazio
-         ItemTombo.objects.filter(item=item).delete()
+#       # Cria ou atualiza o ItemTombo
+#       if tombo:
+#          ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
+#       else:
+#          # Remove o ItemTombo se o campo tombo estiver vazio
+#          ItemTombo.objects.filter(item=item).delete()
       
-      return response
+#       return response
 
-    def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      context['title'] = "Editar Item" 
-      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
-      return context
+#     def get_context_data(self, **kwargs):
+#       context = super().get_context_data(**kwargs)
+#       context['title'] = "Editar Item" 
+#       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
+#       return context
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
@@ -249,8 +275,8 @@ class ItemsSubMaterialInstalacao(LoginRequiredMixin, ListView):
    context_object_name = 'item_material_aplicacao_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
+      category = self.kwargs['category']
+      return Items.objects.filter(category=category)
    
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -268,8 +294,8 @@ class ItemsSubDescarte(LoginRequiredMixin, ListView):
    context_object_name = 'item_descarte_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
+      category = self.kwargs['category']
+      return Items.objects.filter(category=category)
 
 class ItemsSubMaterialConsumo(LoginRequiredMixin, ListView):
    model: Items
@@ -292,8 +318,8 @@ class ItemsSubInformatica(LoginRequiredMixin, ListView):
    context_object_name = 'item_informatica_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
+      category = self.kwargs['category']
+      return Items.objects.filter(category=category)
    
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)

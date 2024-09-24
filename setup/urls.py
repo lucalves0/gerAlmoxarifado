@@ -6,7 +6,7 @@ from django.contrib.auth import views as auth_views
 from items.views import (
   ItemsListView, 
   ItemsCreateView, 
-  ItemsUpdateView, 
+  # ItemsUpdateView, 
   ItemsDeleteView,
   LoadSubcategoriesView,
   ItemsRetirarStock,
@@ -27,7 +27,7 @@ urlpatterns = [
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
   path('logout/', auth_views.LogoutView.as_view(template_name='todos/templates/registration/logged_out.html'), name='logout'),
   path('create/', ItemsCreateView.as_view(), name="items_create"),
-  path('update/<str:id>/', ItemsUpdateView.as_view(), name="items_update"),
+  # path('update/<str:id>/', ItemsUpdateView.as_view(), name="items_update"),
   path('delete/<str:id>/', ItemsDeleteView.as_view(), name="items_delete"),
   path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
   path('retirar/<str:id>/', ItemsRetirarStock.as_view(), name="items_form_retirar"),

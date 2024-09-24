@@ -2,7 +2,8 @@
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, Submit, Row, Column
+from crispy_forms.layout import Layout, Submit, Row, Column
+from django.forms import inlineformset_factory
 
 from items.models import Items, ItemTombo
 
@@ -34,13 +35,12 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       )
    )
 
-   tombo = forms.CharField (
-      label = 'Tombo',
-      required = False, 
-      widget = forms.TextInput (
-         attrs = {
+   tombo = forms.CharField(
+      label='Tombo',
+      required=False,
+      widget=forms.TextInput(
+         attrs={
             'class': 'form-control',
-            'id': 'id_tombo',
             'placeholder': 'Digite o tombo do item..'
          },
       ),
@@ -136,7 +136,71 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
 
       super(ItemsFormCreate, self).__init__(*args, **kwargs)
 
-      # Adicionamos elementos dentro do init
+      # Atualiza subcategorias com base na categoria selecionada
+      if 'category' in self.data :
+
+         category = self.data.get ( 'category' ) 
+         self.fields [ 'sub_category' ].choices = [
+            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
+         ]
+
+      elif self.instance.pk:
+
+         category = self.instance.category
+         self.fields[ 'sub_category' ].choices = [
+            (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
+         ]
+
+   def get_subcategories(self, category):
+
+      subcategories = {
+         'Selecionar': [],
+         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
+         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
+         'Ferramenta': ['Não sub categorias'],
+         'Material de Consumo': ['Item usado'],
+         'Descarte': ['Não a sub categorias']
+      }
+
+      return subcategories.get(category, [])
+
+   def clean_quantity(self):
+
+      valor = self.cleaned_data.get('quantity')
+
+      if valor < 1:
+         raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
+      return valor
+
+   def save(self, commit=True):
+
+      item = super(ItemsFormCreate, self).save(commit=False)
+
+      if commit:
+         item.save()
+      
+      return item
+
+class ItemTomboForm(forms.ModelForm):
+   
+   tombo = forms.CharField (
+      label = 'Tombo',
+      required = False, 
+      widget = forms.TextInput (
+         attrs = {
+            'class': 'form-control',
+            'placeholder': 'Digite o tombo do item..'
+         },
+      ),
+   )
+
+   class Meta:
+
+      model = ItemTombo
+      fields = ['tombo']
+
+   def __init__(self, *args, **kwargs):
+
       self.helper = FormHelper()
       self.helper.form_class = 'form-horizontal'
       self.helper.layout = Layout(
@@ -159,65 +223,17 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
 
          ),
 
-         'name',
-         'brand',
-         'model',
-         'location',
-         'category',
-         'sub_category',
-         'quantity',
-         'observation',
       )
 
-      # Iremos retirar a redenrização automatica do campo 'tombo' para podermos configura-lo manualmente 
-      if 'tombo' in self.helper.layout.fields:
-         self.helper.layout.fields.remove('tombo')
-
-      # Atualiza subcategorias com base na categoria selecionada
-      if 'category' in self.data :
-         category = self.data.get ( 'category' ) 
-         self.fields [ 'sub_category' ].choices = [
-            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
-         ]
-
-      elif self.instance.pk:
-         category = self.instance.category
-         self.fields[ 'sub_category' ].choices = [
-            (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
-         ]
-
-   def get_subcategories(self, category):
-
-      subcategories = {
-         'Selecionar': [],
-         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-         'Ferramenta': ['Não sub categorias'],
-         'Material de Consumo': ['Item usado'],
-         'Descarte': ['Não a sub categorias']
-      }
-      return subcategories.get(category, [])
-
-   def clean_quantity(self):
-
-      valor = self.cleaned_data.get('quantity')
-      if valor < 1:
-         raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
-      return valor
-
-   def save(self, commit=True):
-
-      item = super(ItemsFormCreate, self).save(commit=False)
-      if commit:
-         item.save()
-      
-      tombo = self.cleaned_data.get('tombo')
-      if tombo:
-         # Cria um novo ItemTombo se o tombo for fornecido
-         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
-      
-      return item
-
+# FormsSet para múltiplos tombos
+ItemTomboFormSet = inlineformset_factory(
+   Items,
+   ItemTombo, 
+   fields = ('tombo',),
+   form = ItemTomboForm, 
+   extra = 1 ,
+   can_delete = True,
+)
 
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
 

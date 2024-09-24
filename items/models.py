@@ -52,13 +52,10 @@ class Items(models.Model):
         
         super().save(*args, **kwargs)
 
-
-# Mudança de modelo de dados 
+# Mudança de modelo de dados no Tombo 
 class ItemTombo(models.Model):
     item = models.ForeignKey(Items, related_name='tombos', on_delete=models.CASCADE)
     tombo = models.CharField(max_length=50)
-
-
 
 class ItemsAuditLog(models.Model):
     ACTION_CHOICES = [

@@ -185,19 +185,15 @@ document.querySelectorAll('.menu-content').forEach(function(menu) {
   });
 });
 
+// Adiciona mais um campo e tombo ao formulário
 document.addEventListener('DOMContentLoaded', function () {
-
-  // Capturar o botão "add-tombo-btn"
-  var addTomboBtn = document.getElementById('add-tombo-btn');
+  var addTomboBtn = document.getElementById('add-tombo-btn');               // Capturar o botão "add-tombo-btn"
+  var container = document.getElementById('tombo-container');               // Obter o contêiner onde os campos serão adicionados
+  var totalForms = document.querySelector('#id_itemtombo_set-TOTAL_FORMS'); // Atualize aqui para o nome correto do seu total de forms
 
   // Adicionar o evento de clique no botão
   addTomboBtn.addEventListener('click', function() {
-
-    // Obter o contêiner onde os campos serão adicionados
-    var container = document.getElementById('tombo-container');
-
-    // Contar quantos campos já existem para gerar IDs únicos
-    var fieldCount = container.getElementsByClassName('form-group').length;
+    var fieldCount = container.getElementsByClassName('form-group').length;   // Contar quantos campos já existem para gerar IDs únicos
 
     // Criar um novo div para o campo clonado
     var newField = document.createElement('div');
@@ -205,21 +201,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Criar o HTML do novo campo clonado
     newField.innerHTML = `
-      <label for="id_tombo_${fieldCount}">Tombo</label>
+      <label for="id_itemtombo_set-${fieldCount}-tombo">Tombo</label>
       <div class="input-group">
-        <input type="text" class="form-control" id="id_tombo_${fieldCount}" name="tombo_${fieldCount}" placeholder="Digite o tombo do item..">
+        <input type="text" class="form-control" id="id_itemtombo_set-${fieldCount}-tombo" name="itemtombo_set-${fieldCount}-tombo" placeholder="Digite o tombo do item..">
         <div class="input-group-append">
-          <button type="button" class="btn btn-danger remove-tombo-btn">del</button>
+          <button type="button" class="btn btn-danger remove-tombo-btn">Remover</button>
         </div>
       </div>
     `;
 
     // Adicionar o novo campo no contêiner
     container.appendChild(newField);
+    totalForms.value = parseInt(totalForms.value) + 1; // Corrigido para parseInt
 
     // Adicionar evento de remoção ao botão de deletar recém-adicionado
     newField.querySelector('.remove-tombo-btn').addEventListener('click', function() {
       newField.remove();
+      totalForms.value = parseInt(totalForms.value) - 1; // Corrigido para parseInt
     });
   });
 });

@@ -52,42 +52,43 @@
 
       <form method="POST">
         {% csrf_token %}
-
-        <!-- Renderização manual do campo 'tombo' e botão -->
-        <div id="tombo-container" class="tombo-container">
-          <div class="form-group">
-            <label for="{{ form.tombo.id_for_label }}">{{ form.tombo.label }}</label>
         
-            <small class="form-text text-muted">Caso tenha que cadastrar mais de um item com tombos, especifique e adicione quantos tombos for necessários</small>
-        
-            <div class="input-group">
-              {{ form.tombo }}
-              <div class="input-group-append">
-                <button type="button" class="btn btn-primary" id="add-tombo-btn">add</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      
-        <!-- Renderização dos demais campos automaticamente -->
+        <!-- Renderização oscampos automaticamente -->
         {% for field in form %}
 
-          {% if field.name != 'tombo' %}
-
-            <div class="form-group">
-              {{ field.label_tag }}
-              {{ field }}
-            </div>
-
-          {% endif %}
+          <div class="form-group">
+            {{ field.label_tag }}
+            {{ field }}
+          </div>
 
         {% endfor %}
+
+        <h3>Tombos</h3>
+        <div id="tombo-container">
+          {{ form.management_form }} <!-- Necessário para o FormSet -->
+          {% for tombo_form in formset %}
+            <div class="form-group">
+              {{ tombo_form.tombo.label_tag }}
+              <div class="input-group">
+                {{ tombo_form.tombo }} <!-- Renderiza o campo de tombo -->
+                <div class="input-group-append">
+                  {% if tombo_formset.can_delete %}
+                    <button type="button" class="btn btn-danger remove-tombo-btn">Remover</button>
+                  {% endif %}
+                </div>
+              </div>
+              {{ tombo_form.errors }} <!-- Exibe erros relacionados ao campo de tombo -->
+            </div>
+          {% empty %}
+              <p>Não há tombos. Adicione um.</p>
+          {% endfor %}
+        </div>
         
+        <button type="button" id="add-tombo-btn"> add tombo </button>
         <button type = "submit" class = "btn btn-save"> Salvar </button>
         <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
 
       </form>
-
     {% endif %}
   </div>
 
