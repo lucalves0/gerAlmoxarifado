@@ -19,7 +19,7 @@ class Items(models.Model):
     sub_category = models.CharField(verbose_name="Sub-Categoria", max_length=100, default='')
     quantity = models.PositiveIntegerField(verbose_name="Quantidades de Unidades")
     create_at = models.DateField(auto_now_add=True, null=False, blank=False)
-    observation = models.CharField(verbose_name="Observação", max_length=300, default='', blank=True)
+    observation = models.CharField(verbose_name="Observação", max_length=600, default='', blank=True)
     modified_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
@@ -55,7 +55,7 @@ class Items(models.Model):
 # Mudança de modelo de dados no Tombo 
 class ItemTombo(models.Model):
     item = models.ForeignKey(Items, related_name='tombos', on_delete=models.CASCADE)
-    tombo = models.CharField(max_length=50)
+    tombo = models.CharField(max_length=200)
 
 class ItemsAuditLog(models.Model):
     ACTION_CHOICES = [

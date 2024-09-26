@@ -320,9 +320,9 @@ class ItemsSubInformatica(LoginRequiredMixin, ListView):
       context['has_equipamentos'] = any(item.sub_category == "EQUIPAMENTOS" for item in items)
       context['has_suprimentos'] = any(item.sub_category == "SUPRIMENTOS" for item in items)
       context['has_acessorios'] = any(item.sub_category == "ACESSÓRIOS" for item in items)
-      context['has_perifericos'] = any(item.sub_category == "Periféricos" for item in items)
-      context['has_pecas_reposicao'] = any(item.sub_category == "Peças de reposição" for item in items)
-      context['has_outros'] = any(item.sub_category == "Outros" for item in items)
+      context['has_perifericos'] = any(item.sub_category == "PERIFÉRICOS" for item in items)
+      context['has_pecas_reposicao'] = any(item.sub_category == "PEÇAS DE REPOSIÇÃO" for item in items)
+      context['has_outros'] = any(item.sub_category == "OUTROS" for item in items)
 
       return context
 

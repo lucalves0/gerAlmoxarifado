@@ -16,6 +16,7 @@
     {% if item_informatica_list %}
       <form>
         <div class="expandable-list">
+
           <div class="item">
             <div class="header" onclick="toggleContent(this)">
               <span class="arrow">&#9654;</span> 
@@ -93,6 +94,7 @@
               {% endif %}
             </div>
           </div>
+
           <div class="item">
             <div class="header" onclick="toggleContent(this)">
               <span class="arrow">&#9654;</span> 
@@ -131,6 +133,7 @@
               {% endif %}
             </div>
           </div>
+
           <div class="item">
             <div class="header" onclick="toggleContent(this)">
               <span class="arrow">&#9654;</span> 
@@ -138,7 +141,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Periféricos" %}
+                {% if item.sub_category == "PERIFÉRICOS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -149,6 +152,7 @@
                         <p><span>Marca:</span> {{item.brand}}</p>
                         <p><span>Modelo:</span> {{item.model}}</p>
                       </div>
+                    </div>
                     <div class="menu-container">
                       <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
                       <div class="menu-content" id="menuDropdown">
@@ -168,6 +172,7 @@
               {% endif %}
             </div>
           </div>
+
           <div class="item">
             <div class="header" onclick="toggleContent(this)">
               <span class="arrow">&#9654;</span> 
@@ -175,7 +180,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Peças de reposição" %}
+                {% if item.sub_category == "PEÇAS DE REPOSIÇÃO" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -201,11 +206,12 @@
               {% endfor %}
               {% if not has_pecas_reposicao %}
                 <div>
-                  <p>Não há itens cadastrados para a sub-categoria <span>"Peças de reposição"<span/>.</p>
+                  <p>Não há itens cadastrados para a sub-categoria <span>"Peças de Reposição"<span/>.</p>
                 </div>
               {% endif %}
             </div>
           </div>
+
           <div class="item">
             <div class="header" onclick="toggleContent(this)">
               <span class="arrow">&#9654;</span> 
@@ -213,7 +219,7 @@
             </div>
             <div class="content">
               {% for item in item_informatica_list  %}
-                {% if item.sub_category == "Outros" %}
+                {% if item.sub_category == "OUTROS" %}
                   <div class="item-row">
                     <div class="dados_items">
                       <div class="description">
@@ -244,6 +250,7 @@
               {% endif %}
             </div>
           </div>
+
         </div>
       </form>
     {% else %}
