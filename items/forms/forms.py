@@ -1,9 +1,6 @@
 
 from django import forms
 from django.contrib.auth.mixins import LoginRequiredMixin
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
-from django.forms import inlineformset_factory
 
 from items.models import Items, ItemTombo
 
@@ -33,17 +30,6 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
             
          }
       )
-   )
-
-   tombo = forms.CharField(
-      label='Tombo',
-      required=False,
-      widget=forms.TextInput(
-         attrs={
-            'class': 'form-control',
-            'placeholder': 'Digite o tombo do item..'
-         },
-      ),
    )
 
    brand = forms.CharField (
@@ -99,7 +85,6 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       ) 
    )
 
-
    quantity = forms.IntegerField (
       label = 'Quantidade',
       min_value = 1,
@@ -112,6 +97,19 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
             'placeholder': 'Digite quantas unidades possi do item..'
          }
       )
+   )
+   
+   tombo = forms.CharField (
+      label = 'Tombo',
+      required = False, 
+      widget = forms.Textarea (
+         attrs = {
+            'class': 'form-control',
+            'placeholder': 'Especifique os tombos dos itens associados a este cadastro',
+            'row' : 3,
+            'style' : 'resize: vertical;'
+         },
+      ),
    )
 
    observation = forms.CharField (
@@ -126,16 +124,15 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
          }
       )
    )
-
    
    class Meta:
       model = Items
-      fields = ["name", "tombo", "brand", "model", "location", "category", "sub_category", "quantity", "observation"]
+      fields = ["name","brand", "model", "location", "category", "sub_category", "quantity", "tombo", "observation"]
 
    def __init__(self, *args, **kwargs):
 
       super(ItemsFormCreate, self).__init__(*args, **kwargs)
-
+      
       # Atualiza subcategorias com base na categoria selecionada
       if 'category' in self.data :
 
@@ -171,69 +168,6 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
       if valor < 1:
          raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
       return valor
-
-   def save(self, commit=True):
-
-      item = super(ItemsFormCreate, self).save(commit=False)
-
-      if commit:
-         item.save()
-      
-      return item
-
-class ItemTomboForm(forms.ModelForm):
-   
-   tombo = forms.CharField (
-      label = 'Tombo',
-      required = False, 
-      widget = forms.TextInput (
-         attrs = {
-            'class': 'form-control',
-            'placeholder': 'Digite o tombo do item..'
-         },
-      ),
-   )
-
-   class Meta:
-
-      model = ItemTombo
-      fields = ['tombo']
-
-   def __init__(self, *args, **kwargs):
-
-      self.helper = FormHelper()
-      self.helper.form_class = 'form-horizontal'
-      self.helper.layout = Layout(
-         Row (
-            
-            Column (
-               'tombo',
-               css_class = 'form-group col-md-8 mb-0'
-            ),
-
-            Column (
-               Submit (
-                  'submit_button',
-                  '+',
-                  css_class = 'btn btn-primary'
-               ),
-               css_class='form-group col-md-4 mb-0'
-            ),
-            css_class='form-row'
-
-         ),
-
-      )
-
-# FormsSet para múltiplos tombos
-ItemTomboFormSet = inlineformset_factory(
-   Items,
-   ItemTombo, 
-   fields = ('tombo',),
-   form = ItemTomboForm, 
-   extra = 1 ,
-   can_delete = True,
-)
 
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
 

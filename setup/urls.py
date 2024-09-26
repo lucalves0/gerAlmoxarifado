@@ -1,12 +1,10 @@
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
 from items.views import (
   ItemsListView, 
   ItemsCreateView, 
-  # ItemsUpdateView, 
+  ItemsUpdateView, 
   ItemsDeleteView,
   LoadSubcategoriesView,
   ItemsRetirarStock,
@@ -27,9 +25,9 @@ urlpatterns = [
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
   path('logout/', auth_views.LogoutView.as_view(template_name='todos/templates/registration/logged_out.html'), name='logout'),
   path('create/', ItemsCreateView.as_view(), name="items_create"),
-  # path('update/<str:id>/', ItemsUpdateView.as_view(), name="items_update"),
+  path('items/update/<str:id>/', ItemsUpdateView.as_view(), name="items_update"),
   path('delete/<str:id>/', ItemsDeleteView.as_view(), name="items_delete"),
-  path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
+  path('ajax-load-subcategories/', LoadSubcategoriesView.as_view(), name='load-subcategory'),
   path('retirar/<str:id>/', ItemsRetirarStock.as_view(), name="items_form_retirar"),
   path('items-material-instalacao/<str:category>/', ItemsSubMaterialInstalacao.as_view(template_name="items/pag_subs_category/items_material_instalacao.html"), name="items_material_instalacao"),
   path('items-informatica/<str:category>/', ItemsSubInformatica.as_view(template_name="items/pag_subs_category/items_informatica.html"), name="items_informatica"),

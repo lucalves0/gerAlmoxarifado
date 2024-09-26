@@ -9,10 +9,11 @@
 {% endblock %}
 
 {% block content %}
+
   <div class="container">
 
     <h1>{{ title }}</h1>
-
+    
     <!-- Item já existe -->
     {% if items.pk %}
 
@@ -24,11 +25,9 @@
         
         <!-- Renderização dos demais campos automaticamente -->
         {% for field in form %}
-
           {% if field.name != 'category' and field.name != 'sub_category' %}
-              {{ field|as_crispy_field }}
+            {{ field|as_crispy_field }}
           {% endif %}
-
         {% endfor %}
 
         <!-- Campo 'category' e 'sub-category' desativado manualmente -->
@@ -43,48 +42,24 @@
         </div>
 
         <button type = "submit" class = "btn btn-save"> Salvar </button>
-        <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
+        <a href = "{% url "items_main" %}" class = "btn btn-cancelar"> Cancelar </a>
 
       </form>
     
     <!-- Item sendo criado -->
     {% else %}
 
-      <form method="POST">
+      <form class="form" method="POST">
         {% csrf_token %}
         
         <!-- Renderização oscampos automaticamente -->
         {% for field in form %}
-
           <div class="form-group">
             {{ field.label_tag }}
             {{ field }}
           </div>
-
         {% endfor %}
 
-        <h3>Tombos</h3>
-        <div id="tombo-container">
-          {{ form.management_form }} <!-- Necessário para o FormSet -->
-          {% for tombo_form in formset %}
-            <div class="form-group">
-              {{ tombo_form.tombo.label_tag }}
-              <div class="input-group">
-                {{ tombo_form.tombo }} <!-- Renderiza o campo de tombo -->
-                <div class="input-group-append">
-                  {% if tombo_formset.can_delete %}
-                    <button type="button" class="btn btn-danger remove-tombo-btn">Remover</button>
-                  {% endif %}
-                </div>
-              </div>
-              {{ tombo_form.errors }} <!-- Exibe erros relacionados ao campo de tombo -->
-            </div>
-          {% empty %}
-              <p>Não há tombos. Adicione um.</p>
-          {% endfor %}
-        </div>
-        
-        <button type="button" id="add-tombo-btn"> add tombo </button>
         <button type = "submit" class = "btn btn-save"> Salvar </button>
         <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
 
@@ -94,11 +69,15 @@
 
   <script type="text/javascript">
     $(document).ready(function() {
+
+      // Armazene a URL em uma variavel 
+      var loadSubcategoriesUrl = "{% url 'load-subcategory' %}";
+
       // Campos select category e sub-category
       $('#id_category').change(function() {
         var category = $(this).val();
         $.ajax({
-          url: '{% url "ajax-load-subcategories" %}',
+          url: loadSubcategoriesUrl,
           data: {'category': category},
           success: function(data) {
             var $subCategory = $('#id_sub_category');
@@ -109,22 +88,6 @@
           }
         });
       });
-  
-      var initialCategory = $('#id_category').val();
-      if (initialCategory) {
-        $.ajax({
-          url: '{% url "ajax-load-subcategories" %}',
-          data: {'category': initialCategory},
-          success: function(data) {
-            var $subCategory = $('#id_sub_category');
-            $subCategory.empty();
-            $subCategory.append('<option value="">Selecione</option>');
-            $.each(data, function(index, value) {
-              $subCategory.append($('<option></option>').attr('value', value).text(value));
-            });
-          }
-        });
-      }
     });
   </script>
 {% endblock %}

@@ -8,37 +8,37 @@
 
   <title>{% block title %}Gerenciamento de Almoxarifado{% endblock %}</title>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  
   
   <script src="{% static 'js/funcoes.js' %}"></script>
   {% block extra_styles %}
   {% endblock %}
 </head>
 <body>
+
   <header>
     <a href="{% url 'items_main' %}">
       <img src="{% static 'img/foto-logo-din.png' %}" alt="Logo" style="height: 80px; margin-top: 10px;">
     </a>
     <a class="button_logout" href="{% url 'login' %}">SAIR</a>
   </header>
-  <div class="menu-container" id="menu-container">
-    <button class="menu-button" onclick="toggleMenu()">&#9776;</button>
-    <div class="menu-content" id="menu-content">
-      <a href="{% url 'itemsAuditLog' %}">Histórico</a>
-      <a href="{% url 'items_dashboard' %}">Dashboard</a>
-    </div>
+
+  <div class="menu-content-op" id="menu-content">
+    <a href="{% url 'itemsAuditLog' %}">Histórico</a>
+    <a href="{% url 'items_dashboard' %}">Dashboard</a>
   </div>
+
   <main>
     {% block content %}
     {% endblock %}
   </main>
+  
   {% block extra_scripts %}
   {% endblock %}
 </body>

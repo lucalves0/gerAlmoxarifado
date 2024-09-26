@@ -1,14 +1,11 @@
 main {
   margin: 50px;
+  align-items: baseline;
 }
 
 h1 {
   margin-top: 30px;
   text-align: center;
-}
-
-.download-button {
-  margin-bottom: 20px;
 }
 
 .download-button .btn {
@@ -26,7 +23,6 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 20px auto;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 

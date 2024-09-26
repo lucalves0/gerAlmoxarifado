@@ -15,8 +15,9 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 from django.db.models import Count
+from django.contrib import messages
 
-from .forms.forms import ItemsFormCreate, ItemsFormRetirarStock, ItemTomboFormSet
+from .forms.forms import ItemsFormCreate, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
 
 class ItemsListView(LoginRequiredMixin, ListView):
@@ -51,91 +52,81 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
 
    model = Items
    form_class = ItemsFormCreate
-   template_name = 'items/items_form.html'
    success_url = reverse_lazy("items_main")
 
+   def form_valid(self, form):
+      
+      self.object = form.save(commit=False)  # Não salva imediatamente
+      self.object.save()  # Salva a instância do Items
+
+      # Captura o valor do campo 'tombo'
+      tombo = form.cleaned_data.get('tombo')
+      
+      # Verifica se tombo não está vazio
+      if tombo:
+         ItemTombo.objects.create(item=self.object, tombo=tombo.strip())  # Adiciona o tombo único
+
+      return redirect(self.get_success_url())
+   
    def get_context_data(self, **kwargs):
 
       context = super().get_context_data(**kwargs)
       context['title'] = "Criar Item"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
-      context['tombo_formset'] = ItemTomboFormSet(queryset=ItemTombo.objects.none())
-
+      
       return context
-
-   def form_valid(self, form):
-
-      self.object = form.save()  # Salva o item primeiro
-
-      # Agora associe o formset ao item salva
-      tombo_formset = ItemTomboFormSet(self.request.POST, instance=self.object)
-
-      if tombo_formset.is_valid():
-         tombo_formset.save()
-         return super().form_valid(form)
-      else:
-         return self.form_invalid(form)
-
-   def form_invalid(self, form):
-      # Obtém o contexto e o formset, caso o form principal seja inválido
-      context = self.get_context_data(form=form)
-      tombo_formset = ItemTomboFormSet(self.request.POST)
-      context['tombo_formset'] = tombo_formset
-
-      # repassa o formulário inválido e o formset para o contexto
-      return self.render_to_response(context)
    
 class LoadSubcategoriesView(View):
 
-    def get(self, request, *args, **kwargs):
-        category = request.GET.get('category')
-        subcategories = {
-            'Selecionar': [],
-            'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-            'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-            'Ferramenta': ['Não sub categorias'],
-            'Material de Consumo' : ['Item usado'],
-            'Descarte' : ['Não a sub categorias']
-        }
-        subcats = subcategories.get(category, [])
-        return JsonResponse(subcats, safe=False)
+   def get(self, request, *args, **kwargs):
+      category = request.GET.get('category')
+      subcategories = {
+         'Selecionar': [],
+         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
+         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
+         'Ferramenta': ['Não sub categorias'],
+         'Material de Consumo' : ['Item usado'],
+         'Descarte' : ['Não a sub categorias']
+      }
+      subcats = subcategories.get(category, [])
+      return JsonResponse(subcats, safe=False)
     
-# class ItemsUpdateView(LoginRequiredMixin, UpdateView):
-#     model = Items
-#     form_class = ItemsFormCreate
-#     success_url = reverse_lazy("items_main")
+class ItemsUpdateView(LoginRequiredMixin, UpdateView):
+   model = Items
+   form_class = ItemsFormCreate
+   success_url = reverse_lazy("items_main")
 
-#     def get_object(self):
-#       id = self.kwargs.get('id')
-#       return get_object_or_404(Items, id=id)
-    
-#     def get_form(self, form_class=None):
-#       form = super().get_form(form_class)
-#       # Adiciona o ItemTombo se existir
-#       item = self.get_object()
-#       item_tombo_instance = item.tombos.first()  # Assume que há um ItemTombo associado
-#       form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
-#       return form
+   def get_object(self):
+      id = self.kwargs.get('id')
+      return get_object_or_404(Items, id=id)
 
-#     def form_valid(self, form):
-#       response = super().form_valid(form)
-#       item = self.object
-#       tombo = form.cleaned_data.get('tombo')
+   def get_initial(self):
+      initial = super().get_initial()
+      item = self.get_object()
       
-#       # Cria ou atualiza o ItemTombo
-#       if tombo:
-#          ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo})
-#       else:
-#          # Remove o ItemTombo se o campo tombo estiver vazio
-#          ItemTombo.objects.filter(item=item).delete()
-      
-#       return response
+      # Preenche os campos do formulário com os valores existentes
+      initial['tombo'] = item.tombos.first().tombo if item.tombos.exists() else ''
+      return initial
 
-#     def get_context_data(self, **kwargs):
-#       context = super().get_context_data(**kwargs)
-#       context['title'] = "Editar Item" 
-#       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
-#       return context
+   def form_valid(self, form):
+      
+      item = form.save()
+      tombo = form.cleaned_data.get('tombo')
+
+      # Se tombo não estiver vazio, atualiza ou cria o ItemTombo
+      if tombo:
+         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo.strip()})
+      else:
+         # Se o tombo estiver vazio, remove o ItemTombo existente
+         ItemTombo.objects.filter(item=item).delete()
+
+      messages.success(self.request, 'Item atualizado com sucesso!')
+      return super().form_valid(form)
+
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Editar Item"
+      return context
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
@@ -161,6 +152,7 @@ class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
    
     def get_form(self, form_class=None):
       form = super().get_form(form_class)
+      
       # Define todos os campos como somente leitura
       for field in form.fields.values():
          field.widget.attrs['readonly'] = True
