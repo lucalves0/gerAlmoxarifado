@@ -10,11 +10,11 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
    # Dicionario usando em campos Select | category e sub-category
    CATEGORY_CHOICES = [
       ('', 'Selecionar'),
-      ('Material para instalação', 'Material para instalação'),
-      ('Informática', 'Informática'),
-      ('Ferramenta', 'Ferramenta'),
-      ('Material de Consumo', 'Material de Consumo'),
-      ('Descarte', 'Descarte')   
+      ('MATERIAL PARA INSTALAÇÃO', 'MATERIAL PARA INSTALAÇÃO'),
+      ('INFORMÁTICA', 'INFORMÁTICA'),
+      ('FERRAMENTE', 'FERRAMENTE'),
+      ('MATERIAL DE CONSUMO', 'MATERIAL DE CONSUMO'),
+      ('DESCARTE', 'DESCARTE')   
    ]
 
    SUB_CATEGORY_CHOICES = [
@@ -133,30 +133,47 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
 
       super(ItemsFormCreate, self).__init__(*args, **kwargs)
       
-      # Atualiza subcategorias com base na categoria selecionada
-      if 'category' in self.data :
+      # Se o item já existe (no modo atualização), busque o campos os valores associados aos campos
+      if self.instance.pk:
 
-         category = self.data.get ( 'category' ) 
-         self.fields [ 'sub_category' ].choices = [
-            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
-         ]
-
-      elif self.instance.pk:
-
+         # Carrega a categoria e sub - categorias salvas
          category = self.instance.category
-         self.fields[ 'sub_category' ].choices = [
+         sub_category = self.instance.sub_category
+         
+         # Define os valores iniciais de category e sub_category com os valores salvos
+         self.fields['category'].initial = category
+         self.fields['sub_category'].choices = [
             (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
          ]
+         self.fields['sub_category'].initial = sub_category
+                
+         # Aqui você pode definir como quer salvar os tombos associados no campo de tombo 
+         tombos = ItemTombo.objects.filter(item = self.instance)
+         tombo_str = "\n ".join([t.tombo for t in tombos])  # Junta todos os tombos com quebra de linhas 
+         self.fields['tombo'].initial = tombo_str
+
+      # Atualiza subcategorias com base na categoria selecionada
+      elif 'category' in self.data :
+
+         category = self.data.get('category') 
+         self.fields ['sub_category'].choices = [
+            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
+         ]
+         
+      else:
+         
+         # No modo de criação, ou se não houver dados de categoria; exibe a opção por padrão
+         self.fields['sub_category'].choices = self.SUB_CATEGORY_CHOICES
 
    def get_subcategories(self, category):
 
       subcategories = {
          'Selecionar': [],
-         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-         'Ferramenta': ['Não sub categorias'],
-         'Material de Consumo': ['Item usado'],
-         'Descarte': ['Não a sub categorias']
+         'MATERIAL PARA INSTALAÇÃO': ['ELÉTRICAS', 'REDE', 'OUTROS'],
+         'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
+         'FERRAMENTA': ['NÃO SUB CATEGORIAS'],
+         'MATERIAL DE CONSUMO': ['ITEM USADO'],
+         'DESCARTE': ['NÃO A SUB CATEGORIAS']
       }
 
       return subcategories.get(category, [])

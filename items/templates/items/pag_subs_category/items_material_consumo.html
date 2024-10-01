@@ -30,6 +30,7 @@
                       <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
                       <p><span>Marca:</span> {{item.brand}}</p>
                       <p><span>Modelo:</span> {{item.model}}</p>
+                      <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %}</p>
                     </div>
                   </div>
                   <div class="menu-container">

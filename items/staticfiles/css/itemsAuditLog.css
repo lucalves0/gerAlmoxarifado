@@ -1,11 +1,14 @@
 main {
-  margin: 50px;
+  padding: 20px;
+  display: flex;
   align-items: baseline;
 }
 
 h1 {
+  width: 100%;
   margin-top: 30px;
   text-align: center;
+  
 }
 
 .download-button .btn {

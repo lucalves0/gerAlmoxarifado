@@ -59,6 +59,9 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
       self.object = form.save(commit=False)  # Não salva imediatamente
       self.object.save()  # Salva a instância do Items
 
+      # Atualiza o campo 'modified_by' com o usuário atual
+      self.object.modified_by = self.request.user
+      
       # Captura o valor do campo 'tombo'
       tombo = form.cleaned_data.get('tombo')
       
@@ -92,40 +95,44 @@ class LoadSubcategoriesView(View):
       return JsonResponse(subcats, safe=False)
     
 class ItemsUpdateView(LoginRequiredMixin, UpdateView):
-   model = Items
+   nodel = Items
    form_class = ItemsFormCreate
    success_url = reverse_lazy("items_main")
-
-   def get_object(self):
-      id = self.kwargs.get('id')
-      return get_object_or_404(Items, id=id)
-
-   def get_initial(self):
-      initial = super().get_initial()
-      item = self.get_object()
+   template_name = "items/items_form.html"
+   
+   def get_queryset(self):
       
-      # Preenche os campos do formulário com os valores existentes
-      initial['tombo'] = item.tombos.first().tombo if item.tombos.exists() else ''
-      return initial
-
+      # Aqui garantimos que o queryset está buscando pelo UUID corretamente 
+      return Items.objects.filter(id=self.kwargs['pk'])
+      
    def form_valid(self, form):
       
-      item = form.save()
-      tombo = form.cleaned_data.get('tombo')
-
-      # Se tombo não estiver vazio, atualiza ou cria o ItemTombo
-      if tombo:
-         ItemTombo.objects.update_or_create(item=item, defaults={'tombo': tombo.strip()})
-      else:
-         # Se o tombo estiver vazio, remove o ItemTombo existente
-         ItemTombo.objects.filter(item=item).delete()
-
-      messages.success(self.request, 'Item atualizado com sucesso!')
-      return super().form_valid(form)
-
+      self.object = form.save(commit=False)        # Não salva imediatamente 
+      self.object.modified_by = self.request.user  # Atualiza o campo 'modified_by'
+      self.object.save()                           # Salva a instância do item
+      
+      # Captura o valor do campo 'tombo'
+      tombo_str = form.cleaned_data.get('tombo')
+      
+      # Verifica se tombo não está vazio 
+      if tombo_str:
+         
+         # Remove tombos existentes para associar o novo 
+         ItemTombo.objects.filter(item = self.object).delete()
+         
+         # Quebra os tombos por linha e salva como tombos separados
+         tombos = [t.strip() for t in tombo_str.splitlines() if t.strip()]
+         for tombo in tombos: 
+            ItemTombo.objects.create(item = self.object, tombo = tombo)
+      
+      return redirect(self.get_success_url())
+   
    def get_context_data(self, **kwargs):
+      
       context = super().get_context_data(**kwargs)
-      context['title'] = "Editar Item"
+      context['title'] = "Atualizar Item"
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')
+      
       return context
 
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
@@ -267,8 +274,11 @@ class ItemsSubMaterialInstalacao(LoginRequiredMixin, ListView):
    context_object_name = 'item_material_aplicacao_list'
 
    def get_queryset(self):
+      
       category = self.kwargs['category']
-      return Items.objects.filter(category=category)
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
    
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -287,7 +297,9 @@ class ItemsSubDescarte(LoginRequiredMixin, ListView):
 
    def get_queryset(self):
       category = self.kwargs['category']
-      return Items.objects.filter(category=category)
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
 
 class ItemsSubMaterialConsumo(LoginRequiredMixin, ListView):
    model: Items
@@ -295,15 +307,12 @@ class ItemsSubMaterialConsumo(LoginRequiredMixin, ListView):
    context_object_name = 'item_material_consumo_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-   
-   def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
-      items = context['item_material_consumo_list']
+      
+      category = self.kwargs['category']
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
 
-      return context
-   
 class ItemsSubInformatica(LoginRequiredMixin, ListView):
    model: Items
    template_name = "items/pag_sub_category/items_informatica.html"
@@ -311,7 +320,9 @@ class ItemsSubInformatica(LoginRequiredMixin, ListView):
 
    def get_queryset(self):
       category = self.kwargs['category']
-      return Items.objects.filter(category=category)
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
    
    def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
@@ -332,9 +343,12 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
    context_object_name = 'item_ferramenta_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
-
+      
+      category = self.kwargs['category']
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
+   
 class DashboardView(View):
    def get(self, request, *args, **kwargs):
       # Coletar dados do banco de dados
