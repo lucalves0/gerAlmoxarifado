@@ -68,3 +68,4 @@ document.querySelectorAll('.menu-content').forEach(function(menu) {
     e.stopPropagation();
   });
 });
+

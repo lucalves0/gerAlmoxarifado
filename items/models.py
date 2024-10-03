@@ -47,8 +47,6 @@ class Items(models.Model):
         self.name = self.name.upper()
         self.brand = self.brand.upper()
         self.model = self.model.upper()
-        self.category = self.category.upper()
-        self.sub_category = self.sub_category.upper()
         
         super().save(*args, **kwargs)
 

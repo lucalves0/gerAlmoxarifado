@@ -39,12 +39,44 @@
 
       <form class="form" method="POST">
         {% csrf_token %}
+
+        {% if form.errors %}
+          <div class="alert alert-danger">
+            <strong>Corrija os erros abaixo:</strong>
+            <ul>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
         
         <!-- Renderização oscampos automaticamente -->
         {% for field in form %}
           <div class="form-group">
-            {{ field.label_tag }}
-            {{ field }}
+
+            <!-- Renderizando o campo de input ou select -->
+            {% if field.name == 'category' %}
+
+              <!-- Categoria: irá disparar a lógica de subcategoria -->
+              {{ field.label_tag }}
+              {{ field }}  <!-- Este será o <select> de categoria -->
+
+            {% elif field.name == 'sub_category' %}
+
+              <!-- Subcategoria: será preenchido dinamicamente -->
+              {{ field.label_tag }}
+              {{ field }}
+
+            {% else %}
+
+              {{ field.label_tag }}
+              {{ field }}
+              
+            {% endif %}
+
           </div>
         {% endfor %}
 
@@ -52,30 +84,47 @@
         <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
 
       </form>
-    {% endif %}
-  </div>
 
-  <script type="text/javascript">
-    $(document).ready(function() {
+      <script type="text/javascript">
+        $(document).ready(function() {
+          $('#id_category').change(function() {
+            var category = $(this).val();
+            $.ajax({
+              url: '{% url "ajax-load-subcategories" %}',
+              data: {
+                'category': category
+              },
+              success: function(data) {
+                var $subCategory = $('#id_sub_category');
+                $subCategory.empty();
+                $.each(data, function(index, value) {
+                  $subCategory.append($('<option></option>').attr('value', value).text(value));
+                });
+              }
+            });
+          });
 
-      // Armazene a URL em uma variavel 
-      var loadSubcategoriesUrl = "{% url 'load-subcategory' %}";
-
-      // Campos select category e sub-category
-      $('#id_category').change(function() {
-        var category = $(this).val();
-        $.ajax({
-          url: loadSubcategoriesUrl,
-          data: {'category': category},
-          success: function(data) {
-            var $subCategory = $('#id_sub_category');
-            $subCategory.empty();
-            $.each(data, function(index, value) {
-              $subCategory.append($('<option></option>').attr('value', value).text(value));
+          var initialCategory = $('#id_category').val();
+          if (initialCategory) {
+            $.ajax({
+              url: '{% url "ajax-load-subcategories" %}',
+              data: {
+                'category': initialCategory
+              },
+              success: function(data) {
+                var $subCategory = $('#id_sub_category');
+                $subCategory.empty();
+                $subCategory.append('<option value="">Selecione</option>');
+                $.each(data, function(index, value) {
+                  $subCategory.append('<option value="' + value + '">' + value + '</option>');
+                });
+              }
             });
           }
         });
-      });
-    });
-  </script>
+      </script>
+
+    {% endif %}
+  </div>
+
 {% endblock %}

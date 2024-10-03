@@ -5,21 +5,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from items.models import Items, ItemTombo
 
 
-class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
+class ItemsForm(LoginRequiredMixin, forms.ModelForm):
     
    # Dicionario usando em campos Select | category e sub-category
    CATEGORY_CHOICES = [
       ('', 'Selecionar'),
-      ('MATERIAL PARA INSTALAÇÃO', 'MATERIAL PARA INSTALAÇÃO'),
-      ('INFORMÁTICA', 'INFORMÁTICA'),
-      ('FERRAMENTE', 'FERRAMENTE'),
-      ('MATERIAL DE CONSUMO', 'MATERIAL DE CONSUMO'),
-      ('DESCARTE', 'DESCARTE')   
+      ('Material para instalação', 'Material para instalação'),
+      ('Informática', 'Informática'),
+      ('Ferramenta', 'Ferramenta'),
+      ('Material de Consumo', 'Material de Consumo'),
+      ('Descarte', 'Descarte')
    ]
 
    SUB_CATEGORY_CHOICES = [
-      ('', 'Selecione'),
-   ]
+      ('', 'Selecione'),  # Valor padrão vazio
+   ] 
 
    name = forms.CharField (
       label = "Nome",
@@ -64,7 +64,7 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
          }
       )
    )
-
+   
    category = forms.ChoiceField (
       choices = CATEGORY_CHOICES,
       label = "Categoria",
@@ -74,9 +74,9 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
          }
       )  
    )
-
+   
    sub_category = forms.ChoiceField (
-      choices = SUB_CATEGORY_CHOICES,
+      choices = [('', 'Selecionar')],
       label="Sub-Categoria",
       widget = forms.Select (
          attrs = {
@@ -128,15 +128,31 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
    class Meta:
       model = Items
       fields = ["name","brand", "model", "location", "category", "sub_category", "quantity", "tombo", "observation"]
+     
+   def clean_quantity(self):
+
+      valor = self.cleaned_data.get('quantity')
+
+      if valor < 1:
+         raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
+      return valor
 
    def __init__(self, *args, **kwargs):
-
-      super(ItemsFormCreate, self).__init__(*args, **kwargs)
       
-      # Se o item já existe (no modo atualização), busque o campos os valores associados aos campos
-      if self.instance.pk:
-
-         # Carrega a categoria e sub - categorias salvas
+      super(ItemsForm, self).__init__(*args, **kwargs)
+      
+      self.fields['category'].choices = self.CATEGORY_CHOICES
+      self.fields['sub_category'].choices = self.SUB_CATEGORY_CHOICES
+      
+      if 'category' in self.data:
+         
+         category = self.data.get('category')
+         self.fields['sub_category'].choices = [
+            (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
+         ]
+         
+      elif self.instance.pk:
+         
          category = self.instance.category
          sub_category = self.instance.sub_category
          
@@ -151,40 +167,20 @@ class ItemsFormCreate(LoginRequiredMixin, forms.ModelForm):
          tombos = ItemTombo.objects.filter(item = self.instance)
          tombo_str = "\n ".join([t.tombo for t in tombos])  # Junta todos os tombos com quebra de linhas 
          self.fields['tombo'].initial = tombo_str
-
-      # Atualiza subcategorias com base na categoria selecionada
-      elif 'category' in self.data :
-
-         category = self.data.get('category') 
-         self.fields ['sub_category'].choices = [
-            (sub_cat, sub_cat)  for sub_cat in self.get_subcategories(category)
-         ]
-         
-      else:
-         
-         # No modo de criação, ou se não houver dados de categoria; exibe a opção por padrão
-         self.fields['sub_category'].choices = self.SUB_CATEGORY_CHOICES
-
-   def get_subcategories(self, category):
-
+                
+      
+   def get_subcategories(self, category): 
+      
       subcategories = {
-         'Selecionar': [],
-         'MATERIAL PARA INSTALAÇÃO': ['ELÉTRICAS', 'REDE', 'OUTROS'],
-         'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
-         'FERRAMENTA': ['NÃO SUB CATEGORIAS'],
-         'MATERIAL DE CONSUMO': ['ITEM USADO'],
-         'DESCARTE': ['NÃO A SUB CATEGORIAS']
+      'Selecionar': [],
+      'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
+      'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
+      'Ferramenta': ['Não sub categorias'],
+      'Material de Consumo' : ['Item usado'],
+      'Descarte' : ['Não a sub categorias']
       }
-
+       
       return subcategories.get(category, [])
-
-   def clean_quantity(self):
-
-      valor = self.cleaned_data.get('quantity')
-
-      if valor < 1:
-         raise forms.ValidationError('O valor deve ser maior ou igual a 1.')
-      return valor
 
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
 

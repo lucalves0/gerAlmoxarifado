@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponse
+from django.contrib import messages
 from reportlab.lib.pagesizes import A4
 from io import BytesIO
 from reportlab.lib import colors
@@ -15,9 +16,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
 from django.db.models import Count
-from django.contrib import messages
-
-from .forms.forms import ItemsFormCreate, ItemsFormRetirarStock
+from .forms.forms import ItemsForm, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
 
 class ItemsListView(LoginRequiredMixin, ListView):
@@ -51,52 +50,41 @@ class ItemsListView(LoginRequiredMixin, ListView):
 class ItemsCreateView(LoginRequiredMixin, CreateView):
 
    model = Items
-   form_class = ItemsFormCreate
+   form_class = ItemsForm
    success_url = reverse_lazy("items_main")
-
-   def form_valid(self, form):
-      
-      self.object = form.save(commit=False)  # Não salva imediatamente
-      self.object.save()  # Salva a instância do Items
-
-      # Atualiza o campo 'modified_by' com o usuário atual
-      self.object.modified_by = self.request.user
-      
-      # Captura o valor do campo 'tombo'
-      tombo = form.cleaned_data.get('tombo')
-      
-      # Verifica se tombo não está vazio
-      if tombo:
-         ItemTombo.objects.create(item=self.object, tombo=tombo.strip())  # Adiciona o tombo único
-
-      return redirect(self.get_success_url())
+   template_name = "items/items_form.html"
    
    def get_context_data(self, **kwargs):
-
-      context = super().get_context_data(**kwargs)
-      context['title'] = "Criar Item"
-      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Cadastro de Item"
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')
       return context
    
-class LoadSubcategoriesView(View):
+   def form_valid(self, form):
+      
 
-   def get(self, request, *args, **kwargs):
-      category = request.GET.get('category')
-      subcategories = {
-         'Selecionar': [],
-         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-         'Ferramenta': ['Não sub categorias'],
-         'Material de Consumo' : ['Item usado'],
-         'Descarte' : ['Não a sub categorias']
-      }
-      subcats = subcategories.get(category, [])
-      return JsonResponse(subcats, safe=False)
-    
+      self.object = form.save(commit = False)
+      self.object.created_by = self.request.user
+      self.object.save()
+      
+      tombo_str = form.cleaned_data.get('tombo')
+      
+      if tombo_str:
+         
+         tombos = [t.strip() for t in tombo_str.splitlines() if t.strip()]
+         for tombo in tombos: 
+            ItemTombo.objects.create(item = self.object, tombo = tombo)
+      
+      return redirect(self.get_success_url())
+   
+   def form_invalid(self, form):
+      return super().form_invalid(form)  # Retorna a resposta padrão de formulário inválido
+   
 class ItemsUpdateView(LoginRequiredMixin, UpdateView):
-   nodel = Items
-   form_class = ItemsFormCreate
+   
+   model = Items
+   form_class = ItemsForm
    success_url = reverse_lazy("items_main")
    template_name = "items/items_form.html"
    
@@ -104,7 +92,15 @@ class ItemsUpdateView(LoginRequiredMixin, UpdateView):
       
       # Aqui garantimos que o queryset está buscando pelo UUID corretamente 
       return Items.objects.filter(id=self.kwargs['pk'])
+   
+   def get_context_data(self, **kwargs):
       
+      context = super().get_context_data(**kwargs)
+      context['title'] = "Atualizar Item"
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')
+      
+      return context
+     
    def form_valid(self, form):
       
       self.object = form.save(commit=False)        # Não salva imediatamente 
@@ -124,17 +120,9 @@ class ItemsUpdateView(LoginRequiredMixin, UpdateView):
          tombos = [t.strip() for t in tombo_str.splitlines() if t.strip()]
          for tombo in tombos: 
             ItemTombo.objects.create(item = self.object, tombo = tombo)
-      
+
       return redirect(self.get_success_url())
    
-   def get_context_data(self, **kwargs):
-      
-      context = super().get_context_data(**kwargs)
-      context['title'] = "Atualizar Item"
-      context['previous_page'] = self.request.META.get('HTTP_REFERER')
-      
-      return context
-
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
    success_url = reverse_lazy("items_main") 
@@ -147,10 +135,28 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
       context = super().get_context_data(**kwargs)
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
+
+class LoadSubcategoriesView(View):
+
+   def get(self, request, *args, **kwargs):
+      
+      category = request.GET.get('category')
+      
+      subcategories = {
+         'Selecionar': [],
+         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
+         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
+         'Ferramenta': ['Não sub categorias'],
+         'Material de Consumo' : ['Item usado'],
+         'Descarte' : ['Não a sub categorias']
+      }
+      
+      subcats = subcategories.get(category, [])
+      return JsonResponse(subcats, safe=False)
    
 class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
     model = Items
-    form_class = ItemsFormCreate
+    form_class = ItemsForm
     success_url = reverse_lazy("items_main")
 
     def get_object(self):
@@ -177,7 +183,7 @@ class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
       context['title'] = "Ficha Técnica"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
-   
+
 # atualiza a quantidade de unidades após retirada de produtos no estoque
 class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
 
