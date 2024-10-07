@@ -1,0 +1,66 @@
+{% extends 'items/base.html' %}
+
+{% load static %}
+
+{% block title %}Pesquisar itens{% endblock %}
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'css/items_search.css' %}">
+{% endblock %}
+
+{% block content %} 
+    <h1> Pesquisar item que estão cadastrados dentro do sistema </h1>
+
+    <form method="GET" action="{% url 'items_search' %}">
+        <input type="text" name="query" placeholder="Pesquisar itens">
+        <button type="submit" class="btn btn-save"> Buscar </button>
+    </form>
+
+    <div class="expandable-list">
+        {% for item in results %}
+            <div class="item">
+                <div class="content">
+                    <div class="item-row">
+                        <div class="dados_items">
+                            <div class="description">
+                                <p><span>Entrada no estoque:</span></p>
+                                <p>{{item.create_at}}</p>
+                                <p><span>Nome:</span> {{ item.name }}</p>
+                                <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
+                                <p><span>Marca:</span> {{item.brand}}</p>
+                                <p><span>Modelo:</span> {{item.model}}</p>
+                                <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %}</p>
+                            </div>
+                        </div>
+                        <div class="menu-container">
+                            <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+                            <div class="menu-content" id="menuDropdown">
+                                <a href="{% url 'items_ficha' id=item.id %}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
+                                <a href="{% url 'items_update' item.pk %}" class="btn btn-edit">Editar</a>
+                                <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
+                                <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                            </div>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p> Nenhum item relacionado a informação inserido na pesquisa. </p>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação, se houver -->
+    {% if is_paginated %}
+    <div>
+        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        <div>
+            {% if page_obj.has_previous %}
+                <a href="?q={{ request.GET.q }}&page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?q={{ request.GET.q }}&page={{ page_obj.next_page_number }}">Next</a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+{% endblock %}

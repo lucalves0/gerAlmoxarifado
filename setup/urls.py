@@ -16,7 +16,8 @@ from items.views import (
   SomeView,
   DashboardView,
   ItemsFichaTecnica,
-  LoadSubcategoriesView
+  LoadSubcategoriesView,
+  ItemSearchView,
 )
 
 
@@ -37,4 +38,5 @@ urlpatterns = [
   path('dashboard/', DashboardView.as_view(), name='items_dashboard'),
   path('ficha/<str:id>/', ItemsFichaTecnica.as_view(), name="items_ficha"),
   path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
+  path('search/', ItemSearchView.as_view(), name = 'items_search')
 ]

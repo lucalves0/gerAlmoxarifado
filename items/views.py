@@ -15,7 +15,7 @@ from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from datetime import datetime
-from django.db.models import Count
+from django.db.models import Count, Q
 from .forms.forms import ItemsForm, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
 
@@ -136,6 +136,22 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
 
+class ItemSearchView(ListView):
+   model = Items
+   template_name = 'items/items_search.html'
+   context_object_name = 'results'
+   paginate_by = 10     # Utlizamos a paginação, caso haja muito item aquela busca
+   
+   def get_queryset(self):
+      
+      query = self.request.GET.get('query')
+      
+      if query:
+         return Items.objects.filter (name__icontains = query)
+      
+      return Items.objects.none() # Retorna uma QuerySet vazia se não houver busca
+   
+   
 class LoadSubcategoriesView(View):
 
    def get(self, request, *args, **kwargs):
