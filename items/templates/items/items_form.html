@@ -29,10 +29,24 @@
           </div>
         {% endfor %}
 
-        <button type="submit" class="btn btn-save">Atualizar</button>
-        <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
+        <!-- Aqui está o campo hidden que passa o valor da sub categoria -->
+        <input type="hidden" id="initial-subcategory" value="{{ initial_sub_category }}">
 
-    </form>
+        <div class="menu-btn">
+          {% if not is_view_mode %}
+            <button type = "submit" class = "btn btn-save"> Salvar </button>
+            <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
+          
+          {% else %}
+            <a href = "{{ previous_page }}" class = "btn btn-cancelarFHVisualiar "> Cancelar </a>
+          {% endif %}
+          
+
+          
+          
+        </div>
+
+      </form>
 
     <!-- Item sendo criado -->
     {% else %}
@@ -79,52 +93,65 @@
 
           </div>
         {% endfor %}
-
-        <button type = "submit" class = "btn btn-save"> Salvar </button>
-        <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>
-
+        
+        <div class="menu-btn">
+          <button type = "submit" class = "btn btn-save"> Salvar </button>
+          <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>       
+        </div>
+        
       </form>
 
-      <script type="text/javascript">
-        $(document).ready(function() {
-          $('#id_category').change(function() {
-            var category = $(this).val();
-            $.ajax({
-              url: '{% url "ajax-load-subcategories" %}',
-              data: {
-                'category': category
-              },
-              success: function(data) {
-                var $subCategory = $('#id_sub_category');
-                $subCategory.empty();
-                $.each(data, function(index, value) {
-                  $subCategory.append($('<option></option>').attr('value', value).text(value));
-                });
-              }
-            });
-          });
-
-          var initialCategory = $('#id_category').val();
-          if (initialCategory) {
-            $.ajax({
-              url: '{% url "ajax-load-subcategories" %}',
-              data: {
-                'category': initialCategory
-              },
-              success: function(data) {
-                var $subCategory = $('#id_sub_category');
-                $subCategory.empty();
-                $subCategory.append('<option value="">Selecione</option>');
-                $.each(data, function(index, value) {
-                  $subCategory.append('<option value="' + value + '">' + value + '</option>');
-                });
-              }
-            });
-          }
-        });
-      </script>
-
     {% endif %}
+
+    <script type="text/javascript">
+
+      $(document).ready(function() {
+
+        var initialCategory = $('#id_category').val();
+        var initialSubCategory = '{{ form.sub_category.value }}';
+
+        // Função para carregar subcategorias dinamicamente
+        function loadSubcategories(categoryId, selectedSubCategory) {
+          $.ajax({
+            url: '{% url "ajax-load-subcategories" %}',
+            data: {
+              'category': categoryId
+            },
+            success: function(data) {
+              var $subCategory = $('#id_sub_category');
+              $subCategory.empty();  // Limpa as opções de subcategoria
+
+              // Preenche o campo de subcategorias com os dados recebidos
+              $.each(data, function(index, value) {
+                  var option = $('<option></option>').attr('value', value).text(value);
+                  $subCategory.append(option);
+              });
+
+              // Se houver uma subcategoria selecionada previamente, definir como selecionada
+              if (selectedSubCategory) {
+                  $subCategory.val(selectedSubCategory);
+              }
+            },
+
+            error: function(xhr, status, error) {
+              console.log("Erro ao carregar subcategorias:", error);
+            }
+          });
+        }
+
+        // Carregar subcategorias quando uma nova categoria for selecionada
+        $('#id_category').change(function() {
+          var categoryId = $(this).val();
+          loadSubcategories(categoryId, '');  // Limpa a subcategoria selecionada ao mudar a categoria
+        });
+
+        // Verifica se há uma categoria inicial no modo de atualização
+        if (initialCategory) {
+          loadSubcategories(initialCategory, initialSubCategory);  // Carrega subcategorias com base na categoria inicial
+        }
+      });
+    </script>
+    
   </div>
 
 {% endblock %}

@@ -1,15 +1,9 @@
 main {
   height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 10px 0;
-  padding: 0 20px;
 }
 
 .container {
   height: 40%;
-  width: 80%;
   max-width: 900px;
   gap: 20px;
   display: flex;
@@ -17,7 +11,6 @@ main {
   justify-content: center;
   align-items: center;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
-  padding: 40px;
 }
 
 .container h1 {
@@ -26,32 +19,28 @@ main {
   font-size: 2rem;
 }
 
-.container .btn {
-  text-align: center;
-  text-decoration: none;
+.container p {
   font-size: 1.25rem;
-  padding: 8px 12px;
-  margin: 0 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
+  color: black;
+  margin: 20px;
+}
+
+form {
+  width: 80%;
+  display: flex;
+  justify-content: center;
 }
 
 .container .btn-excluir {
   background-color: red;
   color: black;
+  width: 50%;
 }
 
 .container .btn-cancelar {
   background-color: green;
   color: black;
-}
-
-.container p {
-  font-size: 1.25rem;
-  color: black;
-  margin: 20px;
+  width: 50%;
 }
 
 /* Responsividade */

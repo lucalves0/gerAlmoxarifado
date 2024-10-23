@@ -16,27 +16,27 @@
         <div class="expandable-list">  
           <ul>
             {% if has_material_intalacao %}
-              <a href="{% url 'items_material_instalacao' "Material para instalação" %}"> Material para instalação </a>
+              <a href="{% url 'items_material_instalacao' "MATERIAL PARA INSTALAÇÃO" %}"> Material para instalação </a>
             {% else %}
               <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para instalação</strong></a>
             {% endif %}
             {% if has_informatica %}
-              <a  href="{% url 'items_informatica' "Informática" %}">Informática</a>
+              <a  href="{% url 'items_informatica' "INFORMÁTICA" %}">Informática</a>
             {% else %}
               <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Informática</strong></a>
             {% endif %}
             {% if has_material_consumo %}
-              <a  href="{% url 'items_material_consumo' "Material de Consumo" %}">Material para consumo</a>
+              <a  href="{% url 'items_material_consumo' "MATERIAL DE CONSUMO" %}">Material para consumo</a>
             {% else %}
               <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para consumo</strong></a>
             {% endif %}
             {% if has_descarte %}
-              <a  href="{% url 'items_descarte' "Descarte" %}">Descarte</a>
+              <a  href="{% url 'items_descarte' "DESCARTE" %}">Descarte</a>
             {% else %}
               <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria<strong>"Descarte"</strong></a>
             {% endif %}
             {% if has_ferramenta %}
-              <a href="{% url 'items_ferramentas' "Ferramenta" %}"> Ferramentas</a>
+              <a href="{% url 'items_ferramentas' "FERRAMENTA" %}"> Ferramentas</a>
             {% else %}
               <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Ferramentas</strong></a>
             {% endif %}

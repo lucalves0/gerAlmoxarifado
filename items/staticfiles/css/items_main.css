@@ -2,38 +2,20 @@ main {
   height: 100%;
   padding: 20px;
   margin-top: 60px; 
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .container {
-  width: 100%;
   max-width: 900px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: stretch;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  box-sizing: border-box;
 }
 
 .container h1 {
   font-size: 3rem;
   text-align: center;
-  margin-bottom: 15px;
-}
-
-.container .expandable-list {
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.container .expandable-list ul {
-  list-style-type: none;
+  font-weight: 400;
 }
 
 .container .expandable-list a {
@@ -42,12 +24,8 @@ main {
   color: black;
   background-color: #f1f1f1;
   border: 1px solid #ccc;
-  cursor: pointer;
   padding: 10px;
-  gap: 15px;
   font-size: 1.9rem;
-  border-radius: 4px;
-  margin-bottom: 10px;
 }
 
 .container .expandable-list .disabled-link {
@@ -59,28 +37,15 @@ main {
 }
 
 .btn {
-  background-color: green;
-  display: flex;
-  font-weight: initial;
-  font-size: 1rem;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
   color: white;
-  text-align: center;
-  text-decoration: none;
 }
 
 .btn:hover {
-  background-color: #49535f;
+  background-color: #418650;
 }
 
 .btn-cadastrar {
   background-color: green;
-  display: flex;
-  justify-content: space-around;
-  font-size: 1.2rem;
-  margin-top: 30px;
 }
 
 main .notifications_no_items {

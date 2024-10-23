@@ -26,7 +26,9 @@ urlpatterns = [
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
   path('create/', ItemsCreateView.as_view(), name="items_create"),
   path('update/<str:pk>/', ItemsUpdateView.as_view(), name="items_update"),
-  path('delete/<str:id>/', ItemsDeleteView.as_view(), name="items_delete"),
+  path('delete/<str:pk>/', ItemsDeleteView.as_view(), name="items_delete"),
+  path('ficha/<str:pk>/', ItemsFichaTecnica.as_view(), name="items_ficha"),
+   path('search/', ItemSearchView.as_view(), name = 'items_search'),
   path('retirar/<str:id>/', ItemsRetirarStock.as_view(), name="items_form_retirar"),
   path('items-material-instalacao/<str:category>/', ItemsSubMaterialInstalacao.as_view(template_name="items/pag_subs_category/items_material_instalacao.html"), name="items_material_instalacao"),
   path('items-informatica/<str:category>/', ItemsSubInformatica.as_view(template_name="items/pag_subs_category/items_informatica.html"), name="items_informatica"),
@@ -36,7 +38,6 @@ urlpatterns = [
   path('items-audit-log/', ItemsAuditLogView.as_view(), name='itemsAuditLog'),
   path('item/<str:hash>/update/', SomeView.as_view(), name='item_update'),
   path('dashboard/', DashboardView.as_view(), name='items_dashboard'),
-  path('ficha/<str:id>/', ItemsFichaTecnica.as_view(), name="items_ficha"),
-  path('ajax/load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
-  path('search/', ItemSearchView.as_view(), name = 'items_search')
+  path('ajax-load-subcategories/', LoadSubcategoriesView.as_view(), name='ajax-load-subcategories'),
+ 
 ]

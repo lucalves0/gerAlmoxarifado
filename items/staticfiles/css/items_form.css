@@ -1,8 +1,6 @@
 .container {
-  width: 80%;
   max-width: 800px;
   margin: 50px;
-  padding: 20px;
   border-radius: 5px;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -11,36 +9,36 @@
 }
 
 .container h1 {
-  margin-bottom: 20px;
   color: black;
+  font-weight: 400;
+  margin: 30px;
+
 }
 
 form {
   width: 100%;
+  padding: 10px;
+  margin-left: 40px;
+}
+
+.form-group {
+  margin-bottom: 2rem;
 }
 
 /* Labels específicos para formulários */
 .form-group label {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 20px;
+  font-weight: 600;
   margin: 5px;
   color: #333;
-  display: flex;
-  justify-content: flex-start;
-  margin-left: 20px;
 }
 
 
 input[type="text"],
 input[type="number"],
-.form-control,
-.input-group {
+.form-control {
   width: calc(100% - 50px); /* Ajusta a largura para deixar espaço para o botão */
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-sizing: border-box;
   margin-top: 20px;
-  margin-bottom: 20px;
   padding: 10px;
   font-size: 18px;
 }
@@ -51,25 +49,26 @@ input[type="number"],
   padding-left: 10px;
 }
 
-
-.input-group {
-  width: 97%;
-  border: 0;
-  padding-top: 0;
-  margin: 0;
-  margin-top: 2px;
-  margin-left: 15px;
+.menu-btn {
+  width: calc(100% - 50px);
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+
 }
 
-.input-group-append {
-  margin-right: 0px;
+.btn-save {
+  width: 50%;
+
 }
 
-.input-group #id_tombo {
-  width: 95%;
+main .btn-cancelar {
+  width: 50%;
+}
+
+main .btn-cancelarFHVisualiar {
+  width: 100%;
+  background-color: red;
+  color: black;
 }
 
 /* Media Queries para dispositivos menores */

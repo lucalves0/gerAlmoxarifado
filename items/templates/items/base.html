@@ -22,19 +22,28 @@
 </head>
 <body>
 
+ 
+
   <header>
-    <a href="{% url 'items_main' %}">
-      <img src="{% static 'img/foto-logo-din.png' %}" alt="Logo" style="height: 80px; margin-top: 10px;">
+    <a class="din" href="{% url 'items_main' %}">
+      <img class="logo-din" src="{% static 'img/logo-din.png' %}" alt="Logo">
     </a>
-    <a class="button_logout" href="{% url 'login' %}">SAIR</a>
+
+    <a class="uem" href="{% url 'items_main' %}">
+      <img class="logo-uem" src="{% static 'img/logo-uem.png' %}" alt="Logo">
+    </a>
   </header>
+  
 
   <div class="menu-content-op" id="menu-content">
     <a href="{% url 'items_search' %}">Pesquisar</a>
     <a href="{% url 'itemsAuditLog' %}">Histórico</a>
     <a href="{% url 'items_dashboard' %}">Dashboard</a>
+    <a class="button_logout" href="{% url 'login' %}">SAIR</a>
   </div>
 
+
+  
   <main>
     {% block content %}
     {% endblock %}

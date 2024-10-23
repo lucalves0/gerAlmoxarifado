@@ -7,28 +7,40 @@
 }
 
 body, html {
-  background-color: white;
-  margin: 0;
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
+
 header {
   display: flex;
-  height: 95px;
   padding: 10px;
-  align-items: center;
-  justify-content: space-between;
   background-color: #001e5955;
-  border: 2px solid black;
+  justify-content: space-between;
+  height: 100px;
 }
 
 header a {
-  font-size: 20px;
-  text-decoration-line: none;
-  color: black;
+  width: 50%;
+  margin-left: 20px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: end;
 }
+
+.din {
+  justify-content: start;
+}
+
+.logo-din,
+.logo-uem {
+  width: 130px;
+  height: 60px;
+  border-radius: 10px;
+}
+
+
 
 header .button_logout {
   background-color: red;
@@ -36,7 +48,6 @@ header .button_logout {
   padding: 5px 20px;
   color: white;
 }
-
 
 .menu-button {
   font-size: 30px;

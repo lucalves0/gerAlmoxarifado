@@ -1,4 +1,3 @@
-import json
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
@@ -8,14 +7,17 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.contrib import messages
+from django.db.models import Count
+
 from reportlab.lib.pagesizes import A4
-from io import BytesIO
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+
+from io import BytesIO
 from datetime import datetime
-from django.db.models import Count, Q
+import json
+
 from .forms.forms import ItemsForm, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
 
@@ -26,6 +28,7 @@ class ItemsListView(LoginRequiredMixin, ListView):
    context_object_name = 'items_list'
 
    def post(self, request, *args, **kwargs):
+      
       # Verificar qual botão foi pressionado
       action = request.POST.get('action')
 
@@ -57,7 +60,7 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
    def get_context_data(self, **kwargs):
       
       context = super().get_context_data(**kwargs)
-      context['title'] = "Cadastro de Item"
+      context['title'] = "Ficha de cadastro técnico de itens"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')
       return context
    
@@ -96,7 +99,13 @@ class ItemsUpdateView(LoginRequiredMixin, UpdateView):
    def get_context_data(self, **kwargs):
       
       context = super().get_context_data(**kwargs)
-      context['title'] = "Atualizar Item"
+      
+      # Pegar o valor inicial de category e sub_category do item atual
+      item = self.get_object()
+      context['initial_category'] = item.category  # Passa o valor da categoria para o contexto
+      context['initial_sub_category'] = item.sub_category  # Passa o valor da subcategoria para o contexto
+      context['is_view_mode'] = False  # Indica que estamos em modo de visualização
+      context['title'] = "Ficha de atualização de informações"
       context['previous_page'] = self.request.META.get('HTTP_REFERER')
       
       return context
@@ -122,13 +131,13 @@ class ItemsUpdateView(LoginRequiredMixin, UpdateView):
             ItemTombo.objects.create(item = self.object, tombo = tombo)
 
       return redirect(self.get_success_url())
-   
+      
 class ItemsDeleteView(LoginRequiredMixin, DeleteView):
    model = Items
    success_url = reverse_lazy("items_main") 
 
    def get_object(self):
-      id = self.kwargs.get('id')
+      id = self.kwargs.get('pk')
       return get_object_or_404(Items, id=id) 
    
    def get_context_data(self, **kwargs):
@@ -136,50 +145,19 @@ class ItemsDeleteView(LoginRequiredMixin, DeleteView):
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
 
-class ItemSearchView(ListView):
-   model = Items
-   template_name = 'items/items_search.html'
-   context_object_name = 'results'
-   paginate_by = 10     # Utlizamos a paginação, caso haja muito item aquela busca
-   
-   def get_queryset(self):
-      
-      query = self.request.GET.get('query')
-      
-      if query:
-         return Items.objects.filter (name__icontains = query)
-      
-      return Items.objects.none() # Retorna uma QuerySet vazia se não houver busca
-   
-   
-class LoadSubcategoriesView(View):
-
-   def get(self, request, *args, **kwargs):
-      
-      category = request.GET.get('category')
-      
-      subcategories = {
-         'Selecionar': [],
-         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-         'Ferramenta': ['Não sub categorias'],
-         'Material de Consumo' : ['Item usado'],
-         'Descarte' : ['Não a sub categorias']
-      }
-      
-      subcats = subcategories.get(category, [])
-      return JsonResponse(subcats, safe=False)
-   
 class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
+   
     model = Items
     form_class = ItemsForm
     success_url = reverse_lazy("items_main")
 
     def get_object(self):
-      id = self.kwargs.get('id')
+       
+      id = self.kwargs.get('pk')
       return get_object_or_404(Items, id=id)
    
     def get_form(self, form_class=None):
+       
       form = super().get_form(form_class)
       
       # Define todos os campos como somente leitura
@@ -192,13 +170,50 @@ class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
       form.fields['tombo'].initial = item_tombo_instance.tombo if item_tombo_instance else ''
       form.fields['tombo'].widget.attrs['readonly'] = True
       
+      # Define os campos select category e sub_category como somente leitura (desabilitados)
+      form.fields['category'].widget.attrs['disabled'] = True
+      form.fields['sub_category'].widget.attrs['disabled'] = True
+      
       return form
    
     def get_context_data(self, **kwargs):
       context = super().get_context_data(**kwargs)
       context['title'] = "Ficha Técnica"
+      context['is_view_mode'] = True  # Indica que estamos em modo de visualização
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
+
+class ItemSearchView(ListView):
+   model = Items
+   template_name = 'items/items_search.html'
+   context_object_name = 'results'
+   
+   def get_queryset(self):
+      
+      query = self.request.GET.get('query')
+      
+      if query:
+         return Items.objects.filter (name__icontains = query)
+      
+      return Items.objects.none() # Retorna uma QuerySet vazia se não houver busca
+     
+class LoadSubcategoriesView(View):
+
+   def get(self, request):
+      
+      category = request.GET.get('category')
+      
+      subcategories = {
+      'SELECIONAR': [],
+      'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
+      'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
+      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'MATERIAL DE CONSUMO' : ['ITEM USADO'],
+      'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
+      }
+       
+      subcats = subcategories.get(category, [])
+      return JsonResponse(subcats, safe=False)
 
 # atualiza a quantidade de unidades após retirada de produtos no estoque
 class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
@@ -207,20 +222,24 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
    form_class = ItemsFormRetirarStock
         
    def get_object(self):
+      
       id = self.kwargs.get('id')
       return get_object_or_404(Items, id=id)
 
    def get_form_kwargs(self):
+      
       kwargs = super().get_form_kwargs()
       kwargs['instance'] = self.get_object()
       return kwargs
 
    def form_valid(self, form):
+      
       item = self.get_object()
       quantity_to_item = form.cleaned_data['quantity']
       
       if quantity_to_item > item.quantity:
          return self.form_invalid(form)
+      
       else:
          item.quantity -= quantity_to_item
          item.save()
@@ -372,7 +391,9 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
       return Items.objects.filter(category=category).prefetch_related('tombos')
    
 class DashboardView(View):
+   
    def get(self, request, *args, **kwargs):
+      
       # Coletar dados do banco de dados
       total_items = Items.objects.count()
       items_by_category = Items.objects.values('category').annotate(count=Count('id'))

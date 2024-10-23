@@ -8,15 +8,20 @@
 {% endblock %}
 
 {% block content %} 
+
   <div class="container">
-    <h1>Excluir Item</h1>
-    <p>Tem certeza que deseja excluir item <strong>{{ items.name }}</strong>?</p>
+
+    <h1>Ficha de deleção de item cadastrado no sistema</h1>
+    <p>Tem certeza que deseja excluir item: <strong>{{ items.name }}</strong> ?</p>
+
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-excluir">Excluir</button>
       <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
     </form>
+
   </div> 
+
 {% endblock %}
 
   

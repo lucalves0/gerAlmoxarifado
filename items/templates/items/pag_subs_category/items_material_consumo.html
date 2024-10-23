@@ -36,9 +36,9 @@
                   <div class="menu-container">
                     <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
                     <div class="menu-content" id="menuDropdown">
-                      <a href="{% url 'items_ficha' id=item.id %}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
+                      <a href="{% url 'items_ficha'  item.pk%}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
                       <a href="{% url 'items_update' item.pk %}" class="btn btn-edit">Editar</a>
-                      <a href="{% url 'items_delete' id=item.id %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_delete' item.pk %}" class="btn btn-delete">Excluir</a>
                       <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
                     </div>
                   </div> 

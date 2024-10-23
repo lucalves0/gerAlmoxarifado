@@ -6,19 +6,18 @@ from items.models import Items, ItemTombo
 
 
 class ItemsForm(LoginRequiredMixin, forms.ModelForm):
-    
-   # Dicionario usando em campos Select | category e sub-category
+   
    CATEGORY_CHOICES = [
-      ('', 'Selecionar'),
-      ('Material para instalação', 'Material para instalação'),
-      ('Informática', 'Informática'),
-      ('Ferramenta', 'Ferramenta'),
-      ('Material de Consumo', 'Material de Consumo'),
-      ('Descarte', 'Descarte')
+      ('', 'SELECIONAR'),
+      ('MATERIAL PARA INSTALAÇÃO', 'MATERIAL PARA INSTALAÇÃO'),
+      ('INFORMÁTICA', 'INFORMÁTICA'),
+      ('FERRAMENTA', 'FERRAMENTA'),
+      ('MATERIAL DE CONSUMO', 'MATERIAL PARA CONSUMO'),
+      ('DESCARTE', 'DESCARTE')
    ]
 
    SUB_CATEGORY_CHOICES = [
-      ('', 'Selecione'),  # Valor padrão vazio
+      ('', 'SELECIONAR'),  # Valor padrão vazio
    ] 
 
    name = forms.CharField (
@@ -26,8 +25,7 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
       widget = forms.TextInput (
          attrs = {
             'class' : 'form-control',
-            'placeholder': 'Digite o nome do item..'
-            
+            'placeholder': 'Digite o nome do item..'        
          }
       )
    )
@@ -76,7 +74,7 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
    )
    
    sub_category = forms.ChoiceField (
-      choices = [('', 'Selecionar')],
+      choices = [('', 'SELECIONAR')],
       label="Sub-Categoria",
       widget = forms.Select (
          attrs = {
@@ -153,16 +151,9 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
          
       elif self.instance.pk:
          
-         category = self.instance.category
-         sub_category = self.instance.sub_category
+         self.fields['category'].initial = self.instance.category
+         self.fields['sub_category'].initial = self.instance.sub_category
          
-         # Define os valores iniciais de category e sub_category com os valores salvos
-         self.fields['category'].initial = category
-         self.fields['sub_category'].choices = [
-            (sub_cat, sub_cat) for sub_cat in self.get_subcategories(category)
-         ]
-         self.fields['sub_category'].initial = sub_category
-                
          # Aqui você pode definir como quer salvar os tombos associados no campo de tombo 
          tombos = ItemTombo.objects.filter(item = self.instance)
          tombo_str = "\n ".join([t.tombo for t in tombos])  # Junta todos os tombos com quebra de linhas 
@@ -172,12 +163,12 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
    def get_subcategories(self, category): 
       
       subcategories = {
-      'Selecionar': [],
-      'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-      'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-      'Ferramenta': ['Não sub categorias'],
-      'Material de Consumo' : ['Item usado'],
-      'Descarte' : ['Não a sub categorias']
+      'SELECIONAR': [],
+      'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
+      'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
+      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'MATERIAL DE CONSUMO' : ['ITEM USADO'],
+      'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
       }
        
       return subcategories.get(category, [])
