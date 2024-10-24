@@ -238,15 +238,24 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
       quantity_to_item = form.cleaned_data['quantity']
       
       if quantity_to_item > item.quantity:
-         return self.form_invalid(form)
-      
+         return self.form_invalid(form)     
       else:
          item.quantity -= quantity_to_item
-         item.save()
+         
+         if form.should_delete:
+            item.delete()
+         else:
+            item.save()
+         
          return redirect('items_main')
 
    def form_invalid(self, form):
       return self.render_to_response(self.get_context_data(form=form))
+
+   def get_context_data(self, **kwargs):
+      context = super().get_context_data(**kwargs)
+      context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
+      return context
 
 class ItemsAuditLogView(LoginRequiredMixin, View):
     template_name = 'items/itemsAuditLog.html'
@@ -258,7 +267,11 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
         if request.GET.get('download_pdf'):
            
             buffer = BytesIO()                              # Cria um buffer para o PDF
-            doc = SimpleDocTemplate(buffer, pagesize=A4)    # Cria o documento
+            
+            # Define o documento com margens (40px = 40 pontos)
+            doc = SimpleDocTemplate(buffer, pagesize = A4,
+                                    leftMargin=40, rightMargin=40,
+                                    topMargin=40, bottomMargin=40,)
             elements = []
 
             styles = getSampleStyleSheet()                  # Estilos de texto
@@ -276,18 +289,21 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
             # Adiciona os dados de cada log na tabela
             for log in logs:
                data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
-
+            
+            # Define as larguras das colunas (ajustar conforme necessário)
+            colWidths = [60, 100, 80, 100, 180]  # Larguras em pontos (ajuste conforme o conteúdo)
+            
             # Cria a tabela
-            table = Table(data)
+            table = Table(data, colWidths=colWidths)
 
             # Estilo da tabela
             style = TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),        # Fundo do cabeçalho
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),   # Cor do texto do cabeçalho
+                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),        # Fundo do cabeçalho
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),   # Cor do texto do cabeçalho
                 ('ALIGN', (0, 0), (-1, -1), 'CENTER'),               # Centraliza o texto
                 ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),     # Fonte do cabeçalho
                 ('BOTTOMPADDING', (0, 0), (-1, 0), 12),              # Padding do cabeçalho
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),      # Fundo das linhas
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),      # Fundo das linhas
                 ('GRID', (0, 0), (-1, -1), 1, colors.black),         # Grade ao redor da tabela
             ])
 

@@ -175,11 +175,12 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
 
 class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
 
-   quantity = forms.IntegerField(min_value=1, label="Quantidade a retirar")
+   quantity = forms.IntegerField(min_value=1)
+   location = forms.CharField(max_length=100)
 
    class Meta:
       model = Items
-      fields = ['quantity']
+      fields = ['quantity', 'location']
 
    def clean_quantity(self):
       quantity_to_item = self.cleaned_data.get('quantity')
@@ -194,3 +195,12 @@ class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
          self.should_delete = True
 
       return quantity_to_item
+
+   def __init__(self, *args, **kwargs):
+      
+      super(ItemsFormRetirarStock, self).__init__(*args, **kwargs)
+      
+      # Definiremos que o valor da localização seja limpo do valor anterior 
+      if self.instance and self.instance.pk:
+         self.initial['location'] = ''
+         self.fields['location'].widget.attrs['value'] = ''
