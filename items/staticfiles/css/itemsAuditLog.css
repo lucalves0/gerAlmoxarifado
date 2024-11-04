@@ -4,12 +4,42 @@ main {
   align-items: center;
 }
 
+main .btn {
+  margin: 0;
+}
+
 h1 {
   width: 100%;
   margin-top: 30px;
   text-align: center;
   font-weight: 400;
   
+}
+
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+input[type="text"] {
+  width: 100%;
+  height: 45px;
+  padding: 10px;
+}
+
+main .btn-save {
+  width: 100%;
+  margin-bottom: 0;
+  
+}
+
+form a {
+  height: 45px;
+  width: 100%;
+  border: 1px solid black;
 }
 
 .download-button {
@@ -29,6 +59,11 @@ h1 {
   background-color: #0056b3;
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
 thead th {
   background-color: #808b8ea5;
@@ -38,6 +73,7 @@ thead th {
   text-align: center;
   font-weight: 500;
 }
+
 
 tbody td {
   font-size: 20px;

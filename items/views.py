@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -258,66 +258,86 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
       return context
 
 class ItemsAuditLogView(LoginRequiredMixin, View):
-    template_name = 'items/itemsAuditLog.html'
+   
+   model = ItemsAuditLog
+   template_name = 'items/itemsAuditLog.html'
+   context_object_name = 'results'
 
-    def get(self, request, *args, **kwargs):
-        logs = ItemsAuditLog.objects.all().order_by('-timestamp')
+   def get(self, request, *args, **kwargs):
+      
+      # Obtém a query de pesquisa
+      action = self.request.GET.get('action')
+      item = self.request.GET.get('item')
+      
+      # Base da consulta
+      logs = ItemsAuditLog.objects.all()
+      
+      # Filtra pela ação do item se fornecido
+      if action:
+         logs = logs.filter(action__icontains=action)
+      
+         
+      # Filtra pelo nome do item se fornecido
+      if item:
+         logs = logs.filter(item__name__icontains=item)
+      
+      logs = logs.order_by('-timestamp')
+      
+      # Verifica se o parâmetro `download_pdf` foi enviado
+      if request.GET.get('download_pdf'):
+         
+         buffer = BytesIO()  # Cria um buffer para o PDF
+         doc = SimpleDocTemplate(buffer, pagesize=A4,
+                                 leftMargin=40, rightMargin=40,
+                                 topMargin=40, bottomMargin=40)
+         
+         elements = []
+         styles = getSampleStyleSheet()
+         title_style = styles['Title']
 
-        # Verifica se o parâmetro `download_pdf` foi enviado
-        if request.GET.get('download_pdf'):
-           
-            buffer = BytesIO()                              # Cria um buffer para o PDF
-            
-            # Define o documento com margens (40px = 40 pontos)
-            doc = SimpleDocTemplate(buffer, pagesize = A4,
-                                    leftMargin=40, rightMargin=40,
-                                    topMargin=40, bottomMargin=40,)
-            elements = []
+         # Título com a data e hora
+         current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+         title = f"Relatório de Ações - Gerado em: {current_time}"
+         elements.append(Paragraph(title, title_style))
+         elements.append(Spacer(1, 12))  # Espaçamento após o título
 
-            styles = getSampleStyleSheet()                  # Estilos de texto
-            title_style = styles['Title']
+         # Dados da tabela
+         data = [['Ação', 'Item', 'Usuário', 'Data/Hora', 'Observação']]  # Cabeçalhos da tabela
 
-            # Título com a data e hora
-            current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-            title = f"Relatório de Ações - Gerado em: {current_time}"
-            elements.append(Paragraph(title, title_style))
-            elements.append(Spacer(1, 12))                   # Espaçamento após o título
+         # Adiciona os dados de cada log na tabela
+         for log in logs:
+            data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
+         
+         # Estilo do PDF
+         colWidths = [60, 100, 80, 100, 180]  # Larguras em pontos
+         table = Table(data, colWidths=colWidths)
+         style = TableStyle([
+               ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+               ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
+               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+               ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+               ('GRID', (0, 0), (-1, -1), 1, colors.black),
+         ])
 
-            # Dados da tabela
-            data = [['Ação', 'Item', 'Usuário', 'Data/Hora', 'Observação']]  # Cabeçalhos da tabela
+         table.setStyle(style)
+         elements.append(table)  # Adiciona a tabela ao documento
+         doc.build(elements)     # Constrói o documento PDF
+         buffer.seek(0)          # Retorna o PDF como resposta
 
-            # Adiciona os dados de cada log na tabela
-            for log in logs:
-               data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
-            
-            # Define as larguras das colunas (ajustar conforme necessário)
-            colWidths = [60, 100, 80, 100, 180]  # Larguras em pontos (ajuste conforme o conteúdo)
-            
-            # Cria a tabela
-            table = Table(data, colWidths=colWidths)
+         return HttpResponse(buffer, content_type='application/pdf')
 
-            # Estilo da tabela
-            style = TableStyle([
-                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),        # Fundo do cabeçalho
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),   # Cor do texto do cabeçalho
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),               # Centraliza o texto
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),     # Fonte do cabeçalho
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),              # Padding do cabeçalho
-                ('BACKGROUND', (0, 1), (-1, -1), colors.white),      # Fundo das linhas
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),         # Grade ao redor da tabela
-            ])
-
-            table.setStyle(style)
-            elements.append(table)     # Adiciona a tabela ao documento
-            doc.build(elements)        # Constrói o documento PDF
-            buffer.seek(0)             # Retorna o PDF como resposta
-
-            return HttpResponse(buffer, content_type='application/pdf')
-
-        # Renderiza normalmente se não for pedido o download
-        context = {'logs': logs}
-        return render(request, self.template_name, context)
-
+      # Renderiza a página normalmente se não for pedido o download
+      context = {
+         'results': logs, 
+         'action': action,
+         'item' : item,
+      }
+      
+      return render(request, self.template_name, context)
+   
+   
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):

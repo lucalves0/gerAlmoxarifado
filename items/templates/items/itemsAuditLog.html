@@ -10,12 +10,19 @@
 
 {% block content %} 
 
-    <!-- Botão para baixar o PDF -->
-    <div class="download-button">
-        <a href="?download_pdf=true" class="btn btn-primary">Baixar Relatório em PDF</a>
-    </div>
     <h1>Histórico de ações realizadas dentro do sistema</h1>
 
+    <!-- Barra de pesquisa -->
+    <form method="GET" action="{% url 'itemsAuditLog' %}">
+        
+        <input type="text" name="action" placeholder="Busca pela ação realizada" value="{{ query|default_if_none:'' }}">
+        <input type="text" name="item" placeholder="Buscar por nome do item" value="{{ query|default_if_none:'' }}">
+
+        <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn btn-primary">Baixar Relatório em PDF</a>
+        <button type="submit" class="btn btn-save">Buscar item</button>
+        <a href = "itemsAuditLog" class = "btn btn-cancelar"> Cancelar busca </a>      
+        
+    </form>
     
     <table>
         <thead>
@@ -28,15 +35,21 @@
             </tr>
         </thead>
         <tbody>
-            {% for log in logs %}
+            {% if results %}
+                {% for log in results %}
+                    <tr>
+                        <td>{{ log.action }}</td>
+                        <td>{{ log.item_deletado }}</td>
+                        <td>{{ log.user.username }}</td>
+                        <td>{{ log.timestamp }}</td>
+                        <td>{{ log.observation }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
                 <tr>
-                    <td>{{ log.action }}</td>
-                    <td>{{ log.item_deletado }}</td>
-                    <td>{{log.user.username }}</td>
-                    <td>{{ log.timestamp }}</td>
-                    <td>{{ log.observation }}</td>
+                    <td colspan="5">Nenhum registro encontrado.</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
         </tbody>
     </table>
 {% endblock %}

@@ -28,7 +28,7 @@ urlpatterns = [
   path('update/<str:pk>/', ItemsUpdateView.as_view(), name="items_update"),
   path('delete/<str:pk>/', ItemsDeleteView.as_view(), name="items_delete"),
   path('ficha/<str:pk>/', ItemsFichaTecnica.as_view(), name="items_ficha"),
-   path('search/', ItemSearchView.as_view(), name = 'items_search'),
+  path('search/', ItemSearchView.as_view(), name = 'items_search'),
   path('retirar/<str:id>/', ItemsRetirarStock.as_view(), name="items_form_retirar"),
   path('items-material-instalacao/<str:category>/', ItemsSubMaterialInstalacao.as_view(template_name="items/pag_subs_category/items_material_instalacao.html"), name="items_material_instalacao"),
   path('items-informatica/<str:category>/', ItemsSubInformatica.as_view(template_name="items/pag_subs_category/items_informatica.html"), name="items_informatica"),
