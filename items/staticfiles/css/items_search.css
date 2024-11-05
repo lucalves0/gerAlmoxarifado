@@ -1,6 +1,8 @@
 main {
+    height: 100%;
     padding: 20px;
-  
+    margin: 60px; 
+    display: block;
 }
 
 form {
@@ -19,47 +21,30 @@ input[type="text"] {
   
 
 .expandable-list {
-    height: auto;
-    width: 80%;
-    max-width: 900px;
-    margin-top: 15px;
-    gap: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+    width: 60%;
+    margin: 0 auto;
     padding: 40px;
+    box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
     border: 1px solid #ccc;
 }
 
-
-.expandable-list .item {
-    
-    margin-bottom: 10px;
-    width: 100%;
+.expandable-list h1 {
+    text-align: center;
 }
 
-.expandable-list .header{
-    display: flex;
-    background-color: #f1f1f1;
-    cursor: pointer;
-    padding: 10px;
-    gap: 15px;
-}  
+.expandable-list .alert-init {
+
+    margin-top: none;
+    margin-bottom: none;
+    font-size: x-large;
+    text-align: center;
+    font-weight: bold
+}
 
 .expandable-list .content.open {
     display: flex;
     flex-direction: column;
     width: 100%;
-}
-
-.item-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 10px;
 }
   
 .content .dados_items {
@@ -68,12 +53,19 @@ input[type="text"] {
     padding: 10px;
     margin-bottom: 5px; 
 }
-  
-.menu-container {
-    position: relative;
-    display: inline-block;
+
+.content .description span {
+    font-weight: bold;
 }
 
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+  
 .menu-btn {
     background: transparent;
     border: none;
@@ -82,14 +74,13 @@ input[type="text"] {
 }
 
 .menu-content {
+    display: none;
     position: absolute;
     background-color: white;
     border: 1px solid #ddd; 
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
     padding: 10px; 
     width: 300px;
-    z-index: 100;
-    height: unset;
 }
 
 .menu-content a {
@@ -98,8 +89,6 @@ input[type="text"] {
     padding: 10px;
     font-size: 20px;
     color: #000;
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;
 }
 
 .btn {
@@ -127,7 +116,7 @@ input[type="text"] {
 }
 
 .btn:hover {
-    background-color: #49535f;
+    background-color: #424a53;
 }
 
 .btn i {

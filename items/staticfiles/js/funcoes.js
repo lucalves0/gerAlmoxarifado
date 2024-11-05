@@ -25,9 +25,11 @@ function toggleDescription(itemId) {
 
 // Campos de ações nas pag-sub-category
 function toggleMenuPagSub(event) {
+
   event.preventDefault(); // Evita o comportamento padrão do botão, se necessário
 
   const menuContent = event.target.nextElementSibling;
+  
   if (menuContent.style.display === "block") {
     menuContent.style.display = "none";
   } else {

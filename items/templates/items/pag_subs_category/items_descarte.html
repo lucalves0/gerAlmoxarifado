@@ -14,16 +14,26 @@
 
     {% if item_descarte_list %}
       <form>
+
         <div class="expandable-list">
+
           <div class="item">
+
             <div class="header" onclick="toggleContent(this)">
+
               <span class="arrow">&#9654;</span> 
               <h1>Itens para descarte</h1>
+
             </div>
+
             <div class="content">
+
               {% for item in item_descarte_list  %}
+
                 <div class="item-row">
+
                   <div class="description">
+
                     <p><span>Entrada no estoque:</span></p>
                     <p>{{item.create_at}}</p>
                     <p><span>Nome:</span> {{ item.name }}</p>
@@ -31,21 +41,34 @@
                     <p><span>Marca:</span> {{item.brand}}</p>
                     <p><span>Modelo:</span> {{item.model}}</p>
                     <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %}</p>
+
                   </div>
+
                   <div class="menu-container">
+
                     <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+
                     <div class="menu-content" id="menuDropdown">
+
                       <a href="{% url 'items_ficha'  item.pk%}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
                       <a href="{% url 'items_update' item.pk %}" class="btn btn-edit">Editar</a>
                       <a href="{% url 'items_delete' item.pk %}" class="btn btn-delete">Excluir</a>
                       <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    
                     </div>
+
                   </div> 
+
                 </div>
+
               {% endfor %}
+
             </div>
+
           </div>
+
         </div>
+        
       </form>
     {% else %}
         <p class="notifications_no_items">Não há itens associados a categoria <strong>Descarte</strong>.</p>

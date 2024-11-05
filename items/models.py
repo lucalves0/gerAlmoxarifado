@@ -10,6 +10,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 User = settings.AUTH_USER_MODEL  # Importar User do settings para evitar ciclos
 
 class Items(models.Model):
+    
     id = models.CharField(primary_key=True, max_length=36, default=uuid.uuid4, editable=False)
     name = models.CharField(verbose_name="Nome", max_length=100, null=False, blank=False, default='')
     brand = models.CharField(verbose_name="Marca", max_length=100, default='')

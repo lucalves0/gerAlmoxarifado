@@ -16,32 +16,6 @@ h1 {
   
 }
 
-form {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-input[type="text"] {
-  width: 100%;
-  height: 45px;
-  padding: 10px;
-}
-
-main .btn-save {
-  width: 100%;
-  margin-bottom: 0;
-  
-}
-
-form a {
-  height: 45px;
-  width: 100%;
-  border: 1px solid black;
-}
-
 .download-button {
   width: 100%;
   padding-left: 22px;

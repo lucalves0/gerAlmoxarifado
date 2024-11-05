@@ -13,14 +13,14 @@
     <h1>Histórico de ações realizadas dentro do sistema</h1>
 
     <!-- Barra de pesquisa -->
-    <form method="GET" action="{% url 'itemsAuditLog' %}">
+    <form class="form-search" method="GET" action="{% url 'itemsAuditLog' %}">
         
         <input type="text" name="action" placeholder="Busca pela ação realizada" value="{{ query|default_if_none:'' }}">
         <input type="text" name="item" placeholder="Buscar por nome do item" value="{{ query|default_if_none:'' }}">
 
         <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn btn-primary">Baixar Relatório em PDF</a>
         <button type="submit" class="btn btn-save">Buscar item</button>
-        <a href = "itemsAuditLog" class = "btn btn-cancelar"> Cancelar busca </a>      
+        <a href = "{% url "itemsAuditLog" %}" class = "btn btn-cancelar"> Cancelar busca </a>      
         
     </form>
     

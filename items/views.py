@@ -188,14 +188,62 @@ class ItemSearchView(ListView):
    template_name = 'items/items_search.html'
    context_object_name = 'results'
    
-   def get_queryset(self):
+   def get(self, request):
       
-      query = self.request.GET.get('query')
+      # Obtém a query de pesquisa
+      name = self.request.GET.get('name')
+      brand = self.request.GET.get('brand')
+      model = self.request.GET.get('model')
+      category = self.request.GET.get('category')
       
-      if query:
-         return Items.objects.filter (name__icontains = query)
+      # Definimos uma queryset vazio como padrão
+      logs = Items.objects.none()
       
-      return Items.objects.none() # Retorna uma QuerySet vazia se não houver busca
+      # Verifica se algum filtro foi fornecido
+      search_provided = any([name, brand, model, category])
+      
+      if search_provided:
+         # Base da consulta
+         logs = Items.objects.all()
+         
+         # Filtra pela ação do item se fornecido
+         if name:
+            logs = logs.filter(name__icontains=name)
+         
+         
+         # Filtra pelo nome do item se fornecido
+         if brand:
+            logs = logs.filter(brand__icontains=brand)
+         
+         # Filtra pela ação do item se fornecido
+         if model:
+            logs = logs.filter(model__icontains=model)
+         
+            
+         # Filtra pelo nome do item se fornecido
+         if category:
+            logs = logs.filter(category__icontains=category)
+         
+         message = None # Não exibe mensagem inicial se houver resultados
+      
+      else:
+         
+         # Nenhuma busca foi fornecida, então define logs como vazio
+         message = "Por favor, insira os critérios de busca e precisone Buscar "
+         
+
+      # Renderiza a página normalmente se não for pedido o download
+      context = {
+         'results': logs, 
+         'name': name,
+         'brand' : brand,
+         'model' : model,
+         'category' : category,
+         'message' : message,
+      }
+      
+      return render(request, self.template_name, context)
+   
      
 class LoadSubcategoriesView(View):
 
@@ -336,7 +384,6 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
       }
       
       return render(request, self.template_name, context)
-   
    
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
