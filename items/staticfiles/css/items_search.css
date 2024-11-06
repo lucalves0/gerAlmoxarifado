@@ -1,225 +1,253 @@
+.menu {
+  margin-bottom: 60px;
+}
 main {
-    height: 100%;
-    padding: 20px;
-    margin: 60px; 
-    display: block;
+  height: 100%;
+  padding: 20px;
+  display: block;
 }
 
-form {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
+.search-bar {
+  width: 70%;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-search {
+  width: 70%;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 30px;
 }
 
 input[type="text"] {
-    width: 60%;
-    height: 50%;
-    margin-right: 5px;
-    font-size: 20px;
+  width: 60%;
+  height: 50%;
+  margin-right: 5px;
+  font-size: 20px;
 }
 
 .expandable-list {
-    width: 60%;
-    margin: 0 auto;
-    padding: 40px;
-    box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
-    border: 1px solid #ccc;
-}
-
-.expandable-list h1 {
-    text-align: center;
-    font-weight: 400;
-    margin-bottom: 30px;
+  width: 70%;
+  margin: 0 auto;
+  padding: 40px;
+  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .expandable-list .alert-init {
-    font-size: x-large;
-    text-align: center;
-    font-weight: bold;
+  font-size: x-large;
+  text-align: center;
+  font-weight: bold;
 }
 
 .expandable-list .content.open {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 
 .content .dados_items {
-    display: flex;
-    font-size: 20px;
-    padding: 10px;
-    margin-bottom: 5px; 
+  display: flex;
+  font-size: 20px;
+  padding: 10px;
+  margin-bottom: 5px;
 }
 
 .content .description span {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .item-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .menu-btn {
-    background: transparent;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .menu-content {
-    display: none;
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ddd; 
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
-    padding: 10px; 
-    width: 300px;
+  display: none;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 300px;
 }
 
 .menu-content a {
-    display: block;
-    text-decoration: none;
-    padding: 10px;
-    font-size: 20px;
-    color: #000;
+  display: block;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 20px;
+  color: #000;
 }
 
 .btn {
-    font-size: 20px;
-    padding: 5px;
-    cursor: pointer;
-    border: none;
+  font-size: 20px;
+  padding: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+main .btn {
+  margin: 0;
+}
+
+.btn-download {
+  background-color: #007bff;
 }
 
 .btn-visualizar {
-    background-color: #4842548a;
+  background-color: #4842548a;
 }
 
 .btn-delete {
-    background-color: red;
+  background-color: red;
 }
 
 .btn-edit {
-    background-color: #007bff;
+  background-color: #007bff;
 }
 
 .btn-retirar {
-    background-color: green;
+  background-color: green;
 }
 
 .btn:hover {
-    background-color: #424a53;
+  background-color: #424a53;
 }
 
 .btn i {
-    margin: auto 0;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
+  margin: auto 0;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 
 .btn-cadastrar {
-    background-color: green;
-    display: flex;
-    justify-content: space-around;
-    width: 300px;
-    font-size: 20px;
-    font-weight: 500;
+  background-color: green;
+  display: flex;
+  justify-content: space-around;
+  width: 300px;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .btn.disabled {
-    pointer-events: none;
-    cursor: default;
-    opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
 }
 
-/* Responsividade para telas médias (tablets e laptops menores) */
 @media (max-width: 1024px) {
-    main {
-        margin: 20px;
-    }
-  
-    .expandable-list,
-    input[type="text"],
-    table {
-        width: 90%;
-    }
-  
-    input[type="text"] {
-        font-size: 18px;
-    }
+  main {
+    margin: 20px;
+  }
 
-    .btn, .menu-content a {
-        font-size: 18px;
-    }
-  
-    .expandable-list {
-        padding: 20px;
-    }
+  .expandable-list,
+  input[type="text"],
+  table {
+    width: 90%;
+  }
+
+  input[type="text"] {
+    font-size: 18px;
+  }
+
+  .btn,
+  .menu-content a {
+    font-size: 18px;
+  }
+
+  .expandable-list {
+    padding: 20px;
+  }
 }
 
-/* Responsividade para telas pequenas (smartphones) */
 @media (max-width: 768px) {
-    main {
-        margin: 10px;
-    }
-  
-    form {
-        flex-direction: column;
-    }
-  
-    input[type="text"] {
-        width: 100%;
-        margin-bottom: 10px;
-    }
+  main {
+    margin: 10px;
+  }
 
-    .expandable-list {
-        width: 100%;
-        padding: 20px;
-    }
-  
-    .menu-content {
-        width: 100%;
-        position: relative;
-    }
-  
-    .btn, .menu-content a {
-        font-size: 16px;
-    }
+  form {
+    flex-direction: column;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .expandable-list {
+    width: 100%;
+    padding: 20px;
+  }
+
+  .menu-content {
+    width: 100%;
+    position: relative;
+  }
+
+  .btn,
+  .menu-content a {
+    font-size: 16px;
+  }
 }
 
-/* Responsividade para telas extra pequenas (smartphones em modo paisagem e dispositivos menores) */
 @media (max-width: 480px) {
-    .expandable-list, input[type="text"], .btn-cadastrar {
-        width: 100%;
-    }
-  
-    input[type="text"] {
-        font-size: 16px;
-    }
+  .expandable-list,
+  input[type="text"],
+  .btn-cadastrar {
+    width: 100%;
+  }
 
-    .btn {
-        font-size: 16px;
-        padding: 8px;
-    }
+  input[type="text"] {
+    font-size: 16px;
+  }
 
-    .btn-cadastrar {
-        font-size: 18px;
-        padding: 10px;
-    }
+  .btn {
+    font-size: 16px;
+    padding: 8px;
+  }
 
-    .menu-content {
-        width: 100%;
-        font-size: 16px;
-    }
-  
-    .expandable-list h1, .alert-init {
-        font-size: 24px;
-    }
+  .btn-cadastrar {
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .menu-content {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .expandable-list h1,
+  .alert-init {
+    font-size: 24px;
+  }
 }

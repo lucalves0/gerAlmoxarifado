@@ -19,7 +19,6 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from io import BytesIO
 from datetime import datetime
-import json
 
 from .forms.forms import ItemsForm, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
@@ -186,7 +185,7 @@ class ItemsFichaTecnica(LoginRequiredMixin, UpdateView):
       context['previous_page'] = self.request.META.get('HTTP_REFERER')  # Armazena a URL anterior
       return context
 
-class ItemSearchView(ListView):
+class ItemSearchView(LoginRequiredMixin, ListView):
    model = Items
    template_name = 'items/items_search.html'
    context_object_name = 'results'
@@ -289,7 +288,7 @@ class ItemSearchView(ListView):
       
       return render(request, self.template_name, context)
        
-class LoadSubcategoriesView(View):
+class LoadSubcategoriesView(LoginRequiredMixin, View):
 
    def get(self, request):
       
