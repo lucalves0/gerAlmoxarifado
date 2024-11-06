@@ -35,11 +35,11 @@ def log_save_action(sender, instance, created, **kwargs):
         if old_instance and instance.quantity < old_instance.quantity:
             action = f'Retirado: {old_instance.quantity - instance.quantity} UN'
             item_deletado = f"{instance.name}"
-            observation = f"Quantidade do item <b>{instance.name}</b> reduzida de {old_instance.quantity} para {instance.quantity}."
+            observation = f"Quantidade do item {instance.name} reduzida de {old_instance.quantity} para {instance.quantity}."
         else:
             action = 'Editado'
             item_deletado = f"{instance.name}"
-            observation = f"Item <b>{instance.name}</b> editado."
+            observation = f"Item {instance.name} editado."
     
     # Criar o registro de log no audit log
     ItemsAuditLog.objects.create(

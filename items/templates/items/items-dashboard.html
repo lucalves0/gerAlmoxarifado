@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Categorias</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div>
+    <canvas id="categoryChart"></canvas>
+</div>
+
+<div>
+    <canvas id="subCategoryChart"></canvas>
+</div>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+
+    fetch('/dashboard/data/').then(response => response.json()).then(data => {
+      // Processa os dados das categorias para o gráfico
+      const categories = data.categories.map(item => item.category);
+      const categoryCounts = data.categories.map(item => item.count);
+
+      // Cria o gráfico de categorias
+      new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+          labels: categories,
+          datasets: [{
+            label: 'Itens por Categoria',
+            data: categoryCounts,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Processa os dados das subcategorias para o gráfico
+      const subCategories = data.sub_categories.map(item => item.sub_category);
+      const subCategoryCounts = data.sub_categories.map(item => item.count);
+
+      // Cria o gráfico de subcategorias
+      new Chart(document.getElementById('subCategoryChart'), {
+        type: 'pie',
+        data: {
+          labels: subCategories,
+          datasets: [{
+            label: 'Itens por Sub-Categoria',
+            data: subCategoryCounts,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.6)',
+              'rgba(54, 162, 235, 0.6)',
+              'rgba(255, 206, 86, 0.6)',
+              'rgba(75, 192, 192, 0.6)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true
+        }
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

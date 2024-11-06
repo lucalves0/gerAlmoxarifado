@@ -190,10 +190,6 @@ class ItemsFormRetirarStock(LoginRequiredMixin, forms.ModelForm):
       if quantity_to_item > item.quantity:
          raise forms.ValidationError("A quantidade a retirar não pode ser maior que à quantidade disponível em estoque.")
          
-      # Define a flag para deletar o item se a quantidade for igual
-      if quantity_to_item == item.quantity:
-         self.should_delete = True
-
       return quantity_to_item
 
    def __init__(self, *args, **kwargs):

@@ -23,6 +23,9 @@
             <input type="text" name="category" placeholder="Informe o nome da categoria do item" value="{{ query|default_if_none:'' }}">
 
             <button type="submit" class="btn btn-save">Buscar item</button>
+            <a href="?download_pdf=1{% if name %}&name={{ name }}{% endif %}{% if brand %}&brand={{ brand }}{% endif %}{% if model %}&model={{ model }}{% endif %}{% if category %}&category={{ category }}{% endif %}" class="btn btn-save">
+                Baixar PDF
+            </a>
             <a href = "{% url "items_search" %}" class = "btn btn-cancelar"> Cancelar busca </a>      
             
         </form>
@@ -73,7 +76,7 @@
                     </div>
                 </div>
             {% empty %}
-                <p> Nenhum item relacionado a informação inserido na pesquisa. </p>
+                <p class="alert-init"> Nenhum item relacionado a informação inserido na pesquisa. </p>
             {% endfor %}
         {% endif %}       
     </div>

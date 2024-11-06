@@ -7,12 +7,15 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponse
-from django.db.models import Count, Q
+from django.db.models import Count
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 
 from io import BytesIO
 from datetime import datetime
@@ -203,24 +206,20 @@ class ItemSearchView(ListView):
       search_provided = any([name, brand, model, category])
       
       if search_provided:
+         
          # Base da consulta
          logs = Items.objects.all()
          
-         # Filtra pela ação do item se fornecido
+         # Filtra por cada campo fornecido
          if name:
             logs = logs.filter(name__icontains=name)
          
-         
-         # Filtra pelo nome do item se fornecido
          if brand:
             logs = logs.filter(brand__icontains=brand)
-         
-         # Filtra pela ação do item se fornecido
+
          if model:
             logs = logs.filter(model__icontains=model)
          
-            
-         # Filtra pelo nome do item se fornecido
          if category:
             logs = logs.filter(category__icontains=category)
          
@@ -231,6 +230,52 @@ class ItemSearchView(ListView):
          # Nenhuma busca foi fornecida, então define logs como vazio
          message = "Por favor, insira os critérios de busca e precisone Buscar "
          
+      # Verifica se o parâmetro `download_pdf` foi enviado
+      if request.GET.get('download_pdf'):
+         
+         buffer = BytesIO()  # Cria um buffer para o PDF
+         doc = SimpleDocTemplate(buffer, pagesize=A4,
+                                 leftMargin=40, rightMargin=40,
+                                 topMargin=40, bottomMargin=40)
+         
+         elements = []
+         styles = getSampleStyleSheet()
+         title_style = styles['Title']
+
+         # Título com a data e hora
+         current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+         title = f"Relatório de Itens - Gerado em: {current_time}"
+         elements.append(Paragraph(title, title_style))
+         elements.append(Spacer(1, 12))  # Espaçamento após o título
+
+         # Estilo da descrição dos itens
+         item_style = ParagraphStyle('ItemStyle', fontSize = 10, spaceAfter = 8)
+         
+         if logs.exists():
+         
+            # Adiciona a descrição de cada item
+            for item in logs:
+               elements.append(Paragraph(f"<b>Entrada no estoque:</b> {item.create_at}", item_style))
+               elements.append(Paragraph(f"<b>Nome:</b> {item.name}", item_style))
+               elements.append(Paragraph(f"<b>Unidade(s):</b> {item.quantity} Unidade(s)", item_style))
+               elements.append(Paragraph(f"<b>Marca:</b> {item.brand}", item_style))
+               elements.append(Paragraph(f"<b>Modelo:</b> {item.model}", item_style))
+
+               # Listando os tombos associados ao item
+               tombos = ", ".join([str(tombo.tombo) for tombo in item.tombos.all()])
+               elements.append(Paragraph(f"<b>Tombo(s):</b> {tombos}", item_style))
+               
+               # Espaço entre itens
+               elements.append(Spacer(1, 12))
+         else:
+            elements.append(Paragraph("Nenhum resultado encontrado", item_style))
+
+         # Constrói o documento PDF
+         doc.build(elements)
+         buffer.seek(0)  # Retorna o PDF como resposta
+         
+         return HttpResponse(buffer, content_type='application/pdf')
+
 
       # Renderiza a página normalmente se não for pedido o download
       context = {
@@ -243,8 +288,7 @@ class ItemSearchView(ListView):
       }
       
       return render(request, self.template_name, context)
-   
-     
+       
 class LoadSubcategoriesView(View):
 
    def get(self, request):
@@ -284,16 +328,14 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
       
       item = self.get_object()
       quantity_to_item = form.cleaned_data['quantity']
+      location_to_item = form.cleaned_data['location']
       
       if quantity_to_item > item.quantity:
          return self.form_invalid(form)     
       else:
          item.quantity -= quantity_to_item
-         
-         if form.should_delete:
-            item.delete()
-         else:
-            item.save()
+         item.location = location_to_item
+         item.save()
          
          return redirect('items_main')
 
@@ -308,7 +350,7 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
 class ItemsAuditLogView(LoginRequiredMixin, View):
    
    model = ItemsAuditLog
-   template_name = 'items/itemsAuditLog.html'
+   template_name = 'items/items-auditLog.html'
    context_object_name = 'results'
 
    def get(self, request, *args, **kwargs):
@@ -384,6 +426,37 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
       }
       
       return render(request, self.template_name, context)
+
+class DashboardView(APIView):
+   
+   def get(self, request, *args, **kwargs):
+      
+      # Agrupa por `category` e conta os itens em cada uma
+      category_data = (
+         
+         Items.objects.values('category')
+         .annotate(count=Count('id'))
+         .order_by('-count')
+         
+      )
+
+      # Agrupa por `sub_category` dentro de cada `category`
+      
+      sub_category_data = (
+         
+         Items.objects.values('category', 'sub_category')
+         .annotate(count=Count('id'))
+         .order_by('category', '-count')
+         
+      )
+
+      # Cria o dicionário de dados a ser enviado como JSON
+      data = {
+         'categories': list(category_data),
+         'sub_categories': list(sub_category_data),
+      }
+
+      return Response(data)
    
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
@@ -472,20 +545,3 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
       
       # Usando prefetch_related para carregar os tombos associados 
       return Items.objects.filter(category=category).prefetch_related('tombos')
-   
-class DashboardView(View):
-   
-   def get(self, request, *args, **kwargs):
-      
-      # Coletar dados do banco de dados
-      total_items = Items.objects.count()
-      items_by_category = Items.objects.values('category').annotate(count=Count('id'))
-      recent_items = Items.objects.order_by('-create_at')[:5]  # Exemplo: últimos 5 itens cadastrados
-
-      context = {
-         'total_items': total_items,
-         'items_by_category': json.dumps(items_by_category),
-         'recent_items': recent_items,
-      }
-
-      return render(request, 'items/itemsDashboard.html', context)

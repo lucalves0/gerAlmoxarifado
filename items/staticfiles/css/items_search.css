@@ -17,8 +17,8 @@ input[type="text"] {
     width: 60%;
     height: 50%;
     margin-right: 5px;
+    font-size: 20px;
 }
-  
 
 .expandable-list {
     width: 60%;
@@ -30,15 +30,14 @@ input[type="text"] {
 
 .expandable-list h1 {
     text-align: center;
+    font-weight: 400;
+    margin-bottom: 30px;
 }
 
 .expandable-list .alert-init {
-
-    margin-top: none;
-    margin-bottom: none;
     font-size: x-large;
     text-align: center;
-    font-weight: bold
+    font-weight: bold;
 }
 
 .expandable-list .content.open {
@@ -46,7 +45,7 @@ input[type="text"] {
     flex-direction: column;
     width: 100%;
 }
-  
+
 .content .dados_items {
     display: flex;
     font-size: 20px;
@@ -65,7 +64,7 @@ input[type="text"] {
     padding: 10px;
     border-bottom: 1px solid #ddd;
 }
-  
+
 .menu-btn {
     background: transparent;
     border: none;
@@ -96,11 +95,10 @@ input[type="text"] {
     padding: 5px;
     cursor: pointer;
     border: none;
-  }
-  
+}
+
 .btn-visualizar {
     background-color: #4842548a;
-
 }
 
 .btn-delete {
@@ -140,5 +138,88 @@ input[type="text"] {
     cursor: default;
     opacity: 0.5;
 }
+
+/* Responsividade para telas médias (tablets e laptops menores) */
+@media (max-width: 1024px) {
+    main {
+        margin: 20px;
+    }
   
+    .expandable-list,
+    input[type="text"],
+    table {
+        width: 90%;
+    }
   
+    input[type="text"] {
+        font-size: 18px;
+    }
+
+    .btn, .menu-content a {
+        font-size: 18px;
+    }
+  
+    .expandable-list {
+        padding: 20px;
+    }
+}
+
+/* Responsividade para telas pequenas (smartphones) */
+@media (max-width: 768px) {
+    main {
+        margin: 10px;
+    }
+  
+    form {
+        flex-direction: column;
+    }
+  
+    input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .expandable-list {
+        width: 100%;
+        padding: 20px;
+    }
+  
+    .menu-content {
+        width: 100%;
+        position: relative;
+    }
+  
+    .btn, .menu-content a {
+        font-size: 16px;
+    }
+}
+
+/* Responsividade para telas extra pequenas (smartphones em modo paisagem e dispositivos menores) */
+@media (max-width: 480px) {
+    .expandable-list, input[type="text"], .btn-cadastrar {
+        width: 100%;
+    }
+  
+    input[type="text"] {
+        font-size: 16px;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .btn-cadastrar {
+        font-size: 18px;
+        padding: 10px;
+    }
+
+    .menu-content {
+        width: 100%;
+        font-size: 16px;
+    }
+  
+    .expandable-list h1, .alert-init {
+        font-size: 24px;
+    }
+}
