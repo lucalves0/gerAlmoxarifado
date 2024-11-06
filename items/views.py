@@ -77,6 +77,7 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
          return self.form_invalid(form)
 
    def form_invalid(self, form):
+
       # Obtém o contexto e o formset, caso o form principal seja inválido
       context = self.get_context_data(form=form)
       tombo_formset = ItemTomboFormSet(self.request.POST)
@@ -87,18 +88,18 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
    
 class LoadSubcategoriesView(View):
 
-    def get(self, request, *args, **kwargs):
-        category = request.GET.get('category')
-        subcategories = {
-            'Selecionar': [],
-            'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
-            'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
-            'Ferramenta': ['Não sub categorias'],
-            'Material de Consumo' : ['Item usado'],
-            'Descarte' : ['Não a sub categorias']
-        }
-        subcats = subcategories.get(category, [])
-        return JsonResponse(subcats, safe=False)
+   def get(self, request):
+      category = request.GET.get('category')
+      subcategories = {
+         'Selecionar': [],
+         'Material para instalação': ['Elétricas', 'Rede', 'Outros'],
+         'Informática': ['Equipamentos', 'Suprimentos', 'Acessórios', 'Periféricos', 'Peças de reposição', 'Outros'],
+         'Ferramenta': ['Não sub categorias'],
+         'Material de Consumo' : ['Item usado'],
+         'Descarte' : ['Não a sub categorias']
+      }
+      subcats = subcategories.get(category, [])
+      return JsonResponse(subcats, safe=False)
     
 # class ItemsUpdateView(LoginRequiredMixin, UpdateView):
 #     model = Items
@@ -340,8 +341,8 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
    context_object_name = 'item_ferramenta_list'
 
    def get_queryset(self):
-        category = self.kwargs['category']
-        return Items.objects.filter(category=category)
+      category = self.kwargs['category']
+      return Items.objects.filter(category=category)
 
 class DashboardView(View):
    def get(self, request, *args, **kwargs):
