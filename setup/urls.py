@@ -24,6 +24,7 @@ from items.views import (
 urlpatterns = [
   path("", ItemsListView.as_view(template_name="items/items_main.html"), name="items_main"),
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+  path('logout/', auth_views.LogoutView.as_view(), name='logout'),
   path('create/', ItemsCreateView.as_view(), name="items_create"),
   path('update/<str:pk>/', ItemsUpdateView.as_view(), name="items_update"),
   path('delete/<str:pk>/', ItemsDeleteView.as_view(), name="items_delete"),

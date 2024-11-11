@@ -12,17 +12,25 @@
 
     <h1>Histórico de ações realizadas dentro do sistema</h1>
 
-    <!-- Barra de pesquisa -->
-    <form class="form-search" method="GET" action="{% url 'items-auditLog' %}">
-        
-        <input type="text" name="action" placeholder="Busca pela ação realizada" value="{{ query|default_if_none:'' }}">
-        <input type="text" name="item" placeholder="Buscar por nome do item" value="{{ query|default_if_none:'' }}">
+    <!-- Botão para abrir o formulário de pesquisa -->
+    <button id="searchButton" onclick="toggleSearchForm()" class="search-bar">
+        <i class="fas fa-search"></i> Pesquisar Itens
+    </button>
 
-        <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn btn-primary">Baixar Relatório em PDF</a>
-        <button type="submit" class="btn btn-save">Buscar item</button>
-        <a href = "{% url "items-auditLog" %}" class = "btn btn-cancelar"> Cancelar busca </a>      
+    <!-- Barra de pesquisa -->
+    <div id="searchFormContainer" style="display: none">
+        <form class="form-search" method="GET" action="{% url 'items-auditLog' %}">
         
-    </form>
+            <input type="text" name="action" placeholder="Busca pela ação realizada" value="{{ query|default_if_none:'' }}">
+            <input type="text" name="item" placeholder="Buscar por nome do item" value="{{ query|default_if_none:'' }}">
+    
+            <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn btn-primary">Baixar Relatório em PDF</a>
+            <button type="submit" class="btn btn-save">Buscar item</button>
+            <a href = "{% url "items-auditLog" %}" class = "btn btn-cancelar"> Cancelar busca </a>      
+            
+        </form>
+    </div>
+    
     
     <table>
         <thead>
@@ -52,4 +60,20 @@
             {% endif %}
         </tbody>
     </table>
+
+    <script>
+        function toggleSearchForm() {
+          const formContainer = document.getElementById("searchFormContainer");
+          const searchButton = document.getElementById("searchButton");
+      
+          // Toggle exibição do formulário
+          if (formContainer.style.display === "none") {
+            formContainer.style.display = "block";
+            searchButton.style.display = "none"; // Oculta o botão
+          } else {
+            formContainer.style.display = "none";
+            searchButton.style.display = "inline-block"; // Mostra o botão
+          }
+        }
+      </script>
 {% endblock %}

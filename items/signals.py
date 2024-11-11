@@ -27,7 +27,7 @@ def log_save_action(sender, instance, created, **kwargs):
         # Se o item foi criado
         action = 'Criado'
         item_deletado = f"{instance.name}"
-        observation = f"Item <b>{instance.name}</b> criado."
+        observation = f"Item {instance.name} criado."
 
     else:
         # Se o item foi atualizado

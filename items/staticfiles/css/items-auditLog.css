@@ -17,7 +17,25 @@ h1 {
   margin-bottom: 30px;
 }
 
-.form-search {
+.search-bar {
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+
+#searchFormContainer {
   width: 80%;
 }
 

@@ -52,7 +52,10 @@
       <a href="{% url 'items_search' %}">Pesquisar</a>
       <a href="{% url 'items-auditLog' %}">Histórico</a>
       <a href="{% url 'items_dashboard' %}">Dashboard</a>
-      <a class="button_logout" href="{% url 'login' %}">SAIR</a>
+      <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button class="button_logout" type="submit">Sair</button>
+      </form>
     </div>
 
     <main>{% block content %} {% endblock %}</main>

@@ -40,13 +40,6 @@ header a {
   border-radius: 10px;
 }
 
-header .button_logout {
-  background-color: red;
-  border-radius: 5px;
-  padding: 5px 20px;
-  color: white;
-}
-
 .menu-button {
   font-size: 30px;
   cursor: pointer;
@@ -57,12 +50,20 @@ header .button_logout {
 }
 
 .menu {
+  display: flex;
   align-content: center;
   background-color: #f0f0f0;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.menu a {
+form {
+  background-color: white
+}
+
+.menu a, 
+.menu form button {
+  background-color: white;
+  border: none;
   padding: 10px;
   font-size: 18px;
   font-weight: bold;
