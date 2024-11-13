@@ -69,6 +69,6 @@ def log_delete_action(sender, instance, **kwargs):
         item=None,  # O item foi deletado, então não podemos referenciá-lo
         user=user,
         item_deletado=item_name,
-        observation=f"Item '{item_name}' deletado.",
+        observation=f"Item {item_name} deletado.",
         changes='{"item_deleted": true}'  # Informação sobre a deleção
     )
