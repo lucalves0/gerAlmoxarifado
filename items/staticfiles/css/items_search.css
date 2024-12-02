@@ -1,13 +1,15 @@
 .menu {
   margin-bottom: 60px;
 }
+
 main {
   height: 100%;
   padding: 20px;
   display: block;
 }
 
-.search-bar {
+.search-bar, 
+.container-download {
   width: 70%;
   margin: 0 auto;
   margin-bottom: 15px;
@@ -20,14 +22,11 @@ main {
   color: white;
   border: none;
   border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
 }
 
 .form-search {
   width: 70%;
   margin: 0 auto;
-  padding: 10px;
 }
 
 h1 {
@@ -36,11 +35,31 @@ h1 {
   margin-bottom: 30px;
 }
 
-input[type="text"] {
-  width: 60%;
+.form-search input[type="text"] {
   height: 50%;
   margin-right: 5px;
   font-size: 20px;
+}
+
+.form-search label {
+  width: 100%;
+  display: flex;
+  font-size: 20px;
+  font-weight: 600;
+  color: black;
+  text-align: start;
+  margin-top: 10px;
+}
+
+.form-search .btn-save {
+  margin-top: 10px;
+}
+
+.btn-download {
+  background-color: #007bff;
+  color: white;
+  padding: 0;
+  margin: 0;
 }
 
 .expandable-list {
@@ -64,14 +83,14 @@ input[type="text"] {
   width: 100%;
 }
 
-.content .dados_items {
+.main .dados_items {
   display: flex;
   font-size: 20px;
   padding: 10px;
   margin-bottom: 5px;
 }
 
-.content .description span {
+.main .description span {
   font-weight: bold;
 }
 
@@ -117,10 +136,6 @@ input[type="text"] {
 
 main .btn {
   margin: 0;
-}
-
-.btn-download {
-  background-color: #007bff;
 }
 
 .btn-visualizar {

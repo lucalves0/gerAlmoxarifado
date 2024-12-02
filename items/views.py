@@ -349,7 +349,7 @@ class ItemsRetirarStock(LoginRequiredMixin, FormView, DeleteView):
 class ItemsAuditLogView(LoginRequiredMixin, View):
    
    model = ItemsAuditLog
-   template_name = 'items/items-auditLog.html'
+   template_name = 'items/items_historico.html'
    context_object_name = 'results'
 
    def get(self, request, *args, **kwargs):
@@ -383,6 +383,10 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
          elements = []
          styles = getSampleStyleSheet()
          title_style = styles['Title']
+         body_style = styles['BodyText']
+         body_style.alignment = 1  # 0=Left, 1=Center, 2=Right
+         body_style.spaceAfter = 0  # Remove espaçamento adicional
+         body_style.spaceBefore = 0
 
          # Título com a data e hora
          current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -391,23 +395,37 @@ class ItemsAuditLogView(LoginRequiredMixin, View):
          elements.append(Spacer(1, 12))  # Espaçamento após o título
 
          # Dados da tabela
-         data = [['Ação', 'Item', 'Usuário', 'Data/Hora', 'Observação']]  # Cabeçalhos da tabela
+         # Dados da tabela
+         data = [[
+            Paragraph('<b>Ação</b>', body_style), 
+            Paragraph('<b>Item</b>', body_style),
+            Paragraph('<b>Usuário</b>', body_style), 
+            Paragraph('<b>Data/Hora</b>', body_style), 
+            Paragraph('<b>Observação</b>', body_style),
+         ]]  # Cabeçalhos da tabela
 
          # Adiciona os dados de cada log na tabela
          for log in logs:
-            data.append([log.action, log.item_deletado, str(log.user), log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), log.observation])
-         
+            data.append([
+               Paragraph(str(log.action), body_style),
+               Paragraph(str(log.item_deletado), body_style),
+               Paragraph(str(log.user), body_style),
+               Paragraph(log.timestamp.strftime("%d/%m/%Y %H:%M:%S"), body_style),
+               Paragraph(str(log.observation), body_style),
+            ])
+
          # Estilo do PDF
-         colWidths = [60, 100, 80, 100, 180]  # Larguras em pontos
+         colWidths = [50, 160, 40, 110, 190]  # Larguras em pontos
          table = Table(data, colWidths=colWidths)
          style = TableStyle([
-               ('BACKGROUND', (0, 0), (-1, 0), colors.gray),
-               ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
-               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-               ('BACKGROUND', (0, 1), (-1, -1), colors.white),
-               ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ('BACKGROUND', (0, 0), (-1, 0), colors.gray),      # Fundo do cabeçalho
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),      # Cor do texto do cabeçalho
+            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # Alinhamento central
+            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),            # Alinhamento vertical ao meio
+            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),   # Fonte do cabeçalho
+            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),            # Espaçamento do cabeçalho
+            ('BACKGROUND', (0, 1), (-1, -1), colors.white),    # Fundo das células
+            ('GRID', (0, 0), (-1, -1), 1, colors.black),       # Grid da tabela
          ])
 
          table.setStyle(style)
@@ -459,12 +477,15 @@ class DashboardView(APIView):
    
 @method_decorator(login_required, name='dispatch')
 class SomeView(LoginRequiredMixin, View):
+    
     def post(self, request, *args, **kwargs):
+
       item = get_object_or_404(Items, pk=kwargs['pk'])  # Garante que o item existe
       item.save(user=request.user)
       return redirect('itemsAuditLog')  # Redireciona para a página de logs
 
 class ItemsSubMaterialInstalacao(LoginRequiredMixin, ListView):
+   
    model: Items
    template_name = "items/pag_sub_category/items_material_instalacao.html"
    context_object_name = 'item_material_aplicacao_list'

@@ -8,7 +8,9 @@
 
 {% block extra_styles %}
     <link rel="stylesheet" href="{% static 'css/items_search.css' %}" />
-{% endblock %} {% block content %}
+{% endblock %} 
+
+{% block main %}
 
     <!-- Botão para abrir o formulário de pesquisa -->
     <button id="searchButton" onclick="toggleSearchForm()" class="search-bar">
@@ -20,42 +22,27 @@
         <form class="form-search" method="GET" action="{% url 'items_search' %}">
             <h1>Pesquisar itens cadastrados no sistema</h1>
 
-            <input
-            type="text"
-            name="name"
-            placeholder="Informe o nome do item"
-            value="{{ query|default_if_none:'' }}"
-            />
-            <input
-            type="text"
-            name="brand"
-            placeholder="Informe o nome da marca do item"
-            value="{{ query|default_if_none:'' }}"
-            />
-            <input
-            type="text"
-            name="model"
-            placeholder="Informe o nome do modelo do item"
-            value="{{ query|default_if_none:'' }}"
-            />
-            <input
-            type="text"
-            name="category"
-            placeholder="Informe o nome da categoria do item"
-            value="{{ query|default_if_none:'' }}"
-            />
+            <label for="name"> Nome </label>
+            <input type="text" name="name" placeholder="Informe o nome do item" value="{{ query|default_if_none:'' }}" />
+            
+            <label for="brand"> Marca </label>
+            <input type="text" name="brand" placeholder="Informe o nome da marca do item" value="{{ query|default_if_none:'' }}" />
+            
+            <label for="model"> Modelo </label>
+            <input type="text" name="model" placeholder="Informe o nome do modelo do item" value="{{ query|default_if_none:'' }}"  />
+            
+            <label for="category"> Categoria </label>
+            <input type="text" name="category" placeholder="Informe o nome da categoria do item"value="{{ query|default_if_none:'' }}"/>
 
-            <button type="submit" class="btn btn-save">Buscar item</button>
-            <a href="{% url 'items_search' %}" class="btn btn-cancelar"
-            >Cancelar busca</a
-            >
-            <a
-            href="?download_pdf=1{% if name %}&name={{ name }}{% endif %}{% if brand %}&brand={{ brand }}{% endif %}{% if model %}&model={{ model }}{% endif %}{% if category %}&category={{ category }}{% endif %}"
-            class="btn btn-download"
-            >
-            Baixar PDF
-            </a>
+            <button type="submit" class="btn btn-save"> Buscar item </button>
+            <a href="{% url 'items_search' %}" class="btn btn-cancelar"> Cancelar busca </a>
         </form>
+    </div>
+
+    <div class="container-download">
+        <a href="?download_pdf=1{% if name %}&name={{ name }}{% endif %}{% if brand %}&brand={{ brand }}{% endif %}{% if model %}&model={{ model }}{% endif %}{% if category %}&category={{ category }}{% endif %}" class="btn-download">
+            Baixar PDF
+        </a>
     </div>
 
     <div class="expandable-list">
@@ -77,10 +64,7 @@
                                     <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
                                     <p><span>Marca:</span> {{item.brand}}</p>
                                     <p><span>Modelo:</span> {{item.model}}</p>
-                                    <p>
-                                    <span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{
-                                    tombo.tombo }}{% endfor %}
-                                    </p>
+                                    <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %} </p>
                                 </div>
                                 </div>
 
@@ -134,4 +118,5 @@
         }
     }
     </script>
+
 {% endblock %}
