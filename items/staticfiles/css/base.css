@@ -3,7 +3,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
 }
 
 body, html {
@@ -18,27 +17,65 @@ header {
   padding: 10px;
   background-color: #001e5955;
   justify-content: space-between;
-  height: 100px;
 }
 
-header a {
-  width: 50%;
-  margin-left: 20px;
-  margin-right: 20px;
+header a,
+header .menu a,
+header .menu form button {
   display: flex;
-  justify-content: end;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
 }
 
-header .din {
-  justify-content: start;
-}
-
-header .logo-din,
-header .logo-uem {
+header a img {
   width: 130px;
   height: 60px;
   border-radius: 10px;
 }
+
+header a img:nth-last-of-type(2) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+header a img:nth-last-of-type(1) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+header .menu {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+header .menu form {
+  border-radius: 10px;
+}
+
+
+header .menu form button {
+  background-color: red;
+  border-radius: 5px;
+  border: 1px solid red;
+  width: 70px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+
+}
+
+/* header .menu form button {
+  background-color: white;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+} */
 
 .menu-button {
   font-size: 30px;
@@ -49,28 +86,6 @@ header .logo-uem {
   z-index: 1;
 }
 
-.menu {
-  display: flex;
-  align-content: center;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.menu form {
-  background-color: white;
-  padding: 0;
-  margin-left: 0;
-}
-
-.menu a, 
-.menu form button {
-  background-color: white;
-  border: none;
-  padding: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-}
 
 main {
   display: flex;
