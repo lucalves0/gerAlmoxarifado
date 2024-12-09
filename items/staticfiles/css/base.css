@@ -67,33 +67,27 @@ header .menu form button {
 
 }
 
-/* header .menu form button {
-  background-color: white;
-  border: none;
-  padding: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
-} */
-
-.menu-button {
+/* .menu-button {
   font-size: 30px;
   cursor: pointer;
   background: none;
   border: none;
   color: black;
   z-index: 1;
-}
+} */
 
 
 main {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: 10px 0;
   height: auto;
+  margin-top: 100px;
+}
+
+main .container h1 {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: 400;
 }
 
 .form-search {
@@ -122,25 +116,23 @@ main {
   border: 1px solid black;
 }
 
-main .btn,
-main a {
+main .container .btn,
+main .container a {
+  color: white;
   text-align: center;
   text-decoration: none;
   font-size: 18px;
   padding: 8px 12px;
   margin: 20px 5px;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
 }
 
-main .btn-save {
+main .container .btn-save {
   background-color: green;
   color: black;
 }
 
-main .btn-cancelar {
+main .conatiner .btn-cancelar {
   background-color: red;
   color: black;
 }
