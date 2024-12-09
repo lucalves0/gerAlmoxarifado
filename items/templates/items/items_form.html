@@ -8,16 +8,15 @@
   <link rel="stylesheet" href="{% static 'css/items_form.css' %}">
 {% endblock %}
 
-{% block content %}
+{% block main %}
 
   <div class="container">
 
     <h1>{{ title }}</h1>
     
-    <!-- Item já existe -->
+    <!-- Formulário de Atualização -->
     {% if object.pk %}
 
-      <!-- Formulário de atualização -->
       <form class="form" method="POST">
         {% csrf_token %}
 
@@ -41,19 +40,17 @@
             <a href = "{{ previous_page }}" class = "btn btn-cancelarFHVisualiar "> Cancelar </a>
           {% endif %}
           
-
-          
-          
         </div>
 
       </form>
 
-    <!-- Item sendo criado -->
+    
+      <!-- Formulário de criação -->
     {% else %}
 
       <form class="form" method="POST">
         {% csrf_token %}
-
+        
         {% if form.errors %}
           <div class="alert alert-danger">
             <strong>Corrija os erros abaixo:</strong>

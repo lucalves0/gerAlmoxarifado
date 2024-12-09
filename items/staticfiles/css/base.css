@@ -90,7 +90,38 @@ main .container h1 {
   font-weight: 400;
 }
 
-.form-search {
+main .container form {
+  width: 100%;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+main .container form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+
+}
+
+main .container form .form-group label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+main .container form input[type="text"],
+main .container form input[type="number"],
+main .container form .form-control {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 18px;
+}
+
+
+
+
+/* .form-search {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -114,10 +145,11 @@ main .container h1 {
   height: 45px;
   width: 100%;
   border: 1px solid black;
-}
+} */
 
 main .container .btn,
-main .container a {
+main .container a,
+main .container form .menu-btn button{
   color: white;
   text-align: center;
   text-decoration: none;
@@ -127,12 +159,13 @@ main .container a {
   border-radius: 5px;
 }
 
+
 main .container .btn-save {
   background-color: green;
   color: black;
 }
 
-main .conatiner .btn-cancelar {
+main .container .btn-cancelar {
   background-color: red;
   color: black;
 }
