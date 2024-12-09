@@ -39,11 +39,7 @@
 
     <header>
       <a class="din" href="{% url 'items_main' %}">
-        <img
-          class="logo-din"
-          src="{% static 'img/logo-din.png' %}"
-          alt="Logo"
-          />
+        <img class="logo-din" src="{% static 'img/logo-din.png' %}" alt="Logo"/>
       </a>
 
       <a class="uem" href="{% url 'items_main' %}">
@@ -68,7 +64,7 @@
     </div>
 
     <main>
-      {% block main %} {% endblock %}
+      {% block content %} {% endblock %}
     </main>
 
     <script src="{% static 'js/funcoes.js' %}"></script>
