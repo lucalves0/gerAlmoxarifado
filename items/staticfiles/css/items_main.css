@@ -14,6 +14,7 @@ main .container form .expandable-list a {
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 1.9rem;
+  font-weight: 400;
 }
 
 main .container form .expandable-list .disabled-link {

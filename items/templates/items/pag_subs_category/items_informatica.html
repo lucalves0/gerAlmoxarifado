@@ -7,10 +7,10 @@
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
   <div class="container">
-    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
+    <h1>{{ request.resolver_match.kwargs.category }}</h1>
     <h2>Sub-Categorias: </h2>
 
     {% if item_informatica_list %}

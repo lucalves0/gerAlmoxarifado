@@ -1,52 +1,28 @@
-main {
-  padding: 100px 20px 20px;
 
-}
-
-.container {
-  height: auto;
-  width: 80%;
-  max-width: 900px;
+main .container {
+  width: 900px;
   gap: 20px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  justify-content: center; 
 }
 
-.container .arrow {
-  font-size: 1.5rem;
+main .container form {
+  padding: 0;
 }
 
-.container .titulo {
-  font-size: 50px;
-  font-weight: 400;
-  text-align: center;
-}
-
-.container .expandable-list {
-  margin: 0 auto;
+main .container .expandable-list {
   display: flex;
   flex-direction: column;  
 }
 
-.container .expandable-list p{
-  font-size: 20px;
-  font-weight: normal;
-}
-
-.container .expandable-list p span{
-  font-weight: bold;
-}
-
-.container .expandable-list .item {
+main .container .expandable-list .item {
   border: 1px solid #ccc;
   margin-bottom: 10px;
-  width: 100%;
 }
 
-.container .expandable-list .header{
+.container .expandable-list .item .header {
   display: flex;
   background-color: #f1f1f1;
   cursor: pointer;
@@ -54,29 +30,26 @@ main {
   gap: 15px;
 }
 
-.container .expandable-list .header .arrow {
-  display: inline-block;
-  width: 20px;
-  transition: transform 0.3s;
+.container .expandable-list .item .header .arrow {
   align-self: center;
+  font-size: 1.5rem;
 }
 
-.container .expandable-list .header h1{
+.container .expandable-list .item .header h1 {
   font-size: 1.9rem;
 }
 
-.expandable-list .content {
+main .expandable-list .item .content {
   display: none;
   padding: 10px;
 }
 
-.expandable-list .content.open {
+main .expandable-list .item .content.open {
   display: flex;
   flex-direction: column;
-  width: 100%;
 }
 
-.item-row {
+main .expandable-list .item .content.open .item-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,76 +58,56 @@ main {
   margin-bottom: 10px;
 }
 
-.content .dados_items {
+main .expandable-list .item .content.open .description {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+main .container .expandable-list .item .content.open p {
   font-size: 20px;
-  padding: 10px;
-  margin-bottom: 5px; 
+  font-weight: normal;
 }
 
-.menu-container {
-  position: relative;
-  display: inline-block;
+main .container .expandable-list .item p span {
+  font-weight: bold;
 }
 
-.menu-btn {
+main .expandable-list .item .menu-container button {
   background: transparent;
   border: none;
   font-size: 24px;
   cursor: pointer;
 }
 
-.menu-content {
+main .expandable-list .item .menu-container .menu-content {
   position: absolute;
   background-color: white;
   border: 1px solid #ddd; 
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); 
   padding: 10px; 
   width: 300px;
-  z-index: 100;
-  height: unset;
 }
 
-.menu-content a {
+main .expandable-list .item .menu-container .menu-content a {
   display: block;
-  text-decoration: none;
-  padding: 10px;
-  font-size: 20px;
-  color: #000;
-  border-bottom: 1px solid #ddd;
-  white-space: nowrap;
 }
 
 .expandable-list .header.active .arrow {
   transform: rotate(90deg);
 }
 
-.btn {
-  font-size: 20px;
-  padding: 5px;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-visualizar {
+main .expandable-list .item .menu-container .menu-content .btn-visualizar {
   background-color: #4842548a;
 
 }
 
-.btn-delete {
-  background-color: red;
-}
-
-.btn-edit {
+main .expandable-list .item .menu-container .menu-content .btn-edit {
   background-color: #007bff;
 }
 
-.btn-retirar {
+main .expandable-list .item .menu-container .menu-content .btn-retirar {
   background-color: green;
-}
-
-.btn:hover {
-  background-color: #49535f;
 }
 
 .btn i {

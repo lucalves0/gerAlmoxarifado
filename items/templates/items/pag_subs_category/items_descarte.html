@@ -7,31 +7,24 @@
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
   <div class="container">
 
-    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
+    <h1 >{{ request.resolver_match.kwargs.category }}</h1>
 
     {% if item_descarte_list %}
       <form>
 
         <div class="expandable-list">
-
           <div class="item">
-
             <div class="header" onclick="toggleContent(this)">
-
               <span class="arrow">&#9654;</span> 
               <h1>Itens para descarte</h1>
-
             </div>
-
             <div class="content">
-
               {% for item in item_descarte_list  %}
 
                 <div class="item-row">
-
                   <div class="description">
 
                     <p><span>Entrada no estoque:</span></p>
