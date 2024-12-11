@@ -115,6 +115,18 @@ main .container form .form-control {
   font-size: 18px;
 }
 
+/* Para Chrome, Sefari, Edge e Opera */
+main .container form input[type="number"]::-webkit-inner-spin-button,
+main .container form input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Para Firefox */
+main .container form input[type="number"]{
+  -moz-appearance: textfield;
+}
+
 main .container .btn,
 main .container a,
 main .container form .menu-btn button {
