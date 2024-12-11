@@ -8,19 +8,13 @@
   <link rel="stylesheet" href="{% static 'css/items_historico.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
-    <h1>Histórico de ações realizadas dentro do sistema</h1>
+    <div class="containerSearch">
 
-    <!-- Botão para abrir o formulário de pesquisa -->
-    <button id="searchButton" onclick="toggleSearchForm()" class="search-bar">
-        <i class="fas fa-search"></i> Pesquisar Itens
-    </button>
-
-    <!-- Barra de pesquisa -->
-    <div id="searchFormContainer" style="display: none">
         <form class="form-search" method="GET" action="{% url 'items-auditLog' %}">
             
+            <h1> Pesquisar </h1>
             <label for="action"> Ação realizada </label>
             <input type="text" name="action" placeholder="Busca pela ação realizada" value="{{ query|default_if_none:'' }}">
             
@@ -29,56 +23,43 @@
     
             <button type="submit" class="btn btn-save">Buscar item</button>
             <a href = "{% url "items-auditLog" %}" class = "btn btn-cancelar"> Cancelar busca </a>      
-            
+            <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn-download">Baixar Histórico em PDF</a>
         </form>
+
     </div>
 
-    <div class="container-download">
-        <a href="?download_pdf=true&action={{ action|default_if_none:'' }}&item={{ item|default_if_none:'' }}" class="btn-download">Baixar Histórico em PDF</a>
-    </div>
-    
-    <table>
-        <thead>
-            <tr>
-                <th>Ação</th>
-                <th>Item</th>
-                <th>Usuário</th>
-                <th>Data/Hora</th>
-                <th>Observação</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if results %}
-                {% for log in results %}
-                    <tr>
-                        <td>{{ log.action }}</td>
-                        <td>{{ log.item_deletado }}</td>
-                        <td>{{ log.user.username }}</td>
-                        <td>{{ log.timestamp }}</td>
-                        <td>{{ log.observation }}</td>
-                    </tr>
-                {% endfor %}
-            {% else %}
+    <div class="containerHistorico">
+        <h1>Histórico de ações realizadas dentro do sistema</h1>
+
+        <table>
+            <thead>
                 <tr>
-                    <td colspan="5">Nenhum registro encontrado.</td>
+                    <th>Ação</th>
+                    <th>Item</th>
+                    <th>Usuário</th>
+                    <th>Data/Hora</th>
+                    <th>Observação</th>
                 </tr>
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% if results %}
+                    {% for log in results %}
+                        <tr>
+                            <td>{{ log.action }}</td>
+                            <td>{{ log.item_deletado }}</td>
+                            <td>{{ log.user.username }}</td>
+                            <td>{{ log.timestamp }}</td>
+                            <td>{{ log.observation }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5">Nenhum registro encontrado.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+            
+    </div>
 
-    <script>
-        function toggleSearchForm() {
-          const formContainer = document.getElementById("searchFormContainer");
-          const searchButton = document.getElementById("searchButton");
-      
-          // Toggle exibição do formulário
-          if (formContainer.style.display === "none") {
-            formContainer.style.display = "block";
-            searchButton.style.display = "none"; // Oculta o botão
-          } else {
-            formContainer.style.display = "none";
-            searchButton.style.display = "inline-block"; // Mostra o botão
-          }
-        }
-      </script>
 {% endblock %}

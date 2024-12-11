@@ -147,13 +147,15 @@ main .containerSearch form button {
 }
 
 
-main .container .btn-save {
+main .container .btn-save,
+main .containerSearch .btn-save {
   background-color: green;
   color: black;
 }
 
 main .container .btn-cancelar,
-main .container .btn-delete {
+main .container .btn-delete,
+main .containerSearch .btn-cancelar {
   background-color: red;
   color: black;
 }
