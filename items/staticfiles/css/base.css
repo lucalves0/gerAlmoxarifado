@@ -3,7 +3,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
-  font-weight: 400;
 }
 
 body, html {
@@ -18,116 +17,156 @@ header {
   padding: 10px;
   background-color: #001e5955;
   justify-content: space-between;
-  height: 100px;
 }
 
-header a {
-  width: 50%;
-  margin-left: 20px;
-  margin-right: 20px;
+header a,
+header .menu a,
+header .menu form button {
   display: flex;
-  justify-content: end;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: black;
 }
 
-header .din {
-  justify-content: start;
-}
-
-header .logo-din,
-header .logo-uem {
+header a img {
   width: 130px;
   height: 60px;
   border-radius: 10px;
 }
 
-.menu-button {
-  font-size: 30px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  color: black;
-  z-index: 1;
+header a img:nth-last-of-type(2) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.menu {
+header a img:nth-last-of-type(1) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+header .menu {
   display: flex;
-  align-content: center;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  gap: 20px;
+  align-items: center;
 }
 
-.menu form {
-  background-color: white;
-  padding: 0;
-  margin-left: 0;
+header .menu form {
+  border-radius: 10px;
 }
 
-.menu a, 
-.menu form button {
-  background-color: white;
-  border: none;
-  padding: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  text-decoration: none;
-  color: black;
+
+header .menu form button {
+  background-color: red;
+  border-radius: 5px;
+  border: 1px solid red;
+  width: 70px;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  cursor: pointer;
+
 }
 
 main {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  margin: 10px 0;
   height: auto;
+  margin-top: 100px;
 }
 
-.form-search {
+main .container {
+  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+  width: 900px;
+
+}
+
+main .container h1,
+main .containerSearch h1 {
+  font-size: 3rem;
+  text-align: center;
+  font-weight: 400;
+}
+
+main .container form,
+main .containerSearch form {
   width: 100%;
+  padding: 30px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 5px;
 }
 
-.form-search input[type="text"] {
-  width: 100%;
-  height: 45px;
+main .container form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+
+}
+
+main .container form .form-group label,
+main .containerSearch form label {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+main .containerSearch form input[type="text"],
+main .container form input[type="text"],
+main .container form input[type="number"],
+main .container form .form-control {
+  margin-top: 20px;
   padding: 10px;
+  font-size: 18px;
 }
 
-.form-search .btn-save {
-  width: 100%;
-  margin-bottom: 0;
-  
+/* Para Chrome, Sefari, Edge e Opera */
+main .container form input[type="number"]::-webkit-inner-spin-button,
+main .container form input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.form-search a {
-  height: 45px;
-  width: 100%;
-  border: 1px solid black;
+/* Para Firefox */
+main .container form input[type="number"]{
+  -moz-appearance: textfield;
 }
 
-main .btn,
-main a {
+main .container .btn,
+main .container a,
+main .containerSearch form a,
+main .container form .menu-btn button,
+main .containerSearch form button {
+  color: white;
   text-align: center;
   text-decoration: none;
   font-size: 18px;
   padding: 8px 12px;
   margin: 20px 5px;
-  border: none;
   border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
+  font-weight: 600;
 }
 
-main .btn-save {
+
+main .container .btn-save,
+main .containerSearch .btn-save {
   background-color: green;
   color: black;
 }
 
-main .btn-cancelar {
+main .container .btn-cancelar,
+main .container .btn-delete,
+main .containerSearch .btn-cancelar {
   background-color: red;
   color: black;
+}
+
+main .containerSearch form .btn-download:hover,
+main .containerSearch form button:hover,
+main .container .btn:hover,
+main .container .expandable-list .item .menu-container .menu-content .btn-visualizar:hover,
+main .container .expandable-list .item .menu-container .menu-content .btn-edit:hover,
+main .container .expandable-list .item .menu-container .menu-content .btn-retirar:hover {
+  background-color: #49535f;
 }
 
 

@@ -2,36 +2,29 @@
 
 {% load static %}
 
-{% block title %}Sub items{% endblock %}
+{% block title %}{{ request.resolver_match.kwargs.category }}{% endblock %}
 {% block extra_styles %}
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
   <div class="container">
 
-    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
+    <h1 >{{ request.resolver_match.kwargs.category }}</h1>
 
     {% if item_descarte_list %}
       <form>
 
         <div class="expandable-list">
-
           <div class="item">
-
             <div class="header" onclick="toggleContent(this)">
-
               <span class="arrow">&#9654;</span> 
               <h1>Itens para descarte</h1>
-
             </div>
-
             <div class="content">
-
               {% for item in item_descarte_list  %}
 
                 <div class="item-row">
-
                   <div class="description">
 
                     <p><span>Entrada no estoque:</span></p>
@@ -73,6 +66,6 @@
     {% else %}
         <p class="notifications_no_items">Não há itens associados a categoria <strong>Descarte</strong>.</p>
     {% endif %}
-    <a href="{% url 'items_main' %}" class="btn btn-delete">Voltar para página inicial</a>
+    <a href="{% url 'items_main' %}" class="btn btn-cancelar">Voltar para página inicial</a>
   </div>
 {% endblock %}

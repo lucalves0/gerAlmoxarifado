@@ -7,51 +7,51 @@
   <link rel="stylesheet" href="{% static 'css/items_form_retirar.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
   <div class="container">
     <h1>Retirar item de estoque</h1>
     <p> Dentro de estoque possui {{items.quantity}} de unidades do item: <span>{{items.name}}</span></p>
-    <div class="formulario">
-      <form method="POST">
-        {% csrf_token %}
 
-        <!-- Renderização Manual dos Campos do Formulário -->
-        <div class="form-group">
+    <form method="POST">
+      {% csrf_token %}
 
-          <label for="{{ form.quantity.id_for_label }}">Quantidade a Retirar</label>
-          {{ form.quantity }}
+      <!-- Renderização Manual dos Campos do Formulário -->
+      <div class="form-group">
 
-          <label for="{{ form.quantity.id_for_label }}">Nova Localização do Item</label>
-          {{ form.location }}
+        <label for="{{ form.quantity.id_for_label }}">Quantidade a Retirar</label>
+        {{ form.quantity }}
 
-          {% if form.quantity.errors %}
-            <ul class="error-messages">
-              {% for error in form.quantity.errors %}
-                <li>{{ error }}</li>
-              {% endfor %}
-            </ul>
-          {% endif %}
+        <label for="{{ form.quantity.id_for_label }}">Nova Localização do Item</label>
+        {{ form.location }}
 
-        </div>
-
-        <!-- Bloco de Erros Personalizado -->
-        {% if form.errors %}
-          <div class="error-list">
-            <ul>
-              {% for error in form.non_field_errors %}
-                <li class="non-field-error">{{ error }}</li>
-              {% endfor %}
-            </ul>
-          </div>
+        {% if form.quantity.errors %}
+          <ul class="error-messages">
+            {% for error in form.quantity.errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
         {% endif %}
 
-        <div class="menu-btn">
-          <button type = "submit" class = "btn btn-save"> Salvar </button>
-          <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>       
-        </div>
+      </div>
 
-      </form>
-    </div>
+      <!-- Bloco de Erros Personalizado -->
+      {% if form.errors %}
+        <div class="error-list">
+          <ul>
+            {% for error in form.non_field_errors %}
+              <li class="non-field-error">{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <div class="menu-btn">
+        <button type = "submit" class = "btn btn-save"> Salvar </button>
+        <a href = "{{ previous_page }}" class = "btn btn-cancelar"> Cancelar </a>       
+      </div>
+
+    </form>
+
   </div>
 {% endblock %}

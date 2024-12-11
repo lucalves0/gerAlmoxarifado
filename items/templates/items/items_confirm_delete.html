@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="{% static 'css/items_delete.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
   <div class="container">
 
@@ -16,7 +16,7 @@
 
     <form method="post">
       {% csrf_token %}
-      <button type="submit" class="btn btn-excluir">Excluir</button>
+      <button type="submit" class="btn btn-delete">Excluir</button>
       <a href="{{ previous_page }}" class="btn btn-cancelar">Cancelar</a>
     </form>
 

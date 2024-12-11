@@ -1,45 +1,27 @@
-main {
-  height: 100%;
-}
-
-.container {
-  height: 40%;
-  max-width: 900px;
-  gap: 20px;
+main .container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+
 }
 
-.container h1 {
-  color: black;
-  text-align: center;
-  font-size: 2rem;
-}
-
-.container p {
+main .container p {
   font-size: 1.25rem;
-  color: black;
   margin: 20px;
+  text-align: center;
 }
 
-form {
-  width: 80%;
-  display: flex;
-  justify-content: center;
+main .container form {
+  flex-direction: row;
+  padding: 0px;
 }
 
-.container .btn-excluir {
-  background-color: red;
-  color: black;
+main .container form .btn-delete {
   width: 50%;
 }
 
-.container .btn-cancelar {
+main .container form .btn-cancelar {
   background-color: green;
-  color: black;
   width: 50%;
 }
 

@@ -2,16 +2,15 @@
 
 {% load static %}
 
-{% block title %}Sub items{% endblock %}
+{% block title %}{{ request.resolver_match.kwargs.category }}{% endblock %}
 {% block extra_styles %}
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
 {% endblock %}
 
-{% block content %} 
+{% block main %} 
 
   <div class="container">
-    <h1 class="titulo">Itens na Categoria: {{ request.resolver_match.kwargs.category }}</h1>
-    <h2>Sub-Categorias: </h2>
+    <h1>{{ request.resolver_match.kwargs.category }}</h1>
 
     {% if item_informatica_list %}
       <form>

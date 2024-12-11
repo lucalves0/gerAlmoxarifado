@@ -1,34 +1,23 @@
-main {
-  height: 100%;
-  padding: 20px;
-  margin-top: 60px; 
-}
 
-.container {
-  max-width: 900px;
+main .container {
+  width: 900px;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
 
-.container h1 {
-  font-size: 3rem;
-  text-align: center;
-  font-weight: 400;
-}
-
-.container .expandable-list a {
+main .container form .expandable-list a {
   display: flex;
-  text-decoration: none;
   color: black;
   background-color: #f1f1f1;
   border: 1px solid #ccc;
   padding: 10px;
   font-size: 1.9rem;
+  font-weight: 400;
 }
 
-.container .expandable-list .disabled-link {
+main .container form .expandable-list .disabled-link {
   color: gray;
   font-weight: 100;
   pointer-events: none;
@@ -36,19 +25,16 @@ main {
   text-decoration: none;
 }
 
-.btn {
-  color: white;
-}
-
-.btn:hover {
+main .container .btn:hover {
   background-color: #418650;
 }
 
-.btn-cadastrar {
+main .container .btn-cadastrar {
   background-color: green;
+  margin: 0 30px 20px;
 }
 
-main .notifications_no_items {
+main .container .notifications_no_items {
   text-align: center;
   font-size: 1.5rem;
   color: black;

@@ -1,92 +1,86 @@
+body {
+  overflow: hidden;
+}
+
 main {
-  padding: 40px;
+  margin-top: 0px;
   display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: start;
+}
+
+main .containerSearch {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background-color: #75849631;
+}
+
+main .containerSearch h1 {
+  margin-bottom: 50px;
+}
+
+main .containerSearch input[type="text"]{
+  width: 478px;
+  margin: 20px 0 20px 0;
+}
+
+main .containerSearch form button {
+  background-color: green;
+  cursor: pointer;
+  margin: 30px 0 10px;
+}
+
+main .containerSearch form .btn-download {
+  background-color: #007bff;
+}
+
+main .containerSearch form a {
+  margin: 0 0 10px;
+  
+}
+
+main .containerHistorico {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  flex-direction: column; /* Garante que elementos fiquem empilhados em telas pequenas */
+  overflow-y: scroll;
+  padding: 40px;
+  width: 100%;
 }
 
-main .btn {
-  margin: 0;
-}
-
-h1 {
-  width: 80%;
-  margin-top: 30px;
-  text-align: center;
+main .containerHistorico h1 {
   font-weight: 400;
   margin-bottom: 30px;
 }
 
-.search-bar,
-.container-download {
-  width: 80%;
-  margin: 0 auto;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.container-download {
-  margin-top: 10px;
-}
-
-#searchFormContainer {
-  width: 80%;
-}
-
-.form-search label {
-  width: 100%;
-  display: flex;
-  font-size: 20px;
-  font-weight: 600;
-  color: black;
-  text-align: start;
-  margin-top: 10px;
-}
-
-.btn-download {
-  background-color: #007bff;
-  color: white;
-  padding: 0;
-  margin: 0;
-}
-
-table {
-  width: 80%;
+main .containerHistorico table {
   border-collapse: collapse;
-  margin-top: 10px;
+  width: 100%;
 }
 
-thead th {
+
+main .containerHistorico table thead tr th {
   background-color: #808b8ea5;
-  color: white;
   font-size: 25px;
   padding: 10px;
-  text-align: center;
   font-weight: 500;
 }
 
-tbody td {
+main .containerHistorico table tbody tr td {
   font-size: 20px;
   padding: 10px;
   border-bottom: 1px solid #ddd;
   text-align: center;
 }
 
-tbody tr:nth-child(even) {
+main .containerHistorico table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-tbody tr:hover {
+main .containerHistorico table tbody tr:hover {
   background-color: #e0e0e0;
 }
 

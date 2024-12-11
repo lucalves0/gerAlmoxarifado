@@ -229,17 +229,21 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          # Nenhuma busca foi fornecida, então define logs como vazio
          message = "Por favor, insira os critérios de busca e precisone Buscar "
          
-      # Verifica se o parâmetro `download_pdf` foi enviado
       if request.GET.get('download_pdf'):
-         
+
          buffer = BytesIO()  # Cria um buffer para o PDF
-         doc = SimpleDocTemplate(buffer, pagesize=A4,
-                                 leftMargin=40, rightMargin=40,
-                                 topMargin=40, bottomMargin=40)
+         doc = SimpleDocTemplate(
+            buffer, 
+            pagesize=A4, 
+            leftMargin=40, rightMargin=40, 
+            topMargin=40, bottomMargin=40
+         )
          
          elements = []
          styles = getSampleStyleSheet()
          title_style = styles['Title']
+         body_style = styles['BodyText']
+         body_style.alignment = 1  # Alinha o texto centralizado
 
          # Título com a data e hora
          current_time = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -247,45 +251,62 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          elements.append(Paragraph(title, title_style))
          elements.append(Spacer(1, 12))  # Espaçamento após o título
 
-         # Estilo da descrição dos itens
-         item_style = ParagraphStyle('ItemStyle', fontSize = 10, spaceAfter = 8)
-         
+         # Verifica se há logs
          if logs.exists():
-         
-            # Adiciona a descrição de cada item
-            for item in logs:
-               elements.append(Paragraph(f"<b>Entrada no estoque:</b> {item.create_at}", item_style))
-               elements.append(Paragraph(f"<b>Nome:</b> {item.name}", item_style))
-               elements.append(Paragraph(f"<b>Unidade(s):</b> {item.quantity} Unidade(s)", item_style))
-               elements.append(Paragraph(f"<b>Marca:</b> {item.brand}", item_style))
-               elements.append(Paragraph(f"<b>Modelo:</b> {item.model}", item_style))
 
-               # Listando os tombos associados ao item
-               tombos = ", ".join([str(tombo.tombo) for tombo in item.tombos.all()])
-               elements.append(Paragraph(f"<b>Tombo(s):</b> {tombos}", item_style))
-               
-               # Espaço entre itens
-               elements.append(Spacer(1, 12))
+            # Cabeçalhos da tabela
+            data = [[
+               Paragraph("<b>Entrada no Estoque</b>", body_style),
+               Paragraph("<b>Nome</b>", body_style),
+               Paragraph("<b>Unidade(s)</b>", body_style),
+               Paragraph("<b>Marca</b>", body_style),
+               Paragraph("<b>Modelo</b>", body_style)
+            ]]
+            
+            # Adiciona os dados dos logs na tabela
+            for item in logs:
+               data.append([
+                  Paragraph(str(item.create_at), body_style),
+                  Paragraph(str(item.name), body_style),
+                  Paragraph(f"{item.quantity} Unidade(s)", body_style),
+                  Paragraph(str(item.brand), body_style),
+                  Paragraph(str(item.model), body_style)
+               ])
+
+            # Configuração da tabela
+            colWidths = [100, 150, 80, 120, 120]  # Ajuste das larguras das colunas
+            table = Table(data, colWidths=colWidths)
+            style = TableStyle([
+               ('BACKGROUND', (0, 0), (-1, 0), colors.gray),      # Fundo do cabeçalho
+               ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),      # Cor do texto do cabeçalho
+               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # Alinha texto ao centro
+               ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),            # Alinha verticalmente ao meio
+               ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),   # Fonte do cabeçalho
+               ('FONTSIZE', (0, 0), (-1, -1), 10),                # Tamanho da fonte
+               ('GRID', (0, 0), (-1, -1), 0.5, colors.black),     # Grid da tabela
+            ])
+            
+            table.setStyle(style)
+            elements.append(table)  # Adiciona a tabela ao documento
          else:
-            elements.append(Paragraph("Nenhum resultado encontrado", item_style))
+            elements.append(Paragraph("Nenhum resultado encontrado", body_style))
 
          # Constrói o documento PDF
          doc.build(elements)
          buffer.seek(0)  # Retorna o PDF como resposta
-         
-         return HttpResponse(buffer, content_type='application/pdf')
 
+         return HttpResponse(buffer, content_type='application/pdf')
 
       # Renderiza a página normalmente se não for pedido o download
       context = {
          'results': logs, 
          'name': name,
-         'brand' : brand,
-         'model' : model,
-         'category' : category,
-         'message' : message,
+         'brand': brand,
+         'model': model,
+         'category': category,
+         'message': message,
       }
-      
+
       return render(request, self.template_name, context)
        
 class LoadSubcategoriesView(LoginRequiredMixin, View):

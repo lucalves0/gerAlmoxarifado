@@ -1,80 +1,33 @@
-main {
-  height: 100%;
-}
-
-.container {
-  max-width: 900px;
-  gap: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+main .container {
   padding: 40px;
 }
 
-.container h1 {
+main .container h1 {
   margin-bottom: 20px;
-  color: black;
-  font-weight: 600;
 }
 
-.container p {
+main .container p {
   font-size: 25px;
-  margin-bottom: 10px;
+  text-align: center;
 }
 
-.container p span {
+main .container p span {
   font-weight: 600;
 }
 
 
-.form-group label {
-  font-size: 20px;
-  font-weight: 500;
-  color: black;
+main .container form .form-group label {
   margin-top: 20px;
 }
 
-input[type="text"],
-input[type="number"],
-form .form-control {
-  width: 100%;
-  margin-top: 10px;
+main .container form input[type="text"],
+main .container form input[type="number"] {
   border: 1px solid #ccc;
   border-radius: 3px;
-  padding: 10px;
-  font-size: 18px;
 }
 
-.menu-btn {
-  display: flex;
-  justify-content: space-between;
-
-}
-
-main .btn,
-main a {
-  text-align: center;
-  text-decoration: none;
-  font-size: 18px;
-  padding: 8px 12px;
-  margin: 20px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  display: inline-block;
-}
-
-main .btn-save {
-  width: 50%;
-}
-
-main .btn-cancelar {
-  width: 50%;
-}
-
-.error-list,
-.error-messages {
+main .container form .form-group .error-list,
+main .container form .form-group .error-messages {
   color: #ff0000;
   font-size: 16px;
   margin: 0;
@@ -82,11 +35,26 @@ main .btn-cancelar {
   list-style: none;
 }
 
-.field-error,
-.non-field-error {
+main .container form .form-group .field-error,
+main .container form .form-group .non-field-error {
   margin: 0;
   padding: 0;
 }
+
+main .container .menu-btn {
+  display: flex;
+  justify-content: space-between;
+
+}
+
+main .container .menu-btn .btn-save {
+  width: 50%;
+}
+
+main .container .menu-btn .btn-cancelar {
+  width: 50%;
+}
+
 
 /* Media Queries para dispositivos menores */
 @media (max-width: 768px) {
