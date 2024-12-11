@@ -31,6 +31,7 @@ main .container .btn:hover {
 
 main .container .btn-cadastrar {
   background-color: green;
+  margin: 0 30px 20px;
 }
 
 main .container .notifications_no_items {

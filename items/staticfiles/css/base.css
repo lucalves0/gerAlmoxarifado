@@ -81,13 +81,15 @@ main .container {
 
 }
 
-main .container h1 {
+main .container h1,
+main .containerSearch h1 {
   font-size: 3rem;
   text-align: center;
   font-weight: 400;
 }
 
-main .container form {
+main .container form,
+main .containerSearch form {
   width: 100%;
   padding: 30px;
   display: flex;
@@ -101,12 +103,14 @@ main .container form .form-group {
 
 }
 
-main .container form .form-group label {
+main .container form .form-group label,
+main .containerSearch form label {
   font-size: 20px;
   font-weight: 600;
   color: #333;
 }
 
+main .containerSearch form input[type="text"],
 main .container form input[type="text"],
 main .container form input[type="number"],
 main .container form .form-control {
@@ -129,7 +133,9 @@ main .container form input[type="number"]{
 
 main .container .btn,
 main .container a,
-main .container form .menu-btn button {
+main .containerSearch form a,
+main .container form .menu-btn button,
+main .containerSearch form button {
   color: white;
   text-align: center;
   text-decoration: none;
@@ -152,9 +158,12 @@ main .container .btn-delete {
   color: black;
 }
 
+main .containerSearch form .btn-download:hover,
+main .containerSearch form button:hover,
 main .container .btn:hover,
-main .expandable-list .item .menu-container .menu-content .btn-visualizar:hover,
-main .expandable-list .item .menu-container .menu-content .btn-edit:hover {
+main .container .expandable-list .item .menu-container .menu-content .btn-visualizar:hover,
+main .container .expandable-list .item .menu-container .menu-content .btn-edit:hover,
+main .container .expandable-list .item .menu-container .menu-content .btn-retirar:hover {
   background-color: #49535f;
 }
 
