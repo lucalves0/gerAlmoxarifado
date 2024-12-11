@@ -64,18 +64,9 @@ header .menu form button {
   align-items: center;
   justify-content: center;
   padding: 5px;
+  cursor: pointer;
 
 }
-
-/* .menu-button {
-  font-size: 30px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  color: black;
-  z-index: 1;
-} */
-
 
 main {
   display: flex;
@@ -86,6 +77,7 @@ main {
 
 main .container {
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
+  width: 900px;
 
 }
 
@@ -123,35 +115,6 @@ main .container form .form-control {
   font-size: 18px;
 }
 
-
-
-
-/* .form-search {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.form-search input[type="text"] {
-  width: 100%;
-  height: 45px;
-  padding: 10px;
-}
-
-.form-search .btn-save {
-  width: 100%;
-  margin-bottom: 0;
-  
-}
-
-.form-search a {
-  height: 45px;
-  width: 100%;
-  border: 1px solid black;
-} */
-
 main .container .btn,
 main .container a,
 main .container form .menu-btn button {
@@ -177,7 +140,9 @@ main .container .btn-delete {
   color: black;
 }
 
-main .container .btn:hover {
+main .container .btn:hover,
+main .expandable-list .item .menu-container .menu-content .btn-visualizar:hover,
+main .expandable-list .item .menu-container .menu-content .btn-edit:hover {
   background-color: #49535f;
 }
 

@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Sub items{% endblock %}
+{% block title %}{{ request.resolver_match.kwargs.category }}{% endblock %}
 {% block extra_styles %}
   <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
 {% endblock %}
