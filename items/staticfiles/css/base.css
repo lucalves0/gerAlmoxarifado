@@ -113,6 +113,7 @@ main .containerSearch form label {
 main .containerSearch form input[type="text"],
 main .container form input[type="text"],
 main .container form input[type="number"],
+main .container form input[type="password"],
 main .container form .form-control {
   margin-top: 20px;
   padding: 10px;
