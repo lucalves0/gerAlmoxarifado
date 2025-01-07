@@ -242,7 +242,7 @@ class ItemSearchView(LoginRequiredMixin, ListView):
       logs = Items.objects.none()
       
       # Verifica se algum filtro foi fornecido
-      search_provided = any([name, brand, model, category])
+      search_provided = any([name, brand, model, category, location])
       
       if search_provided:
          
@@ -271,7 +271,9 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          
          # Nenhuma busca foi fornecida, então define logs como vazio
          message = "Por favor, insira os critérios de busca e precisone Buscar "
-         
+      
+      total_results = len(logs) # Pega o valor total de itens cadastrados
+
       if request.GET.get('download_pdf'):
 
          buffer = BytesIO()  # Cria um buffer para o PDF
@@ -293,6 +295,11 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          title = f"Relatório de Itens - Gerado em: {current_time}"
          elements.append(Paragraph(title, title_style))
          elements.append(Spacer(1, 12))  # Espaçamento após o título
+
+         # Adiciona o total de resultados abaixo do título
+         results_message = f"Total de Resultados: {total_results}"
+         elements.append(Paragraph(results_message, body_style))
+         elements.append(Spacer(1, 12))  # Espaçamento após a mensagem de total de resultados
 
          # Verifica se há logs
          if logs.exists():
@@ -352,6 +359,7 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          'category': category,
          'location': location,
          'message': message,
+         'total_results': total_results
       }
 
       return render(request, self.template_name, context)

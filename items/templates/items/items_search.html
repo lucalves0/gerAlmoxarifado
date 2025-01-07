@@ -48,7 +48,10 @@
         {% if message %}
         <p class="alert-init">{{ message }}</p>
 
-        {% else %} 
+        {% else %}
+
+            <p>Total de itens cadastrados: {{ total_results }}</p>
+            
             {% for item in results %}
 
                 <div class="item">
