@@ -1,10 +1,59 @@
-/* main {
+main {
   flex-direction: row;
   justify-content: space-between;
-} */
+  padding: 0 40px;
+  margin-top: 0px;
+}
+
+main .dashboard {
+  width: 30%;
+  display: flex;
+  flex-direction: column;
+}
+
+main .dashboard img {
+  width: 100%;
+  height: auto;
+}
+
+main .dashboard table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+}
+
+main .dashboard table thead tr th {
+  background-color: #808b8ea5;
+  font-size: 20px;
+  padding: 10px;
+  font-weight: 500;
+}
+
+main .dashboard table tbody tr td {
+  font-size: 18px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+main .dashboard table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+main .dashboard table tbody tr:hover {
+  background-color: #e0e0e0;
+}
+
+main .painel {
+  width: 70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 main .container {
   width: 900px;
+  height: auto;
   display: flex;
   flex-direction: column;
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
@@ -47,51 +96,46 @@ main .container .notifications_no_items {
 
 /* Responsividade */
 @media (max-width: 768px) {
-  header {
-      flex-direction: column;
-      height: auto;
-      padding: 20px;
+  main .dashboard {
+    width: 100%; /* Ocupa 100% da largura */
   }
 
-  .container {
-      width: 100%;
-      padding: 10px;
-      box-shadow: none;
+  main .painel {
+    width: 100%; /* Ocupa 100% da largura */
   }
 
-  .container h1 {
-      font-size: 2rem;
+  main .container {
+    width: 100%; /* Ajuste dinâmico */
+    max-width: 700px;
+    padding: 15px;
   }
 
-  .container .expandable-list a {
-      font-size: 1.2rem;
-      padding: 8px;
+  main .dashboard img {
+    width: 100%; /* Redimensiona a imagem */
+    height: auto; /* Mantém a proporção */
   }
 
-  .btn {
-      font-size: 0.875rem;
-      padding: 8px 16px;
+}
+
+@media (max-width: 768px) {
+  main .dashboard img {
+    width: 100%;          /* Garante que a imagem ocupe toda a largura do container */
+    height: auto;         /* Mantém a proporção da imagem */
+    object-fit: contain;  /* Garante que a imagem não distorça */
+  }
+
+  main .dashboard table thead tr th, 
+  main .dashboard table tbody tr td {
+    font-size: 14px; /* Texto menor em dispositivos pequenos */
+    padding: 6px;
   }
 }
 
 @media (max-width: 480px) {
-  header a {
-      font-size: 18px;
+  main .dashboard img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;  /* Garante que a imagem não distorça */
   }
 
-  header .button_logout {
-      padding: 5px 15px;
-  }
-
-  .container h1 {
-      font-size: 1.5rem;
-  }
-
-  .container .expandable-list a {
-      font-size: 1rem;
-  }
-
-  .btn {
-      font-size: 0.75rem;
-  }
 }
