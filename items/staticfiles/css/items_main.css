@@ -1,3 +1,7 @@
+/* main {
+  flex-direction: row;
+  justify-content: space-between;
+} */
 
 main .container {
   width: 900px;

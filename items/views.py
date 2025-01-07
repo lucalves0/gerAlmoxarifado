@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, TemplateView
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
@@ -15,7 +15,7 @@ from rest_framework.response import Response
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import getSampleStyleSheet
 
 from io import BytesIO
 from datetime import datetime
@@ -23,11 +23,27 @@ from datetime import datetime
 from .forms.forms import ItemsForm, ItemsFormRetirarStock
 from .models import Items, ItemsAuditLog, ItemTombo
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+import base64
+
 class ItemsListView(LoginRequiredMixin, ListView):
 
    model = Items
    template_name = 'items/items_main.html'
    context_object_name = 'items_list'
+
+   subcategories = {
+      'SELECIONAR': [],
+      'MATERIAL PARA INSTALAÇÃO': ['ELÉTRICAS', 'REDE', 'OUTROS'],
+      'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
+      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'MATERIAL DE CONSUMO': ['ITEM USADO'],
+      'DESCARTE': ['NÃO HÁ SUB CATEGORIAS']
+    }
 
    def post(self, request, *args, **kwargs):
       
@@ -35,8 +51,9 @@ class ItemsListView(LoginRequiredMixin, ListView):
       action = request.POST.get('action')
 
    def get_context_data(self, **kwargs):
-      context = super().get_context_data(**kwargs)
       
+      context = super().get_context_data(**kwargs)
+
       # Obtém a lista de itens
       items = context['items_list']
       
@@ -46,9 +63,15 @@ class ItemsListView(LoginRequiredMixin, ListView):
       context['has_material_consumo'] = any(item.category == "MATERIAL DE CONSUMO" for item in items)
       context['has_descarte'] = any(item.category == "DESCARTE" for item in items)
       context['has_ferramenta'] = any(item.category == "FERRAMENTA" for item in items)
-      
-      # Adiciona lista de categorias únicas
       context['categories'] = Items.objects.values_list('category', flat=True).distinct()
+
+      # Gerar o gráfico
+      radar_chart = RadarChart(subcategories=self.subcategories, model=Items)
+      radar_chart.collect_data()
+      chart_image_base64 = radar_chart.get_chart_as_base64()
+
+      # Adicionar o gráfico ao contexto
+      context['chart_image'] = chart_image_base64
 
       return context
 
@@ -67,7 +90,6 @@ class ItemsCreateView(LoginRequiredMixin, CreateView):
       return context
    
    def form_valid(self, form):
-      
 
       self.object = form.save(commit = False)
       self.object.created_by = self.request.user
@@ -197,6 +219,7 @@ class ItemSearchView(LoginRequiredMixin, ListView):
       brand = self.request.GET.get('brand')
       model = self.request.GET.get('model')
       category = self.request.GET.get('category')
+      location = self.request.GET.get('location')
       
       # Definimos uma queryset vazio como padrão
       logs = Items.objects.none()
@@ -222,6 +245,9 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          if category:
             logs = logs.filter(category__icontains=category)
          
+         if location:
+            logs = logs.filter(location__icontains=location)
+
          message = None # Não exibe mensagem inicial se houver resultados
       
       else:
@@ -260,7 +286,8 @@ class ItemSearchView(LoginRequiredMixin, ListView):
                Paragraph("<b>Nome</b>", body_style),
                Paragraph("<b>Unidade(s)</b>", body_style),
                Paragraph("<b>Marca</b>", body_style),
-               Paragraph("<b>Modelo</b>", body_style)
+               Paragraph("<b>Modelo</b>", body_style),
+               Paragraph("<b>Localização</b>", body_style)
             ]]
             
             # Adiciona os dados dos logs na tabela
@@ -270,20 +297,22 @@ class ItemSearchView(LoginRequiredMixin, ListView):
                   Paragraph(str(item.name), body_style),
                   Paragraph(f"{item.quantity} Unidade(s)", body_style),
                   Paragraph(str(item.brand), body_style),
-                  Paragraph(str(item.model), body_style)
+                  Paragraph(str(item.model), body_style),
+                  Paragraph(str(item.location), body_style)
                ])
 
             # Configuração da tabela
-            colWidths = [100, 150, 80, 120, 120]  # Ajuste das larguras das colunas
+            colWidths = [65, 100, 70, 80, 100]  # Larguras em pontos
             table = Table(data, colWidths=colWidths)
             style = TableStyle([
                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),      # Fundo do cabeçalho
-               ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),      # Cor do texto do cabeçalho
-               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # Alinha texto ao centro
-               ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),            # Alinha verticalmente ao meio
+               ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),      # Cor do texto do cabeçalho
+               ('ALIGN', (0, 0), (-1, -1), 'CENTER'),             # Alinhamento central
+               ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),            # Alinhamento vertical ao meio
                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),   # Fonte do cabeçalho
-               ('FONTSIZE', (0, 0), (-1, -1), 10),                # Tamanho da fonte
-               ('GRID', (0, 0), (-1, -1), 0.5, colors.black),     # Grid da tabela
+               ('BOTTOMPADDING', (0, 0), (-1, 0), 12),            # Espaçamento do cabeçalho
+               ('BACKGROUND', (0, 1), (-1, -1), colors.white),    # Fundo das células
+               ('GRID', (0, 0), (-1, -1), 1, colors.black),       # Grid da tabela
             ])
             
             table.setStyle(style)
@@ -304,6 +333,7 @@ class ItemSearchView(LoginRequiredMixin, ListView):
          'brand': brand,
          'model': model,
          'category': category,
+         'location': location,
          'message': message,
       }
 
@@ -586,3 +616,65 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
       
       # Usando prefetch_related para carregar os tombos associados 
       return Items.objects.filter(category=category).prefetch_related('tombos')
+   
+# Gráfico radar
+class RadarChart:
+    def __init__(self, subcategories, model):
+      self.subcategories = subcategories
+      self.model = model
+      self.data = {}
+
+    def collect_data(self):
+      """Coleta os dados do banco de dados para o gráfico."""
+      for category, sub_cats in self.subcategories.items():
+         if sub_cats:
+               self.data[category] = {
+                  sub_cat: self.model.objects.filter(category=category, sub_category=sub_cat).count()
+                  for sub_cat in sub_cats
+               }
+         else:
+            self.data[category] = {
+               category: self.model.objects.filter(category=category).count()
+            }
+
+    def prepare_chart(self):
+      """Prepara os dados para o gráfico radar."""
+      labels = list(self.data.keys())
+      values = [sum(sub.values()) for sub in self.data.values()]
+
+      # Adicionar o primeiro valor ao final para fechamento do gráfico
+      values += values[:1]
+      labels += labels[:1]
+
+      return labels, values
+
+    def get_chart_as_base64(self):
+      """
+      Gera o gráfico radar e o retorna como uma string Base64.
+      """
+      labels, values = self.prepare_chart()
+      angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=True).tolist()
+
+      fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
+      ax.fill(angles, values, color='blue', alpha=0.25)
+      ax.plot(angles, values, color='blue', linewidth=2)
+
+      # Adicionar rótulos
+      ax.set_yticks(range(0, max(values) + 1))
+      ax.set_xticks(angles)
+      ax.set_xticklabels(labels, fontsize=10)
+
+      plt.title("Quantidade de Categorias e Subcategorias", fontsize=16, y=1.1)
+      plt.tight_layout()
+
+      # Salvar o gráfico em memória
+      buffer = io.BytesIO()
+      plt.savefig(buffer, format='png')
+      plt.close(fig)
+      buffer.seek(0)
+
+      # Converter para Base64
+      base64_image = base64.b64encode(buffer.getvalue()).decode('utf-8')
+      buffer.close()
+
+      return base64_image
