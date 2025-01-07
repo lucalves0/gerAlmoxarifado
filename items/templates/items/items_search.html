@@ -31,9 +31,12 @@
             <label for="category"> Categoria </label>
             <input type="text" name="category" placeholder="Informe o nome da categoria do item"value="{{ query|default_if_none:'' }}"/>
 
+            <label for="location"> Localização </label>
+            <input type="text" name="location" placeholder="Informe a localização do item"value="{{ query|default_if_none:'' }}"/>
+
             <button type="submit"> Buscar item </button>
             <a href="{% url 'items_search' %}" class="btn btn-cancelar"> Cancelar busca </a>
-            <a href="?download_pdf=1{% if name %}&name={{ name }}{% endif %}{% if brand %}&brand={{ brand }}{% endif %}{% if model %}&model={{ model }}{% endif %}{% if category %}&category={{ category }}{% endif %}" class="btn-download">
+            <a href="?download_pdf=1{% if name %}&name={{ name }}{% endif %}{% if brand %}&brand={{ brand }}{% endif %}{% if model %}&model={{ model }}{% endif %}{% if category %}&category={{ category }}{% endif %}{% if location %}&location={{ location }}{% endif %}" class="btn-download">
                 Baixar PDF
             </a>
         </form>
@@ -57,6 +60,7 @@
                         <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
                         <p><span>Marca:</span> {{item.brand}}</p>
                         <p><span>Modelo:</span> {{item.model}}</p>
+                        <p><span>Localização:</span> {{item.location}}</p>
                         <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %} </p>
                     </div>
                    

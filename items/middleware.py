@@ -5,7 +5,7 @@ _thread_locals = threading.local()
 
 # Função para obter o usuário logado
 def get_current_user():
-    return getattr(_thread_locals, 'user', None)
+  return getattr(_thread_locals, 'user', None)
 
 # Middleware para armazenar o usuário logado em thread-local
 class CurrentUserMiddleware:

@@ -49,6 +49,7 @@ main .containerHistorico {
   overflow-y: scroll;
   padding: 40px;
   width: 100%;
+  margin-bottom: 50px;
 }
 
 main .containerHistorico h1 {

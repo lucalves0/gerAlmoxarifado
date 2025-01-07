@@ -1,11 +1,12 @@
-import datetime
-import json
-import uuid
 from django.db import models
 from django.conf import settings
 from django.forms import ValidationError
 from django.utils import timezone
 from django.core.serializers.json import DjangoJSONEncoder
+
+import datetime
+import json
+import uuid
 
 User = settings.AUTH_USER_MODEL  # Importar User do settings para evitar ciclos
 
