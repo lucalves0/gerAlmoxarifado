@@ -37,7 +37,6 @@ class ItemsListView(LoginRequiredMixin, ListView):
    context_object_name = 'items_list'
 
    subcategories = {
-      'SELECIONAR': [],
       'MATERIAL PARA INSTALAÇÃO': ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
       'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
@@ -45,7 +44,7 @@ class ItemsListView(LoginRequiredMixin, ListView):
       'DESCARTE': ['NÃO HÁ SUB CATEGORIAS']
     }
 
-   def post(self, request, *args, **kwargs):
+   def post(self, request, **kwargs):
       
       # Verificar qual botão foi pressionado
       action = request.POST.get('action')
@@ -70,8 +69,26 @@ class ItemsListView(LoginRequiredMixin, ListView):
       radar_chart.collect_data()
       chart_image_base64 = radar_chart.get_chart_as_base64()
 
-      # Adicionar o gráfico ao contexto
+      # Adicionar dados de categorias e porcentagens ao contexto
+      total_items = Items.objects.count()
+      categories_data = {}
+
+      for category, sub_cats in self.subcategories.items():
+         category_total = sum(
+            Items.objects.filter(category=category, sub_category=sub_cat).count()
+            for sub_cat in sub_cats
+         ) if sub_cats else Items.objects.filter(category=category).count()
+
+         percentage = (category_total / total_items * 100) if total_items > 0 else 0
+         categories_data[category] = {
+            'total': category_total,
+            'percentage': round(percentage, 2)
+         }
+
+      # Adicionar dados ao contexto
       context['chart_image'] = chart_image_base64
+      context['categories_data'] = categories_data
+      context['total_items'] = total_items
 
       return context
 
@@ -619,52 +636,77 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
    
 # Gráfico radar
 class RadarChart:
+    
     def __init__(self, subcategories, model):
       self.subcategories = subcategories
       self.model = model
       self.data = {}
 
     def collect_data(self):
-      """Coleta os dados do banco de dados para o gráfico."""
+
+      """Coleta os dados do banco de dados para o gráfico, calculando totais e porcentagens."""
+      total_items = 0  # Total geral de itens
+
+      # Coleta os dados de cada categoria e subcategoria
       for category, sub_cats in self.subcategories.items():
          if sub_cats:
-               self.data[category] = {
-                  sub_cat: self.model.objects.filter(category=category, sub_category=sub_cat).count()
-                  for sub_cat in sub_cats
-               }
+            self.data[category] = {
+               sub_cat: self.model.objects.filter(category=category, sub_category=sub_cat).count()
+               for sub_cat in sub_cats
+            }
          else:
             self.data[category] = {
                category: self.model.objects.filter(category=category).count()
             }
 
     def prepare_chart(self):
+
       """Prepara os dados para o gráfico radar."""
       labels = list(self.data.keys())
-      values = [sum(sub.values()) for sub in self.data.values()]
+
+      # Somente somar valores númericos
+      values = [
+         sum(value for value in sub.values() if isinstance(value, (int,float)))
+         for sub in self.data.values()
+      ]
 
       # Adicionar o primeiro valor ao final para fechamento do gráfico
-      values += values[:1]
-      labels += labels[:1]
+      if values:
+         values += values[:1]
+         labels += labels[:1]
 
       return labels, values
 
     def get_chart_as_base64(self):
+
       """
       Gera o gráfico radar e o retorna como uma string Base64.
       """
       labels, values = self.prepare_chart()
+
+      if not values or not labels:
+         return None 
+      
       angles = np.linspace(0, 2 * np.pi, len(labels), endpoint=True).tolist()
 
       fig, ax = plt.subplots(figsize=(8, 8), subplot_kw=dict(polar=True))
-      ax.fill(angles, values, color='blue', alpha=0.25)
-      ax.plot(angles, values, color='blue', linewidth=2)
+
+      # Preenchimento e linha principal
+      ax.fill(angles, values, color='blue', alpha=0.3)
+      ax.plot(angles, values, color='darkblue', linewidth=2, linestyle='solid')
+      ax.scatter(angles, values, color='red', s=50, zorder=10)    # Destaque nos vértices
+
+      # Grades e eixos
+      ax.grid(color='gray', linestyle='--', linewidth=0.5)
+      ax.set_ylim(0, max(values) + 5)                             # Ajuste dos limites radiais
 
       # Adicionar rótulos
-      ax.set_yticks(range(0, max(values) + 1))
       ax.set_xticks(angles)
-      ax.set_xticklabels(labels, fontsize=10)
+      ax.set_xticklabels(labels, fontsize=12, color='darkred')    # Aumentar os rótulos das categorias
+      ax.set_yticks(range(0, max(values) + 1, 5))                 # Intervalo das grades do eixo radial
+      ax.set_yticklabels([])                                      # Remover rótulos do eixo radial para menos poluição visual
 
-      plt.title("Quantidade de Categorias e Subcategorias", fontsize=16, y=1.1)
+      plt.title("Quantidades de unidades cadastradas em estoque", fontsize=16, y=1.1)
       plt.tight_layout()
 
       # Salvar o gráfico em memória

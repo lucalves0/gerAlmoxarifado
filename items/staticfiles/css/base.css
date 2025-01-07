@@ -11,12 +11,12 @@ body, html {
   height: 100%;
 }
 
-
 header {
   display: flex;
   padding: 10px;
   background-color: #001e5955;
   justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 header a,
@@ -35,26 +35,16 @@ header a img {
   border-radius: 10px;
 }
 
-header a img:nth-last-of-type(2) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-header a img:nth-last-of-type(1) {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
 header .menu {
   display: flex;
   gap: 20px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 header .menu form {
   border-radius: 10px;
 }
-
 
 header .menu form button {
   background-color: red;
@@ -65,7 +55,6 @@ header .menu form button {
   justify-content: center;
   padding: 5px;
   cursor: pointer;
-
 }
 
 main {
@@ -73,17 +62,18 @@ main {
   justify-content: center;
   height: auto;
   margin-top: 100px;
+  padding: 0 20px;
 }
 
 main .container {
   box-shadow: 0px 1px 8px 8px rgba(0, 0, 0, 0.1);
-  width: 900px;
-
+  width: 100%;
+  max-width: 900px;
 }
 
 main .container h1,
 main .containerSearch h1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   text-align: center;
   font-weight: 400;
 }
@@ -91,7 +81,7 @@ main .containerSearch h1 {
 main .container form,
 main .containerSearch form {
   width: 100%;
-  padding: 30px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -100,12 +90,11 @@ main .container form .form-group {
   display: flex;
   flex-direction: column;
   margin-bottom: 2rem;
-
 }
 
 main .container form .form-group label,
 main .containerSearch form label {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #333;
 }
@@ -115,12 +104,13 @@ main .container form input[type="text"],
 main .container form input[type="number"],
 main .container form input[type="password"],
 main .container form .form-control {
-  margin-top: 20px;
+  margin-top: 15px;
   padding: 10px;
-  font-size: 18px;
+  font-size: 16px;
+  width: 100%;
 }
 
-/* Para Chrome, Sefari, Edge e Opera */
+/* Para Chrome, Safari, Edge e Opera */
 main .container form input[type="number"]::-webkit-inner-spin-button,
 main .container form input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -128,7 +118,7 @@ main .container form input[type="number"]::-webkit-outer-spin-button {
 }
 
 /* Para Firefox */
-main .container form input[type="number"]{
+main .container form input[type="number"] {
   -moz-appearance: textfield;
 }
 
@@ -140,13 +130,12 @@ main .containerSearch form button {
   color: white;
   text-align: center;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   padding: 8px 12px;
-  margin: 20px 5px;
+  margin: 10px 5px;
   border-radius: 5px;
   font-weight: 600;
 }
-
 
 main .container .btn-save,
 main .containerSearch .btn-save {
@@ -170,37 +159,74 @@ main .container .expandable-list .item .menu-container .menu-content .btn-retira
   background-color: #49535f;
 }
 
-
+/* Responsividade */
 @media (max-width: 768px) {
   header {
     flex-direction: column;
-    height: auto;
-    padding: 20px;
+    align-items: center;
   }
 
-  header a {
-    font-size: 18px;
+  header a img {
+    width: 100px;
+    height: 50px;
   }
 
-  header .button_logout {
-    padding: 5px 15px;
+  header .menu {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  main .btn,
-  main a {
-    font-size: 16px;
+  main {
+    margin-top: 50px;
+  }
+
+  main .container h1,
+  main .containerSearch h1 {
+    font-size: 2rem;
+  }
+
+  main .container form,
+  main .containerSearch form {
+    padding: 10px;
+  }
+
+  main .container form input[type="text"],
+  main .container form input[type="number"],
+  main .container form input[type="password"],
+  main .container form .form-control {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  main .container .btn,
+  main .containerSearch form button {
+    font-size: 14px;
     padding: 6px 10px;
   }
 }
 
 @media (max-width: 480px) {
-  header a {
-    font-size: 16px;
+  header a img {
+    width: 80px;
+    height: 40px;
   }
 
-  main .btn,
-  main a {
-    font-size: 14px;
+  main .container h1,
+  main .containerSearch h1 {
+    font-size: 1.8rem;
+  }
+
+  main .container form input[type="text"],
+  main .container form input[type="number"],
+  main .container form input[type="password"],
+  main .container form .form-control {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  main .container .btn,
+  main .containerSearch form button {
+    font-size: 12px;
     padding: 5px 8px;
   }
 }

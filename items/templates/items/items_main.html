@@ -9,47 +9,77 @@
 
 {% block main %}
 
-  {% comment %} <div>
-    <img src="data:image/png;base64,{{ chart_img }}" alt="Gráfico Radar">
-  </div> {% endcomment %}
-  <div class="container">
-    <h1>Lista de Itens</h1>
-    {% if items_list %}
-      <form >
-        <div class="expandable-list">  
-          <ul>
-            {% if has_material_intalacao %}
-              <a href="{% url 'items_material_instalacao' "MATERIAL PARA INSTALAÇÃO" %}"> Material para instalação </a>
-            {% else %}
-              <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para instalação</strong></a>
-            {% endif %}
-            {% if has_informatica %}
-              <a  href="{% url 'items_informatica' "INFORMÁTICA" %}">Informática</a>
-            {% else %}
-              <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Informática</strong></a>
-            {% endif %}
-            {% if has_material_consumo %}
-              <a  href="{% url 'items_material_consumo' "MATERIAL DE CONSUMO" %}">Material para consumo</a>
-            {% else %}
-              <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para consumo</strong></a>
-            {% endif %}
-            {% if has_descarte %}
-              <a  href="{% url 'items_descarte' "DESCARTE" %}">Descarte</a>
-            {% else %}
-              <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria<strong>"Descarte"</strong></a>
-            {% endif %}
-            {% if has_ferramenta %}
-              <a href="{% url 'items_ferramentas' "FERRAMENTA" %}"> Ferramentas</a>
-            {% else %}
-              <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Ferramentas</strong></a>
-            {% endif %}
-          </ul>
-        </div>
-      </form>
+  <div class="dashboard">
+
+    {% if chart_image %}
+      <img src="data:image/png;base64,{{ chart_image }}" alt="Gráfico Radar">
     {% else %}
-      <p class="notifications_no_items">Não há itens cadastradas.</p>
+      <p>Nenhum dado disponível para o gráfico.</p>
     {% endif %}
-    <a href="{% url 'items_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
+
+
+    <h2> Resumo de itens cadastrados </h2>
+    <p> Total de itens cadastrados: {{ total_items }}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Categoria</th>
+          <th>Total de Itens</th>
+          <th>Porcentagem</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category, data in categories_data.items %}
+          <tr>
+            <td> {{ category }} </td>
+            <td> {{ data.total }} </td>
+            <td> {{ data.percentage }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="painel">
+    <div class="container">
+      <h1>Lista de Itens</h1>
+      {% if items_list %}
+        <form >
+          <div class="expandable-list">  
+            <ul>
+              {% if has_material_intalacao %}
+                <a href="{% url 'items_material_instalacao' "MATERIAL PARA INSTALAÇÃO" %}"> Material para instalação </a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para instalação</strong></a>
+              {% endif %}
+              {% if has_informatica %}
+                <a  href="{% url 'items_informatica' "INFORMÁTICA" %}">Informática</a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Informática</strong></a>
+              {% endif %}
+              {% if has_material_consumo %}
+                <a  href="{% url 'items_material_consumo' "MATERIAL DE CONSUMO" %}">Material para consumo</a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Material para consumo</strong></a>
+              {% endif %}
+              {% if has_descarte %}
+                <a  href="{% url 'items_descarte' "DESCARTE" %}">Descarte</a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria<strong>"Descarte"</strong></a>
+              {% endif %}
+              {% if has_ferramenta %}
+                <a href="{% url 'items_ferramentas' "FERRAMENTA" %}"> Ferramentas</a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Ferramentas</strong></a>
+              {% endif %}
+            </ul>
+          </div>
+        </form>
+      {% else %}
+        <p class="notifications_no_items">Não há itens cadastradas.</p>
+      {% endif %}
+      <a href="{% url 'items_create' %}" class="btn btn-cadastrar">Cadastrar Item</a>
+    </div>
   </div>
 
 {% endblock %}
