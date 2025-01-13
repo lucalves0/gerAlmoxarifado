@@ -7,18 +7,22 @@ main {
 
 main .dashboard {
   width: 30%;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
 }
 
+main .dashboard h2:first-child {
+  text-align: center;
+}
+
 main .dashboard img {
-  width: 100%;
+  width: 85%;
   height: auto;
 }
 
 main .dashboard table {
   width: 100%;
-  margin-top: 10px;
   border-collapse: collapse;
 }
 
@@ -92,29 +96,6 @@ main .container .notifications_no_items {
   font-size: 1.5rem;
   color: black;
   margin: 20px;
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-  main .dashboard {
-    width: 100%; /* Ocupa 100% da largura */
-  }
-
-  main .painel {
-    width: 100%; /* Ocupa 100% da largura */
-  }
-
-  main .container {
-    width: 100%; /* Ajuste dinâmico */
-    max-width: 700px;
-    padding: 15px;
-  }
-
-  main .dashboard img {
-    width: 100%; /* Redimensiona a imagem */
-    height: auto; /* Mantém a proporção */
-  }
-
 }
 
 @media (max-width: 768px) {

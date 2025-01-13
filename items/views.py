@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.http import HttpResponse
 from django.db.models import Count
+from django.db.models import Sum
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -64,26 +65,62 @@ class ItemsListView(LoginRequiredMixin, ListView):
       context['has_ferramenta'] = any(item.category == "FERRAMENTA" for item in items)
       context['categories'] = Items.objects.values_list('category', flat=True).distinct()
 
-      # Gerar o gráfico
-      radar_chart = RadarChart(subcategories=self.subcategories, model=Items)
-      radar_chart.collect_data()
-      chart_image_base64 = radar_chart.get_chart_as_base64()
-
       # Adicionar dados de categorias e porcentagens ao contexto
-      total_items = Items.objects.count()
+      total_items = Items.objects.aggregate(total=Sum('quantity'))['total'] or 0
       categories_data = {}
 
-      for category, sub_cats in self.subcategories.items():
-         category_total = sum(
-            Items.objects.filter(category=category, sub_category=sub_cat).count()
-            for sub_cat in sub_cats
-         ) if sub_cats else Items.objects.filter(category=category).count()
-
+      for category in Items.objects.values('category').distinct():
+         category_name = category['category']
+         category_total = Items.objects.filter(category=category_name).aggregate(total_quantity=Sum('quantity'))['total_quantity'] or 0
          percentage = (category_total / total_items * 100) if total_items > 0 else 0
-         categories_data[category] = {
+         categories_data[category_name] = {
             'total': category_total,
-            'percentage': round(percentage, 2)
+            'percentage': round(percentage, 2)  # Arredondando para 2 casas decimais
          }
+
+      
+      # Gerar o gráfico de pizza
+      labels = categories_data.keys()
+      sizes = [data['percentage'] for data in categories_data.values()]
+      colors = plt.cm.Pastel1(range(len(labels)))
+
+      # Criar a figura do gráfico
+      plt.figure(figsize=(8, 9))
+
+      # Gerar o gráfico de pizza e capturar os objetos retornados
+      wedges, texts, autotexts = plt.pie (
+         sizes,
+         labels = None,         # Labels serão definidos na legenda
+         autopct = lambda pct: f'{pct:.1f}%',
+         startangle = 90,       # Rotação inicial do gráfico
+         colors = colors
+      )
+
+      # Ajustar as porcentagens para evitar sobreposição
+      for text in autotexts:
+         text.set_color('black')  # Ajustar a cor do texto
+         text.set_fontsize(10)    # Ajustar o tamanho da fonte
+
+      # Adicionar uma legenda ao lado
+      plt.legend(
+         wedges,                              # Usar as fatias (wedges) como referência para a legenda
+         labels,                              # Usar os rótulos correspondentes
+         title = "Categorias",                # Título da legenda
+         loc = "lower left",                  # Localização da legenda
+         bbox_to_anchor = (0, 0.01),          # Posição relativa da legenda
+         fontsize = 10
+      )
+
+      plt.axis('equal')    # Garantir que o gráfico seja exibido como um círculo
+      plt.tight_layout()   # Ajustar o layout para evitar sobreposição
+      plt.show()           # Mostrar o gráfico
+
+      # Converter o gráfico para base64
+      buffer = BytesIO()
+      plt.savefig(buffer, format='png')
+      buffer.seek(0)
+      chart_image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+      buffer.close()
 
       # Adicionar dados ao contexto
       context['chart_image'] = chart_image_base64

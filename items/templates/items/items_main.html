@@ -11,8 +11,9 @@
 
   <div class="dashboard">
 
+    <h2>Porcentagem de itens cadastrados</h2>
     {% if chart_image %}
-      <img src="data:image/png;base64,{{ chart_image }}" alt="Gráfico Radar">
+      <img src="data:image/png;base64,{{ chart_image }}" alt="Gráfico Pizza">
     {% else %}
       <p>Nenhum dado disponível para o gráfico.</p>
     {% endif %}
@@ -33,7 +34,7 @@
           <tr>
             <td> {{ category }} </td>
             <td> {{ data.total }} </td>
-            <td> {{ data.percentage }}</td>
+            <td> {{ data.percentage }}%</td>
           </tr>
         {% endfor %}
       </tbody>
