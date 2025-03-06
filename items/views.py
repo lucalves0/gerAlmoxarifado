@@ -42,6 +42,7 @@ class ItemsListView(LoginRequiredMixin, ListView):
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
       'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
       'MATERIAL DE CONSUMO': ['ITEM USADO'],
+      'IMOVEIS': ['NÃO HÁ SUB CATEGORIAS'],
       'DESCARTE': ['NÃO HÁ SUB CATEGORIAS']
     }
 
@@ -63,6 +64,7 @@ class ItemsListView(LoginRequiredMixin, ListView):
       context['has_material_consumo'] = any(item.category == "MATERIAL DE CONSUMO" for item in items)
       context['has_descarte'] = any(item.category == "DESCARTE" for item in items)
       context['has_ferramenta'] = any(item.category == "FERRAMENTA" for item in items)
+      context['has_imoveis'] = any(item.category == "IMOVEIS" for item in items)
       context['categories'] = Items.objects.values_list('category', flat=True).distinct()
 
       # Adicionar dados de categorias e porcentagens ao contexto
@@ -346,24 +348,26 @@ class ItemSearchView(LoginRequiredMixin, ListView):
                Paragraph("<b>Entrada no Estoque</b>", body_style),
                Paragraph("<b>Nome</b>", body_style),
                Paragraph("<b>Unidade(s)</b>", body_style),
-               Paragraph("<b>Marca</b>", body_style),
-               Paragraph("<b>Modelo</b>", body_style),
-               Paragraph("<b>Localização</b>", body_style)
+               Paragraph("<b>Localização</b>", body_style),
+               Paragraph("<b>Tombo</b>", body_style),
+               
             ]]
             
             # Adiciona os dados dos logs na tabela
             for item in logs:
+               item_tombo_instance = item.tombos.first()  
+               tombo = item_tombo_instance.tombo if item_tombo_instance else 'Não há tombo'
+
                data.append([
                   Paragraph(str(item.create_at), body_style),
                   Paragraph(str(item.name), body_style),
-                  Paragraph(f"{item.quantity} Unidade(s)", body_style),
-                  Paragraph(str(item.brand), body_style),
-                  Paragraph(str(item.model), body_style),
-                  Paragraph(str(item.location), body_style)
+                  Paragraph(f"{item.quantity}", body_style),
+                  Paragraph(str(item.location), body_style),
+                  Paragraph(str(tombo), body_style)
                ])
 
             # Configuração da tabela
-            colWidths = [65, 100, 70, 80, 100]  # Larguras em pontos
+            colWidths = [65, 100, 90, 150, 90]  # Larguras em pontos
             table = Table(data, colWidths=colWidths)
             style = TableStyle([
                ('BACKGROUND', (0, 0), (-1, 0), colors.gray),      # Fundo do cabeçalho
@@ -412,6 +416,7 @@ class LoadSubcategoriesView(LoginRequiredMixin, View):
       'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
       'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'IMOVEIS': ['NÃO SUB HÁ CATEGORIAS'],
       'MATERIAL DE CONSUMO' : ['ITEM USADO'],
       'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
       }
@@ -671,6 +676,18 @@ class ItemsSubFerramentas(LoginRequiredMixin, ListView):
    model: Items
    template_name = "items/pag_sub_category/items_ferramentas.html"
    context_object_name = 'item_ferramenta_list'
+
+   def get_queryset(self):
+      
+      category = self.kwargs['category']
+      
+      # Usando prefetch_related para carregar os tombos associados 
+      return Items.objects.filter(category=category).prefetch_related('tombos')
+
+class ItemsSubImoveis(LoginRequiredMixin, ListView):
+   model: Items
+   template_name = "items/pag_sub_category/items_imoveis.html"
+   context_object_name = 'item_imoveis_list'
 
    def get_queryset(self):
       

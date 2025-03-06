@@ -1,0 +1,54 @@
+{% extends 'items/base.html' %}
+
+{% load static %}
+
+{% block title %}{{ request.resolver_match.kwargs.category }}{% endblock %}
+{% block extra_styles %}
+  <link rel="stylesheet" href="{% static 'css/items_sub.css' %}">
+{% endblock %}
+
+{% block main %} 
+  <div class="container">
+    <h1>{{ request.resolver_match.kwargs.category }}S</h1>
+
+    {% if item_imoveis_list %}
+      <form>
+        <div class="expandable-list">
+          <div class="item">
+            <div class="header" onclick="toggleContent(this)">
+              <span class="arrow">&#9654;</span> 
+              <h1>Imovéis</h1>
+            </div>
+            <div class="content">
+              {% for item in item_imoveis_list  %}
+                <div class="item-row">
+                  <div class="dados_items">
+                    <div class="description">
+                      <p><span>Entrada no estoque:</span></p>
+                      <p>{{item.create_at}}</p>
+                      <p><span>Nome:</span> {{ item.name }}</p>
+                      <p><span>Unidades:</span> {{item.quantity}} Unidades</p>
+                      <p><span>Marca:</span> {{item.brand}}</p>
+                      <p><span>Modelo:</span> {{item.model}}</p>
+                      <p><span>Tombo(s):</span> {% for tombo in item.tombos.all %}{{ tombo.tombo }}{% endfor %}</p>
+                    </div>
+                  </div>
+                  <div class="menu-container">
+                    <button class="menu-btn" onclick="toggleMenuPagSub(event)">&#x22EE;</button>
+                    <div class="menu-content" id="menuDropdown">
+                      <a href="{% url 'items_ficha'  item.pk%}" class="btn btn-visualizar">Visualizar Ficha Tecnica</a>
+                      <a href="{% url 'items_update' item.pk %}" class="btn btn-edit">Editar</a>
+                      <a href="{% url 'items_delete' item.pk %}" class="btn btn-delete">Excluir</a>
+                      <a href="{% url 'items_form_retirar' id=item.id %}" class="btn btn-retirar {% if item.quantity == 0 %} disabled {% endif %}" name="action" value="retirar">Retirar</a>
+                    </div>
+                  </div> 
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </form>
+    {% endif %}
+    <a href="{% url 'items_main' %}" class="btn btn-delete">Voltar para página inicial</a>
+  </div> 
+{% endblock %}

@@ -76,10 +76,11 @@ main .container form .expandable-list a {
 
 main .container form .expandable-list .disabled-link {
   color: gray;
-  font-weight: 100;
+  font-weight: 400;
   pointer-events: none;
   cursor: default;
   text-decoration: none;
+  text-align: start;
 }
 
 main .container .btn:hover {

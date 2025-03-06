@@ -73,6 +73,11 @@
               {% else %}
                 <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>Ferramentas</strong></a>
               {% endif %}
+              {% if has_imoveis %}
+                <a href="{% url 'items_imoveis' "IMOVEIS" %}"> IMOVEIS</a>
+              {% else %}
+                <a href="#" class="disabled-link">Não há nenhum item cadastrado na categoria <strong>IMOVEIS</strong></a>
+              {% endif %}
             </ul>
           </div>
         </form>

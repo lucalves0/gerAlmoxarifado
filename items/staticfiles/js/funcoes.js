@@ -17,12 +17,6 @@ function toggleDescription(itemId) {
     descriptionElement.style.display = isVisible ? 'none' : 'block';
 }
 
-function toggleDescription(itemId) {
-  var descriptionElement = document.getElementById("descricao-" + itemId);
-  var isVisible = descriptionElement.style.display === "block";
-  descriptionElement.style.display = isVisible ? "none" : "block";
-}
-
 // Campos de ações nas pag-sub-category
 function toggleMenuPagSub(event) {
 

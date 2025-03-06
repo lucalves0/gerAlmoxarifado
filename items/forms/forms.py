@@ -13,6 +13,7 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
       ('INFORMÁTICA', 'INFORMÁTICA'),
       ('FERRAMENTA', 'FERRAMENTA'),
       ('MATERIAL DE CONSUMO', 'MATERIAL PARA CONSUMO'),
+      ('IMOVEIS', 'IMOVEIS'),
       ('DESCARTE', 'DESCARTE')
    ]
 
@@ -166,7 +167,8 @@ class ItemsForm(LoginRequiredMixin, forms.ModelForm):
       'SELECIONAR': [],
       'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
-      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'FERRAMENTA': ['NÃO HÁ SUB CATEGORIAS'],
+      'IMOVEIS': ['NÃO HÁ SUB CATEGORIAS'],
       'MATERIAL DE CONSUMO' : ['ITEM USADO'],
       'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
       }

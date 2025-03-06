@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
@@ -18,10 +19,12 @@ from items.views import (
   ItemsFichaTecnica,
   LoadSubcategoriesView,
   ItemSearchView,
+  ItemsSubImoveis
 )
 
 
 urlpatterns = [
+  path("admin/", admin.site.urls, name="admin"),
   path("", ItemsListView.as_view(template_name="items/items_main.html"), name="items_main"),
   path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -40,5 +43,5 @@ urlpatterns = [
   path('items_descarte/<str:category>/', ItemsSubDescarte.as_view(template_name="items/pag_subs_category/items_descarte.html"), name="items_descarte"),
   path('items_material-consumo/<str:category>/', ItemsSubMaterialConsumo.as_view(template_name="items/pag_subs_category/items_material_consumo.html"), name="items_material_consumo"),
   path('items_ferramentas/<str:category>/', ItemsSubFerramentas.as_view(template_name="items/pag_subs_category/items_ferramentas.html"), name="items_ferramentas"),
- 
+  path('items_imoveis/<str:category>/', ItemsSubImoveis.as_view(template_name="items/pag_subs_category/items_imoveis.html"), name="items_imoveis"),
 ]
