@@ -416,7 +416,7 @@ class LoadSubcategoriesView(LoginRequiredMixin, View):
       'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
       'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
-      'IMOVEIS': ['NÃO SUB HÁ CATEGORIAS'],
+      'IMOVEIS': ['NÃO HÁ SUB CATEGORIAS'],
       'MATERIAL DE CONSUMO' : ['ITEM USADO'],
       'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
       }
