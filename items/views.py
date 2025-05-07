@@ -40,7 +40,7 @@ class ItemsListView(LoginRequiredMixin, ListView):
    subcategories = {
       'MATERIAL PARA INSTALAÇÃO': ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
-      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'FERRAMENTA': ['NÃO HÁ SUB CATEGORIAS'],
       'MATERIAL DE CONSUMO': ['ITEM USADO'],
       'IMOVEIS': ['NÃO HÁ SUB CATEGORIAS'],
       'DESCARTE': ['NÃO HÁ SUB CATEGORIAS']
@@ -415,7 +415,7 @@ class LoadSubcategoriesView(LoginRequiredMixin, View):
       'SELECIONAR': [],
       'MATERIAL PARA INSTALAÇÃO' : ['ELÉTRICAS', 'REDE', 'OUTROS'],
       'INFORMÁTICA': ['EQUIPAMENTOS', 'SUPRIMENTOS', 'ACESSÓRIOS', 'PERIFÉRICOS', 'PEÇAS DE REPOSIÇÃO', 'OUTROS'],
-      'FERRAMENTA': ['NÃO SUB HÁ CATEGORIAS'],
+      'FERRAMENTA': ['NÃO HÁ SUB CATEGORIAS'],
       'IMOVEIS': ['NÃO HÁ SUB CATEGORIAS'],
       'MATERIAL DE CONSUMO' : ['ITEM USADO'],
       'DESCARTE' : ['NÃO HÁ SUB CATEGORIAS']
